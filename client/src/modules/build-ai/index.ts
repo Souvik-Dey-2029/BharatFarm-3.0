@@ -5,4 +5,5 @@ export { RegenerativeAiPage } from './regenerative-ai/pages/RegenerativeAiPage.j
 export { BricsHubPage } from './brics-hub/pages/BricsHubPage.js';
 export { ApiDocsPage } from './api/pages/ApiDocsPage.js';
 export { ImpactDashboardPage } from './impact/pages/ImpactDashboardPage.js';
+export { ModelCardsPage } from './model-cards/pages/ModelCardsPage.js';
 export * from './types.js';
