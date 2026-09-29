@@ -12,6 +12,7 @@ import { whatsappRoutes, callRoutes } from '../modules/sahayak/index.js';
 import satelliteRoutes from '../modules/build-ai/satellite/satellite.routes.js';
 import soilRoutes from '../modules/build-ai/soil/soil.routes.js';
 import regenerativeRoutes from '../modules/build-ai/regenerative/regenerative.routes.js';
+import bricsRoutes from '../modules/build-ai/brics/brics.routes.js';
 
 const aggregateRouter = Router();
 
@@ -31,6 +32,7 @@ aggregateRouter.use('/sahayak/call', callRoutes);
 aggregateRouter.use('/build-ai/satellite', satelliteRoutes);
 aggregateRouter.use('/build-ai/soil', soilRoutes);
 aggregateRouter.use('/build-ai/regenerative', regenerativeRoutes);
+aggregateRouter.use('/build-ai/brics', bricsRoutes);
 
 export default aggregateRouter;
 
