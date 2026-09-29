@@ -14,6 +14,7 @@ import soilRoutes from '../modules/build-ai/soil/soil.routes.js';
 import regenerativeRoutes from '../modules/build-ai/regenerative/regenerative.routes.js';
 import bricsRoutes from '../modules/build-ai/brics/brics.routes.js';
 import interopRoutes from '../modules/build-ai/interoperability/interop.routes.js';
+import impactRoutes from '../modules/build-ai/impact/impact.routes.js';
 
 const aggregateRouter = Router();
 
@@ -35,6 +36,7 @@ aggregateRouter.use('/build-ai/soil', soilRoutes);
 aggregateRouter.use('/build-ai/regenerative', regenerativeRoutes);
 aggregateRouter.use('/build-ai/brics', bricsRoutes);
 aggregateRouter.use('/build-ai/api', interopRoutes);
+aggregateRouter.use('/build-ai/impact', impactRoutes);
 
 export default aggregateRouter;
 

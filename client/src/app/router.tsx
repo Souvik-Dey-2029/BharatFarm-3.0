@@ -38,7 +38,7 @@ import { FarmerProfilePage } from './pages/FarmerProfilePage.js';
 import { DemoPage } from './pages/DemoPage.js';
 
 // Build-with-AI Track 4 Modules
-import { BuildAiLauncherPage, SatellitePage, SoilHealthPage, RegenerativeAiPage, BricsHubPage, ApiDocsPage } from '../modules/build-ai/index.js';
+import { BuildAiLauncherPage, SatellitePage, SoilHealthPage, RegenerativeAiPage, BricsHubPage, ApiDocsPage, ImpactDashboardPage } from '../modules/build-ai/index.js';
 
 /**
  * ProtectedRoute component — Redirects unauthenticated users to /login
@@ -271,6 +271,14 @@ export const AppRouter: React.FC = () => {
         element={
           <ProtectedRoute>
             <ApiDocsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/build-ai/impact"
+        element={
+          <ProtectedRoute>
+            <ImpactDashboardPage />
           </ProtectedRoute>
         }
       />
