@@ -6,6 +6,7 @@ import { RegenerativeResponseSchema, RegenerativeContextInput } from '../types.j
 import { ContextGatheringBar } from '../components/ContextGatheringBar.js';
 import { ActionGroupCard } from '../components/ActionGroupCard.js';
 import { EvidenceAndLimitationsCard } from '../components/EvidenceAndLimitationsCard.js';
+import { BuildAiShell } from '../../components/BuildAiShell.js';
 
 export const RegenerativeAiPage: React.FC = () => {
   const navigate = useNavigate();
@@ -56,61 +57,36 @@ export const RegenerativeAiPage: React.FC = () => {
     };
 
     const res = await regenerativeClientService.generatePlan(input);
+    setIsGenerating(false);
 
     if (res.success && res.data) {
       setPlanData(res.data);
     } else {
-      setError(res.error?.message || 'Failed to generate regenerative AI plan.');
+      setError(typeof res.error === 'string' ? res.error : res.error?.message || 'Failed to generate regenerative plan.');
     }
-    setIsGenerating(false);
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--surface-bg, #0b1d12)',
-      color: 'var(--text-primary, #ffffff)',
-      padding: '1rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-    }}>
+    <BuildAiShell activeRoute="/build-ai/regenerative-ai">
       {/* Header Bar */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '1.25rem',
+        marginBottom: '1.5rem',
         flexWrap: 'wrap',
         gap: '0.75rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button
-            onClick={() => navigate('/build-ai')}
-            style={{
-              padding: '0.5rem 0.85rem',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: '10px',
-              fontWeight: 600,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.3rem'
-            }}
-          >
-            ← Back to Build with AI
-          </button>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
-              🤖 Regenerative AI Engine
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+            <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '24px' }}>eco</span>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              Regenerative AI Engine
             </h1>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)' }}>
-              Multi-source intelligence graph & evidence-backed sustainability plan
-            </p>
           </div>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748B', fontWeight: 500 }}>
+            Structured, multi-horizon sustainable agronomic recommendations backed by evidence traces
+          </p>
         </div>
 
         {planData && (
@@ -118,248 +94,161 @@ export const RegenerativeAiPage: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.4rem',
-            padding: '4px 12px',
-            borderRadius: '20px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            background: planData.source === 'live_ai' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-            color: planData.source === 'live_ai' ? '#4ADE80' : '#FBBF24',
-            border: `1px solid ${planData.source === 'live_ai' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`
+            padding: '5px 14px',
+            borderRadius: '9999px',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            background: planData.source === 'live_ai' ? '#DCFCE7' : '#FEF3C7',
+            color: planData.source === 'live_ai' ? '#15803D' : '#B45309',
+            border: `1px solid ${planData.source === 'live_ai' ? '#BBF7D0' : '#FDE68A'}`
           }}>
             <span style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              background: planData.source === 'live_ai' ? '#22C55E' : '#F59E0B'
-            }}></span>
-            <span>{planData.source === 'live_ai' ? 'LIVE AI ENGINE' : 'DETERMINISTIC FALLBACK'}</span>
+              background: planData.source === 'live_ai' ? '#16A34A' : '#D97706'
+            }} />
+            <span>{planData.source === 'live_ai' ? 'LIVE AI ENGINE' : 'DETERMINISTIC ENGINE'}</span>
           </div>
         )}
       </div>
 
       {/* Multi-Source Context Gathering Bar */}
       <ContextGatheringBar
-        hasSoilData={includeSoil}
-        hasSatelliteData={includeSatellite}
-        onToggleSoil={() => {
-          const next = !includeSoil;
-          setIncludeSoil(next);
-          loadPlan({ includeSoilData: next, includeSatelliteData: includeSatellite });
+        availableFields={availableFields}
+        selectedFieldId={selectedFieldId}
+        onSelectField={(id: string) => {
+          setSelectedFieldId(id);
+          loadPlan({ fieldId: id });
         }}
-        onToggleSatellite={() => {
-          const next = !includeSatellite;
-          setIncludeSatellite(next);
-          loadPlan({ includeSoilData: includeSoil, includeSatelliteData: next });
+        includeSoil={includeSoil}
+        onToggleSoil={(val: boolean) => {
+          setIncludeSoil(val);
+          loadPlan({ includeSoilData: val });
         }}
+        includeSatellite={includeSatellite}
+        onToggleSatellite={(val: boolean) => {
+          setIncludeSatellite(val);
+          loadPlan({ includeSatelliteData: val });
+        }}
+        onRefresh={() => loadPlan()}
+        isGenerating={isGenerating}
       />
-
-      {/* Preset Scenario Test Buttons */}
-      <div style={{
-        background: 'rgba(0,0,0,0.25)',
-        borderRadius: '14px',
-        padding: '0.85rem 1rem',
-        border: '1px solid rgba(255,255,255,0.06)',
-        marginBottom: '1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '0.5rem'
-      }}>
-        <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)' }}>
-          🧪 Test Context Scenarios:
-        </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <button
-            onClick={() => {
-              setIncludeSoil(true);
-              setIncludeSatellite(true);
-              loadPlan({ includeSoilData: true, includeSatelliteData: true });
-            }}
-            style={{
-              padding: '4px 10px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              background: includeSoil && includeSatellite ? '#16A34A' : 'rgba(255,255,255,0.08)',
-              color: '#fff'
-            }}
-          >
-            Full Multi-Source Context
-          </button>
-          <button
-            onClick={() => {
-              setIncludeSoil(false);
-              setIncludeSatellite(true);
-              loadPlan({ includeSoilData: false, includeSatelliteData: true });
-            }}
-            style={{
-              padding: '4px 10px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              background: !includeSoil && includeSatellite ? '#F59E0B' : 'rgba(255,255,255,0.08)',
-              color: '#fff'
-            }}
-          >
-            Missing Soil Data
-          </button>
-          <button
-            onClick={() => {
-              setIncludeSoil(true);
-              setIncludeSatellite(false);
-              loadPlan({ includeSoilData: true, includeSatelliteData: false });
-            }}
-            style={{
-              padding: '4px 10px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              borderRadius: '8px',
-              border: 'none',
-              cursor: 'pointer',
-              background: includeSoil && !includeSatellite ? '#F59E0B' : 'rgba(255,255,255,0.08)',
-              color: '#fff'
-            }}
-          >
-            Missing Satellite Data
-          </button>
-        </div>
-      </div>
 
       {/* Loading Skeleton */}
       {isGenerating && (
         <div style={{
-          background: 'var(--surface-card, #12281a)',
+          background: '#FFFFFF',
           borderRadius: '16px',
           padding: '3rem 1.5rem',
           textAlign: 'center',
-          border: '1px solid rgba(255,255,255,0.08)'
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+          marginBottom: '1.5rem'
         }}>
           <div className="spin" style={{ fontSize: '2rem', marginBottom: '1rem' }}>🤖</div>
-          <p style={{ margin: 0, fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
-            Orchestrating Regenerative AI Intelligence Graph...
-          </p>
-          <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)' }}>
-            Evaluating soil, climate, satellite, and crop biology context
+          <p style={{ margin: 0, fontWeight: 700, color: '#334155' }}>
+            Synthesizing Regenerative Action Plan...
           </p>
         </div>
       )}
 
-      {/* Error State with Retry */}
-      {!isGenerating && error && (
+      {/* Error Card */}
+      {error && !isGenerating && (
         <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-          borderRadius: '16px',
-          padding: '2rem 1.5rem',
-          textAlign: 'center',
-          color: '#FCA5A5'
+          background: '#FEF2F2',
+          border: '1px solid #FCA5A5',
+          borderRadius: '14px',
+          padding: '1.25rem',
+          color: '#991B1B',
+          marginBottom: '1.5rem'
         }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚠️</div>
-          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>Failed to Generate Plan</h4>
-          <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>{error}</p>
-          <button
-            onClick={() => loadPlan()}
-            style={{
-              padding: '0.5rem 1.25rem',
-              background: '#EF4444',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            🔄 Retry Plan Generation
-          </button>
+          <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>Regenerative Plan Engine Error</div>
+          <div style={{ fontSize: '0.85rem' }}>{error}</div>
         </div>
       )}
 
-      {/* Main Plan Results */}
+      {/* Plan Content */}
       {!isGenerating && !error && planData && (
-        <div>
-          {/* Headline & Sustainability Score Banner */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {/* Plan Header Headline & Score */}
           <div style={{
-            background: 'var(--surface-card, #12281a)',
+            background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
             borderRadius: '16px',
-            padding: '1.25rem',
-            border: '1px solid rgba(255,255,255,0.08)',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
-            marginBottom: '1.25rem',
+            padding: '1.5rem',
+            border: '1.5px solid #BBF7D0',
+            boxShadow: '0 4px 16px rgba(22, 163, 74, 0.08)',
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'space-between',
+            alignItems: 'center',
             flexWrap: 'wrap',
             gap: '1rem'
           }}>
             <div>
-              <div style={{ fontSize: '0.78rem', color: '#34D399', fontWeight: 700, textTransform: 'uppercase' }}>
-                Regenerative Plan Output • Schema v1.0.0
+              <div style={{ fontSize: '0.78rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '0.2rem' }}>
+                Schema Version {planData.schemaVersion}
               </div>
-              <h2 style={{ margin: '0.25rem 0 0 0', fontSize: '1.25rem', color: '#fff', fontWeight: 800 }}>
+              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, color: '#0F172A' }}>
                 {planData.headline}
               </h2>
             </div>
 
             <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              background: 'rgba(0,0,0,0.3)',
-              padding: '0.6rem 1rem',
+              background: '#FFFFFF',
+              border: '1px solid #BBF7D0',
               borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.08)'
+              padding: '0.75rem 1.25rem',
+              textAlign: 'center'
             }}>
-              <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#34D399' }}>
-                {planData.sustainabilityScore}
-              </div>
-              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
-                Sustainability Index<br />(0-100 Rating)
+              <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 700 }}>Sustainability Rating</div>
+              <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#16A34A' }}>
+                {planData.sustainabilityScore}/100
               </div>
             </div>
           </div>
 
-          {/* Grouped Action Cards */}
+          {/* Action Group Cards */}
           <ActionGroupCard
-            title="⚡ Immediate Actions (Next 1–7 Days)"
-            icon="⚡"
+            title="Immediate Actions (1–3 Days)"
+            icon="flash_on"
+            badgeColor="#DCFCE7"
+            textColor="#15803D"
             actions={planData.immediateActions}
-            badgeColor="#34D399"
           />
 
           <ActionGroupCard
-            title="🌱 Soil Building & Organic Carbon"
-            icon="🌱"
+            title="Soil Health & Bio-Mass Actions"
+            icon="potted_plant"
+            badgeColor="#E0F2FE"
+            textColor="#0369A1"
             actions={planData.soilActions}
-            badgeColor="#4ADE80"
           />
 
           <ActionGroupCard
-            title="💧 Water Conservation & AWD"
-            icon="💧"
+            title="Water Conservation & Irrigation"
+            icon="water_drop"
+            badgeColor="#E0F2FE"
+            textColor="#0284C7"
             actions={planData.waterActions}
-            badgeColor="#38BDF8"
           />
 
           <ActionGroupCard
-            title="🛡️ Climate & Pest Risk Mitigation"
-            icon="🛡️"
+            title="Pest & Micro-Climate Risk Mitigation"
+            icon="shield"
+            badgeColor="#FEF3C7"
+            textColor="#B45309"
             actions={planData.riskMitigation}
-            badgeColor="#F59E0B"
           />
 
           <ActionGroupCard
-            title="📅 Full Seasonal Milestones"
-            icon="📅"
+            title="Seasonal & Cover Crop Strategy"
+            icon="calendar_month"
+            badgeColor="#F3E8FF"
+            textColor="#7E22CE"
             actions={planData.seasonalActions}
-            badgeColor="#A78BFA"
           />
 
-          {/* Grounding Evidence & Model Card Limitations */}
+          {/* Evidence, Assumptions, & Limitations */}
           <EvidenceAndLimitationsCard
             evidence={planData.evidence}
             assumptions={planData.assumptions}
@@ -367,6 +256,6 @@ export const RegenerativeAiPage: React.FC = () => {
           />
         </div>
       )}
-    </div>
+    </BuildAiShell>
   );
 };

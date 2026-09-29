@@ -45,19 +45,19 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({ field, curre
 
   return (
     <div style={{
-      background: 'var(--surface-card, #12281a)',
+      background: '#FFFFFF',
       borderRadius: '16px',
       padding: '1.25rem',
-      border: '1px solid rgba(255,255,255,0.08)',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+      border: '1px solid #E2E8F0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
       marginBottom: '1.25rem'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary, #fff)', fontWeight: 700 }}>
+          <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#0F172A', fontWeight: 800 }}>
             🛰️ Field Boundary & Satellite Map
           </h3>
-          <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748B' }}>
             Centroid: {field.centroid_lat.toFixed(4)}°N, {field.centroid_lng.toFixed(4)}°E ({field.area_acres} Acres)
           </p>
         </div>

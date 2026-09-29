@@ -20,8 +20,8 @@ export const ModelCardDetail: React.FC<Props> = ({ card }) => {
 
   return (
     <div style={{
-      background: 'rgba(17, 24, 39, 0.7)',
-      border: '1px solid rgba(255, 255, 255, 0.08)',
+      background: '#FFFFFF',
+      border: '1px solid #E2E8F0',
       borderRadius: '16px',
       padding: '1.5rem',
       display: 'flex',
@@ -63,12 +63,12 @@ export const ModelCardDetail: React.FC<Props> = ({ card }) => {
         </div>
 
         {/* System Name */}
-        <h3 style={{ margin: '0 0 0.5rem 0', color: '#ffffff', fontSize: '1.15rem', fontWeight: 700 }}>
+        <h3 style={{ margin: '0 0 0.5rem 0', color: '#0F172A', fontSize: '1.15rem', fontWeight: 800 }}>
           {card.name}
         </h3>
 
         {/* Purpose */}
-        <p style={{ margin: '0 0 1.25rem 0', color: '#d1d5db', fontSize: '0.875rem', lineHeight: '1.5' }}>
+        <p style={{ margin: '0 0 1.25rem 0', color: '#475569', fontSize: '0.875rem', lineHeight: '1.5', fontWeight: 500 }}>
           {card.purpose}
         </p>
 
@@ -77,17 +77,17 @@ export const ModelCardDetail: React.FC<Props> = ({ card }) => {
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1rem',
-          background: 'rgba(0, 0, 0, 0.3)',
-          border: '1px solid rgba(255,255,255,0.06)',
+          background: '#F8FAFC',
+          border: '1px solid #E2E8F0',
           borderRadius: '12px',
           padding: '1rem',
           marginBottom: '1.25rem'
         }}>
           <div>
-            <h5 style={{ margin: '0 0 0.4rem 0', color: '#60a5fa', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+            <h5 style={{ margin: '0 0 0.4rem 0', color: '#0369A1', fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 800 }}>
               📥 System Inputs
             </h5>
-            <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#9ca3af', fontSize: '0.8rem', lineHeight: '1.5' }}>
+            <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#334155', fontSize: '0.8rem', lineHeight: '1.5', fontWeight: 500 }}>
               {card.inputs.map((inp, idx) => (
                 <li key={idx}>{inp}</li>
               ))}
@@ -95,10 +95,10 @@ export const ModelCardDetail: React.FC<Props> = ({ card }) => {
           </div>
 
           <div>
-            <h5 style={{ margin: '0 0 0.4rem 0', color: '#34d399', fontSize: '0.8rem', textTransform: 'uppercase' }}>
+            <h5 style={{ margin: '0 0 0.4rem 0', color: '#15803D', fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 800 }}>
               📤 System Outputs
             </h5>
-            <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#9ca3af', fontSize: '0.8rem', lineHeight: '1.5' }}>
+            <ul style={{ margin: 0, paddingLeft: '1.1rem', color: '#334155', fontSize: '0.8rem', lineHeight: '1.5', fontWeight: 500 }}>
               {card.outputs.map((out, idx) => (
                 <li key={idx}>{out}</li>
               ))}
@@ -109,16 +109,16 @@ export const ModelCardDetail: React.FC<Props> = ({ card }) => {
         {/* Technical Architecture & Provider details */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.825rem', marginBottom: '1.25rem' }}>
           <div>
-            <strong style={{ color: '#ffffff' }}>Model / Provider / Library: </strong>
-            <span style={{ color: '#9ca3af' }}>{card.modelProviderLibrary}</span>
+            <strong style={{ color: '#0F172A' }}>Model / Provider / Library: </strong>
+            <span style={{ color: '#475569' }}>{card.modelProviderLibrary}</span>
           </div>
           <div>
-            <strong style={{ color: '#ffffff' }}>Primary Data Source: </strong>
-            <span style={{ color: '#9ca3af' }}>{card.dataSource}</span>
+            <strong style={{ color: '#0F172A' }}>Primary Data Source: </strong>
+            <span style={{ color: '#475569' }}>{card.dataSource}</span>
           </div>
           <div>
-            <strong style={{ color: '#ffffff' }}>Update Frequency: </strong>
-            <span style={{ color: '#9ca3af' }}>{card.updateFrequency}</span>
+            <strong style={{ color: '#0F172A' }}>Update Frequency: </strong>
+            <span style={{ color: '#475569' }}>{card.updateFrequency}</span>
           </div>
         </div>
 

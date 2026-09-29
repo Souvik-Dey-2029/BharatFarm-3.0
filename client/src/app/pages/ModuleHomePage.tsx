@@ -84,11 +84,11 @@ export const ModuleHomePage: React.FC = () => {
     },
     {
       id: 'satellite',
-      title: 'Satellite Data Integration',
-      subtitle: 'Build with AI • Track 4',
-      description: 'Field-level NDVI & vegetation health monitoring via Sentinel-2 satellite data.',
-      icon: 'satellite_alt',
-      path: '/build-ai/satellite',
+      title: 'BharatFarm Regenerative Intelligence',
+      subtitle: 'AgriN & Regenerative Agricultural Intelligence',
+      description: 'Unified field, satellite NDVI, soil health & regenerative AI action plans.',
+      icon: 'eco',
+      path: '/build-ai',
       image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80'
     },
     {

@@ -7,6 +7,7 @@ import { SoilFormCard } from '../components/SoilFormCard.js';
 import { SoilScoreGauge } from '../components/SoilScoreGauge.js';
 import { NutrientBreakdownCard } from '../components/NutrientBreakdownCard.js';
 import { SoilRecommendationsCard } from '../components/SoilRecommendationsCard.js';
+import { BuildAiShell } from '../../components/BuildAiShell.js';
 
 export const SoilHealthPage: React.FC = () => {
   const navigate = useNavigate();
@@ -81,51 +82,26 @@ export const SoilHealthPage: React.FC = () => {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--surface-bg, #0b1d12)',
-      color: 'var(--text-primary, #ffffff)',
-      padding: '1rem',
-      maxWidth: '1200px',
-      margin: '0 auto',
-      fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-    }}>
-      {/* Header Bar */}
+    <BuildAiShell activeRoute="/build-ai/soil-health">
+      {/* Page Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '1.25rem',
+        marginBottom: '1.5rem',
         flexWrap: 'wrap',
         gap: '0.75rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <button
-            onClick={() => navigate('/build-ai')}
-            style={{
-              padding: '0.5rem 0.85rem',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff',
-              border: '1px solid rgba(255,255,255,0.15)',
-              borderRadius: '10px',
-              fontWeight: 600,
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.3rem'
-            }}
-          >
-            ← Back to Build with AI
-          </button>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.02em', color: '#fff' }}>
-              🌱 Soil Health Analysis
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+            <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '24px' }}>potted_plant</span>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              Soil Health Analysis
             </h1>
-            <p style={{ margin: 0, fontSize: '0.82rem', color: 'rgba(255,255,255,0.6)' }}>
-              NPK, pH & Organic Carbon evaluation with AI recommendations
-            </p>
           </div>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748B', fontWeight: 500 }}>
+            Analyze soil chemistry parameters & receive practical restoration priorities
+          </p>
         </div>
 
         {analysisResult && (
@@ -133,69 +109,90 @@ export const SoilHealthPage: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.4rem',
-            padding: '4px 12px',
-            borderRadius: '20px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            background: analysisResult.source === 'live_ai' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-            color: analysisResult.source === 'live_ai' ? '#4ADE80' : '#FBBF24',
-            border: `1px solid ${analysisResult.source === 'live_ai' ? 'rgba(34, 197, 94, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`
+            padding: '5px 14px',
+            borderRadius: '9999px',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            background: analysisResult.source === 'live_ai' ? '#DCFCE7' : '#E0F2FE',
+            color: analysisResult.source === 'live_ai' ? '#15803D' : '#0369A1',
+            border: `1px solid ${analysisResult.source === 'live_ai' ? '#BBF7D0' : '#BAE6FD'}`
           }}>
             <span style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              background: analysisResult.source === 'live_ai' ? '#22C55E' : '#F59E0B'
-            }}></span>
-            <span>{analysisResult.source === 'live_ai' ? 'LIVE AI ADVISORY' : 'DETERMINISTIC ANALYSIS'}</span>
+              background: analysisResult.source === 'live_ai' ? '#16A34A' : '#0284C7'
+            }} />
+            <span>{analysisResult.source === 'live_ai' ? 'LIVE AI EXPLANATION' : 'DETERMINISTIC ANALYSIS'}</span>
           </div>
         )}
       </div>
 
-      {/* Soil Test Form */}
-      <SoilFormCard
-        input={inputForm}
-        onChange={(updated) => setInputForm(updated)}
-        onSubmit={handleAnalyze}
-        onLoadSample={handleLoadSample}
-        isAnalyzing={isAnalyzing}
-        fields={availableFields.length > 0 ? availableFields : [
-          { id: 'field_demo_paddy_01', field_name: 'North Paddy Plot', crop_name: 'Rice (Paddy)' },
-          { id: 'field_demo_wheat_02', field_name: 'East Wheat Parcel', crop_name: 'Wheat' }
-        ]}
-      />
+      {/* Grid: Form Input + Results */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+        gap: '1.5rem',
+        alignItems: 'start'
+      }}>
+        {/* Form Card */}
+        <SoilFormCard
+          input={inputForm}
+          onChange={setInputForm}
+          onSubmit={handleAnalyze}
+          onLoadSample={handleLoadSample}
+          fields={availableFields}
+          isAnalyzing={isAnalyzing}
+        />
 
-      {/* Error Message */}
-      {error && (
-        <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-          borderRadius: '16px',
-          padding: '1.25rem',
-          color: '#FCA5A5',
-          marginBottom: '1.25rem'
-        }}>
-          ⚠️ {error}
-        </div>
-      )}
-
-      {/* Soil Analysis Results */}
-      {analysisResult && (
+        {/* Diagnostic Results Side */}
         <div>
-          {/* Score Gauge & Suitability */}
-          <SoilScoreGauge result={analysisResult} />
+          {error && (
+            <div style={{
+              background: '#FEF2F2',
+              border: '1px solid #FCA5A5',
+              borderRadius: '14px',
+              padding: '1.25rem',
+              color: '#991B1B',
+              marginBottom: '1.5rem'
+            }}>
+              <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>Analysis Error</div>
+              <div style={{ fontSize: '0.85rem' }}>{error}</div>
+            </div>
+          )}
 
-          {/* Metric Breakdown */}
-          <NutrientBreakdownCard metrics={analysisResult.metrics} />
+          {analysisResult ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <SoilScoreGauge
+                result={analysisResult}
+              />
 
-          {/* Recommendations & Warnings */}
-          <SoilRecommendationsCard
-            recommendations={analysisResult.recommendations}
-            warnings={analysisResult.warnings}
-            source={analysisResult.source}
-          />
+              <NutrientBreakdownCard
+                metrics={analysisResult.metrics}
+              />
+
+              <SoilRecommendationsCard
+                recommendations={analysisResult.recommendations}
+                warnings={analysisResult.warnings}
+                source={analysisResult.source}
+              />
+            </div>
+          ) : (
+            <div style={{
+              background: '#FFFFFF',
+              borderRadius: '16px',
+              padding: '3rem 1.5rem',
+              textAlign: 'center',
+              border: '1px solid #E2E8F0',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+            }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🧪</div>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A' }}>No Soil Analysis Performed</div>
+              <div style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '4px' }}>Input lab values on the left or load sample data to generate diagnostic results.</div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </div>
+    </BuildAiShell>
   );
 };

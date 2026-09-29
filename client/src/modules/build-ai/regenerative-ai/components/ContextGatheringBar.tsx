@@ -1,96 +1,120 @@
 import React from 'react';
 
 interface ContextGatheringBarProps {
-  hasSoilData: boolean;
-  hasSatelliteData: boolean;
-  onToggleSoil: () => void;
-  onToggleSatellite: () => void;
+  availableFields: Array<{ id: string; field_name: string; crop_name: string }>;
+  selectedFieldId: string;
+  onSelectField: (id: string) => void;
+  includeSoil: boolean;
+  onToggleSoil: (val: boolean) => void;
+  includeSatellite: boolean;
+  onToggleSatellite: (val: boolean) => void;
+  onRefresh: () => void;
+  isGenerating: boolean;
 }
 
 export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
-  hasSoilData,
-  hasSatelliteData,
+  availableFields,
+  selectedFieldId,
+  onSelectField,
+  includeSoil,
   onToggleSoil,
-  onToggleSatellite
+  includeSatellite,
+  onToggleSatellite,
+  onRefresh,
+  isGenerating
 }) => {
   return (
     <div style={{
-      background: 'var(--surface-card, #12281a)',
+      background: '#FFFFFF',
       borderRadius: '16px',
-      padding: '1rem 1.25rem',
-      border: '1px solid rgba(255,255,255,0.08)',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
-      marginBottom: '1.25rem'
+      padding: '1.25rem',
+      border: '1px solid #E2E8F0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+      marginBottom: '1.5rem'
     }}>
-      <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-        <span>🔗 Multi-Source Agricultural Intelligence Ingestion Pipeline:</span>
+      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '18px' }}>hub</span>
+          <span>Multi-Source Context Pipeline</span>
+        </span>
+        <button
+          onClick={onRefresh}
+          disabled={isGenerating}
+          style={{
+            padding: '4px 12px',
+            borderRadius: '8px',
+            fontSize: '0.78rem',
+            fontWeight: 700,
+            border: 'none',
+            background: '#F0FDF4',
+            color: '#16A34A',
+            cursor: isGenerating ? 'not-allowed' : 'pointer'
+          }}
+        >
+          {isGenerating ? 'Synthesizing...' : '🔄 Re-analyze'}
+        </button>
       </div>
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '0.75rem'
       }}>
-        {/* Weather Item */}
-        <div style={{
-          background: 'rgba(52, 211, 153, 0.12)',
-          border: '1px solid rgba(52, 211, 153, 0.3)',
-          borderRadius: '10px',
-          padding: '0.6rem 0.75rem',
-          fontSize: '0.78rem'
-        }}>
-          <div style={{ color: '#4ADE80', fontWeight: 700 }}>🌤️ Local Climate</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', marginTop: '2px', fontSize: '0.72rem' }}>Connected • Realtime</div>
+        {/* Field Selector */}
+        <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '10px', padding: '0.6rem 0.75rem' }}>
+          <div style={{ color: '#64748B', fontWeight: 600, fontSize: '0.72rem' }}>FIELD CONTEXT</div>
+          <select
+            value={selectedFieldId}
+            onChange={(e) => onSelectField(e.target.value)}
+            style={{
+              width: '100%',
+              background: 'transparent',
+              border: 'none',
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              color: '#0F172A',
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            {availableFields.map(f => (
+              <option key={f.id} value={f.id}>{f.field_name}</option>
+            ))}
+          </select>
         </div>
 
-        {/* Soil Item */}
+        {/* Soil Checkbox */}
         <div
-          onClick={onToggleSoil}
+          onClick={() => onToggleSoil(!includeSoil)}
           style={{
-            background: hasSoilData ? 'rgba(52, 211, 153, 0.12)' : 'rgba(245, 158, 11, 0.12)',
-            border: `1px solid ${hasSoilData ? 'rgba(52, 211, 153, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
+            background: includeSoil ? '#F0FDF4' : '#FFFBEB',
+            border: `1px solid ${includeSoil ? '#BBF7D0' : '#FDE68A'}`,
             borderRadius: '10px',
             padding: '0.6rem 0.75rem',
-            fontSize: '0.78rem',
             cursor: 'pointer'
           }}
-          title="Click to toggle Soil Data inclusion"
         >
-          <div style={{ color: hasSoilData ? '#4ADE80' : '#FBBF24', fontWeight: 700 }}>🧪 Soil Health Lab</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', marginTop: '2px', fontSize: '0.72rem' }}>
-            {hasSoilData ? 'Connected • Lab Values' : 'Missing (Click to add)'}
+          <div style={{ color: includeSoil ? '#15803D' : '#B45309', fontWeight: 700, fontSize: '0.78rem' }}>🧪 Soil Health Data</div>
+          <div style={{ color: '#64748B', fontSize: '0.72rem' }}>
+            {includeSoil ? 'Connected • NPK / pH / OC' : 'Disabled (Click to enable)'}
           </div>
         </div>
 
-        {/* Satellite Item */}
+        {/* Satellite Checkbox */}
         <div
-          onClick={onToggleSatellite}
+          onClick={() => onToggleSatellite(!includeSatellite)}
           style={{
-            background: hasSatelliteData ? 'rgba(52, 211, 153, 0.12)' : 'rgba(245, 158, 11, 0.12)',
-            border: `1px solid ${hasSatelliteData ? 'rgba(52, 211, 153, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
+            background: includeSatellite ? '#F0FDF4' : '#FFFBEB',
+            border: `1px solid ${includeSatellite ? '#BBF7D0' : '#FDE68A'}`,
             borderRadius: '10px',
             padding: '0.6rem 0.75rem',
-            fontSize: '0.78rem',
             cursor: 'pointer'
           }}
-          title="Click to toggle Satellite Telemetry inclusion"
         >
-          <div style={{ color: hasSatelliteData ? '#4ADE80' : '#FBBF24', fontWeight: 700 }}>🛰️ Satellite NDVI</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', marginTop: '2px', fontSize: '0.72rem' }}>
-            {hasSatelliteData ? 'Connected • Sentinel-2' : 'Missing (Click to add)'}
+          <div style={{ color: includeSatellite ? '#15803D' : '#B45309', fontWeight: 700, fontSize: '0.78rem' }}>🛰️ Satellite Telemetry</div>
+          <div style={{ color: '#64748B', fontSize: '0.72rem' }}>
+            {includeSatellite ? 'Connected • Sentinel NDVI' : 'Disabled (Click to enable)'}
           </div>
-        </div>
-
-        {/* Crop Context Item */}
-        <div style={{
-          background: 'rgba(52, 211, 153, 0.12)',
-          border: '1px solid rgba(52, 211, 153, 0.3)',
-          borderRadius: '10px',
-          padding: '0.6rem 0.75rem',
-          fontSize: '0.78rem'
-        }}>
-          <div style={{ color: '#4ADE80', fontWeight: 700 }}>🌾 Field & Crop Profile</div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', marginTop: '2px', fontSize: '0.72rem' }}>Connected • Sowing Date</div>
         </div>
       </div>
     </div>

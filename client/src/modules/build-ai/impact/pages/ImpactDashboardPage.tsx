@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { ImpactSummaryData } from '../types.js';
 import { ImpactClientService } from '../impact.service.js';
 import { ImpactKpiGrid } from '../components/ImpactKpiGrid.js';
 import { ImpactTrajectoryChart } from '../components/ImpactTrajectoryChart.js';
 import { ImpactMetricsTable } from '../components/ImpactMetricsTable.js';
+import { BuildAiShell } from '../../components/BuildAiShell.js';
 
 export const ImpactDashboardPage: React.FC = () => {
   const [fieldId, setFieldId] = useState<string>('field_demo_paddy_01');
@@ -30,151 +30,126 @@ export const ImpactDashboardPage: React.FC = () => {
   }, [fieldId]);
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'var(--surface-bg, #0b1d12)',
-      color: 'var(--text-primary, #ffffff)',
-      padding: '1.5rem',
-      fontFamily: 'Inter, system-ui, sans-serif'
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Navigation Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', fontSize: '0.85rem' }}>
-          <Link to="/build-ai" style={{ color: '#10b981', textDecoration: 'none', fontWeight: 500 }}>
-            ← Build with AI
-          </Link>
-          <span style={{ color: '#6b7280' }}>/</span>
-          <span style={{ color: '#9ca3af' }}>Impact & Evaluation Dashboard</span>
-        </div>
-
-        {/* Page Header */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          flexWrap: 'wrap',
-          gap: '1rem',
-          marginBottom: '1.5rem'
-        }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-              <span style={{
-                background: 'rgba(244, 114, 182, 0.2)',
-                color: '#f472b6',
-                padding: '0.2rem 0.6rem',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 600
-              }}>
-                Feature 6
-              </span>
-              <span style={{
-                background: 'rgba(16, 185, 129, 0.2)',
-                color: '#34d399',
-                padding: '0.2rem 0.6rem',
-                borderRadius: '6px',
-                fontSize: '0.75rem',
-                fontWeight: 500
-              }}>
-                Track 4 Outcomes
-              </span>
-            </div>
-            <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 700, color: '#ffffff' }}>
-              📊 Impact & Evaluation Dashboard
+    <BuildAiShell activeRoute="/build-ai/impact">
+      {/* Page Header */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        marginBottom: '1.5rem'
+      }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+            <span className="material-symbols-outlined" style={{ color: '#DB2777', fontSize: '24px' }}>analytics</span>
+            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
+              Impact & Evaluation Dashboard
             </h1>
-            <p style={{ margin: '0.35rem 0 0 0', color: '#9ca3af', fontSize: '0.9rem' }}>
-              Rigorous evaluation metrics tracking yield gains, soil health restoration, water conservation, climate risk reduction, and carbon sequestration with clear source provenance labels.
-            </p>
           </div>
-
-          {/* Target Field Switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Select Field:</label>
-            <select
-              value={fieldId}
-              onChange={(e) => setFieldId(e.target.value)}
-              style={{
-                background: 'rgba(0,0,0,0.4)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                borderRadius: '8px',
-                padding: '0.45rem 0.75rem',
-                color: '#ffffff',
-                fontSize: '0.85rem'
-              }}
-            >
-              <option value="field_demo_paddy_01" style={{ background: '#111827' }}>North Paddy Plot (Demo Farm)</option>
-              <option value="field_demo_wheat_02" style={{ background: '#111827' }}>East Wheat Parcel</option>
-              <option value="field_unmonitored_03" style={{ background: '#111827' }}>Unmonitored South Field</option>
-            </select>
-          </div>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748B', fontWeight: 500 }}>
+            Proven outcome tracking for yield gains, soil organic carbon, water saved & climate risk reduction
+          </p>
         </div>
 
-        {/* Loading state */}
-        {loading && (
-          <div style={{ padding: '3rem', textAlign: 'center', color: '#10b981' }}>
-            <div className="spin" style={{ display: 'inline-block', fontSize: '2rem', marginBottom: '0.5rem' }}>⌛</div>
-            <div>Loading Impact Evaluation Telemetry...</div>
-          </div>
-        )}
-
-        {/* Error state */}
-        {error && !loading && (
-          <div style={{
-            background: 'rgba(239, 68, 68, 0.1)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#f87171',
-            padding: '1.25rem',
-            borderRadius: '12px',
-            textAlign: 'center',
-            marginBottom: '2rem'
-          }}>
-            <p style={{ margin: '0 0 0.5rem 0', fontWeight: 600 }}>Failed to load impact metrics</p>
-            <p style={{ margin: 0, fontSize: '0.85rem' }}>{error}</p>
-          </div>
-        )}
-
-        {/* Dashboard Display */}
-        {!loading && !error && impactData && (
-          <>
-            {impactData.totalMetricsTracked > 0 ? (
-              <>
-                <ImpactKpiGrid kpis={impactData.kpis} />
-                <ImpactTrajectoryChart data={impactData.timeSeries} />
-                <ImpactMetricsTable metrics={impactData.metrics} />
-              </>
-            ) : (
-              <div style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px border-dashed rgba(255,255,255,0.1)',
-                borderRadius: '16px',
-                padding: '3rem',
-                textAlign: 'center',
-                color: '#9ca3af'
-              }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📉</div>
-                <h4 style={{ margin: '0 0 0.5rem 0', color: '#ffffff' }}>Not enough measured impact data yet</h4>
-                <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem' }}>
-                  No harvest records, soil tests, or telemetry logs are linked to this field ID yet.
-                </p>
-                <button
-                  onClick={() => setFieldId('field_demo_paddy_01')}
-                  style={{
-                    background: '#10b981',
-                    color: '#0b1d12',
-                    border: 'none',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '6px',
-                    fontWeight: 600,
-                    cursor: 'pointer'
-                  }}
-                >
-                  View North Paddy Plot Demo Dataset
-                </button>
-              </div>
-            )}
-          </>
-        )}
+        {/* Target Field Switcher */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <label style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700 }}>Select Field:</label>
+          <select
+            value={fieldId}
+            onChange={(e) => setFieldId(e.target.value)}
+            style={{
+              background: '#FFFFFF',
+              border: '1.5px solid #CBD5E1',
+              borderRadius: '8px',
+              padding: '0.45rem 0.75rem',
+              color: '#0F172A',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              outline: 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="field_demo_paddy_01">North Paddy Plot (Demo Farm)</option>
+            <option value="field_demo_wheat_02">East Wheat Parcel</option>
+            <option value="field_unmonitored_03">Unmonitored South Field</option>
+          </select>
+        </div>
       </div>
-    </div>
+
+      {/* Loading state */}
+      {loading && (
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '3rem 1.5rem',
+          textAlign: 'center',
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+        }}>
+          <div className="spin" style={{ display: 'inline-block', fontSize: '2rem', marginBottom: '0.5rem' }}>⌛</div>
+          <div style={{ fontWeight: 700, color: '#334155' }}>Loading Impact Evaluation Telemetry...</div>
+        </div>
+      )}
+
+      {/* Error state */}
+      {error && !loading && (
+        <div style={{
+          background: '#FEF2F2',
+          border: '1px solid #FCA5A5',
+          color: '#991B1B',
+          padding: '1.25rem',
+          borderRadius: '12px',
+          textAlign: 'center',
+          marginBottom: '2rem'
+        }}>
+          <p style={{ margin: '0 0 0.5rem 0', fontWeight: 800 }}>Failed to load impact metrics</p>
+          <p style={{ margin: 0, fontSize: '0.85rem' }}>{error}</p>
+        </div>
+      )}
+
+      {/* Dashboard Display */}
+      {!loading && !error && impactData && (
+        <>
+          {impactData.totalMetricsTracked > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <ImpactKpiGrid kpis={impactData.kpis} />
+              <ImpactTrajectoryChart data={impactData.timeSeries} />
+              <ImpactMetricsTable metrics={impactData.metrics} />
+            </div>
+          ) : (
+            <div style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: '16px',
+              padding: '3rem',
+              textAlign: 'center',
+              color: '#64748B'
+            }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📉</div>
+              <h4 style={{ margin: '0 0 0.5rem 0', color: '#0F172A', fontWeight: 800 }}>Not enough measured impact data yet</h4>
+              <p style={{ margin: '0 0 1rem 0', fontSize: '0.85rem' }}>
+                No harvest records, soil tests, or telemetry logs are linked to this field ID yet.
+              </p>
+              <button
+                onClick={() => setFieldId('field_demo_paddy_01')}
+                style={{
+                  background: '#16A34A',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  padding: '0.55rem 1.25rem',
+                  borderRadius: '8px',
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer'
+                }}
+              >
+                View North Paddy Plot Demo Dataset
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </BuildAiShell>
   );
 };
