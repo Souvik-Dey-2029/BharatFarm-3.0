@@ -9,6 +9,8 @@ import foodSecurityRoutes from './foodSecurity.routes.js';
 import smartMandiRoutes from './smartMandi.routes.js';
 import insuranceRoutes from './insurance.routes.js';
 import { whatsappRoutes, callRoutes } from '../modules/sahayak/index.js';
+import satelliteRoutes from '../modules/build-ai/satellite/satellite.routes.js';
+import soilRoutes from '../modules/build-ai/soil/soil.routes.js';
 
 const aggregateRouter = Router();
 
@@ -23,6 +25,10 @@ aggregateRouter.use('/smart-mandi', smartMandiRoutes);
 aggregateRouter.use('/insurance', insuranceRoutes);
 aggregateRouter.use('/sahayak/whatsapp', whatsappRoutes);
 aggregateRouter.use('/sahayak/call', callRoutes);
+
+// Build-with-AI Track 4 Route Endpoints
+aggregateRouter.use('/build-ai/satellite', satelliteRoutes);
+aggregateRouter.use('/build-ai/soil', soilRoutes);
 
 export default aggregateRouter;
 

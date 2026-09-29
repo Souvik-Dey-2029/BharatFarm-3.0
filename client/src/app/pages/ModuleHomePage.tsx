@@ -83,6 +83,15 @@ export const ModuleHomePage: React.FC = () => {
       image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'
     },
     {
+      id: 'satellite',
+      title: 'Satellite Data Integration',
+      subtitle: 'Build with AI • Track 4',
+      description: 'Field-level NDVI & vegetation health monitoring via Sentinel-2 satellite data.',
+      icon: 'satellite_alt',
+      path: '/build-ai/satellite',
+      image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=600&q=80'
+    },
+    {
       id: 'sahayak',
       title: t('sih.sahayakNav'),
       subtitle: t('sih.sahayakSubtitle'),
