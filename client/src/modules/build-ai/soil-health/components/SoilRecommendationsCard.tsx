@@ -22,14 +22,14 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
   const topPriorities = recommendations.slice(0, 3);
 
   const getPriorityIcon = (type: string, idx: number) => {
-    if (type === 'ORGANIC_MATTER' || idx === 0) return '🌾';
-    if (type === 'NUTRIENT_CORRECTION' || idx === 1) return '🧪';
-    return '🌱';
+    if (type === 'ORGANIC_MATTER' || idx === 0) return 'compost';
+    if (type === 'NUTRIENT_CORRECTION' || idx === 1) return 'science';
+    return 'eco';
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1rem' }}>
-      {/* 🌱 WHAT YOUR SOIL NEEDS (Top 2-3 priorities) */}
+      {/* WHAT YOUR SOIL NEEDS (Top 2-3 priorities) */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
@@ -39,9 +39,12 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 800 }}>
-              {t('buildAi.soil.whatSoilNeedsTitle')}
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#15803D' }}>task_alt</span>
+              <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 800 }}>
+                {t('buildAi.soil.whatSoilNeedsTitle')}
+              </h3>
+            </div>
             <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
               {t('buildAi.soil.whatSoilNeedsSub')}
             </p>
@@ -69,8 +72,9 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
               border: '1px solid #EFEAE2'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                <span style={{ fontWeight: 800, fontSize: '0.84rem', color: '#15803D' }}>
-                  {getPriorityIcon(rec.type, idx)} {idx + 1}. {rec.title}
+                <span style={{ fontWeight: 800, fontSize: '0.84rem', color: '#15803D', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{getPriorityIcon(rec.type, idx)}</span>
+                  <span>{idx + 1}. {rec.title}</span>
                 </span>
                 <span style={{
                   fontSize: '0.65rem',
@@ -150,8 +154,9 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
           padding: '0.6rem 0.75rem',
           border: '1px solid #FECACA'
         }}>
-          <div style={{ fontSize: '0.78rem', color: '#991B1B', fontWeight: 800, marginBottom: '2px' }}>
-            ⚠️ {t('buildAi.soil.deficiencyNotice')}
+          <div style={{ fontSize: '0.78rem', color: '#991B1B', fontWeight: 800, marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>warning</span>
+            <span>{t('buildAi.soil.deficiencyNotice')}</span>
           </div>
           {warnings.map((w, idx) => (
             <div key={idx} style={{ fontSize: '0.74rem', color: '#7F1D1D' }}>

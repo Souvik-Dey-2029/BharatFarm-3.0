@@ -35,9 +35,10 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
   };
 
   const getPriorityBadge = (idx: number, priority: string) => {
-    if (idx === 0) return { label: `🔴 ${t('buildAi.todayPriority')} 1`, color: '#DC2626', bg: '#FEE2E2', border: '#FECACA' };
-    if (idx === 1) return { label: `🟡 ${t('buildAi.todayPriority')} 2`, color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
-    return { label: `🟢 ${t('buildAi.todayPriority')} 3`, color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' };
+    const num = idx < 9 ? `0${idx + 1}` : `${idx + 1}`;
+    if (idx === 0) return { label: `${num} · ${t('buildAi.todayPriority')}`, color: '#DC2626', bg: '#FEE2E2', border: '#FECACA' };
+    if (idx === 1) return { label: `${num} · ${t('buildAi.urgentPriority')}`, color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
+    return { label: `${num} · ${t('buildAi.routinePriority')}`, color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' };
   };
 
   return (

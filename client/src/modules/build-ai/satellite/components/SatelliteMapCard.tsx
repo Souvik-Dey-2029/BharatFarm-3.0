@@ -86,21 +86,12 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
       {/* Header & Satellite Layer Switching Tabs */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.4rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
-              🛰️ {t('buildAi.satellite.previewTitle')}
-            </h3>
-            <span style={{
-              fontSize: '0.62rem',
-              fontWeight: 800,
-              background: '#FEF3C7',
-              color: '#92400E',
-              padding: '1px 5px',
-              borderRadius: '4px'
-            }}>
-              {t('buildAi.demoDataBadge')}
-            </span>
-          </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '19px', color: '#15803D' }}>satellite_alt</span>
+              <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
+                {t('buildAi.satellite.previewTitle')}
+              </h3>
+            </div>
           <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
             {t('buildAi.satellite.tapInstruction')}
           </p>
@@ -196,7 +187,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
             padding: '2px 8px',
             borderRadius: '6px'
           }}>
-            🛰️ {field.field_name} • 10m Sentinel-2B
+            {field.field_name} • 10m Sentinel-2B
           </span>
 
           <span style={{
@@ -254,13 +245,19 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
                     {zone.name.replace(' Zone', '')}
                   </span>
                   <span style={{
-                    fontSize: '0.65rem',
-                    fontWeight: 900,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     background: 'rgba(0,0,0,0.4)',
-                    padding: '1px 5px',
+                    padding: '2px 5px',
                     borderRadius: '4px'
                   }}>
-                    {zone.status === 'Good' ? '🟢' : zone.status === 'Watch' ? '🟡' : '🔴'}
+                    <span style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: zone.status === 'Good' ? '#4ADE80' : zone.status === 'Watch' ? '#FBBF24' : '#F87171'
+                    }} />
                   </span>
                 </div>
 

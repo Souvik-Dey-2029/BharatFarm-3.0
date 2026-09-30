@@ -211,7 +211,7 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
             }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>widgets</span>
-            <span>Tools</span>
+            <span>{t('buildAi.toolPracticesTitle') ? 'Tools' : 'Tools'}</span>
           </button>
         </div>
       </header>

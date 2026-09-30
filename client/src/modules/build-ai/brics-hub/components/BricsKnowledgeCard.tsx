@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BricsKnowledgeRecord } from '../types.js';
 import { useLanguage } from '../../../../context/LanguageContext.js';
+import { tokens } from '../../theme.js';
 
 interface Props {
   record: BricsKnowledgeRecord;
@@ -15,31 +17,32 @@ const COUNTRY_FLAGS: Record<string, string> = {
 };
 
 export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const flag = COUNTRY_FLAGS[record.country] || '🌍';
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   return (
     <div style={{
-      background: '#FFFFFF',
-      border: '1.5px solid #EFEAE2',
-      borderRadius: '14px',
+      background: tokens.colors.surfaceLight,
+      border: `1.5px solid ${tokens.colors.borderDefault}`,
+      borderRadius: tokens.radii.md,
       padding: '0.85rem 1rem',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)'
+      boxShadow: tokens.shadows.subtle
     }}>
       <div>
         {/* Top: Country & Crop */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', gap: '0.4rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', gap: '0.4rem' }}>
           <span style={{
-            background: '#F0FDF4',
-            border: '1px solid #BBF7D0',
-            color: '#15803D',
-            padding: '2px 7px',
-            borderRadius: '6px',
-            fontSize: '0.72rem',
+            background: tokens.colors.primaryBg,
+            border: `1px solid ${tokens.colors.statusGoodBorder}`,
+            color: tokens.colors.primaryLeaf,
+            padding: '2px 8px',
+            borderRadius: tokens.radii.xs,
+            fontSize: tokens.typography.micro,
             fontWeight: 800,
             display: 'flex',
             alignItems: 'center',
@@ -49,22 +52,26 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
           </span>
 
           <span style={{
-            background: '#FDFBF7',
-            border: '1px solid #EFEAE2',
-            color: '#92400E',
-            padding: '2px 7px',
-            borderRadius: '6px',
-            fontSize: '0.72rem',
-            fontWeight: 800
+            background: tokens.colors.surfaceAlt,
+            border: `1px solid ${tokens.colors.borderDefault}`,
+            color: tokens.colors.earth,
+            padding: '2px 8px',
+            borderRadius: tokens.radii.xs,
+            fontSize: tokens.typography.micro,
+            fontWeight: 800,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '3px'
           }}>
-            🌾 {record.crop}
+            <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>grass</span>
+            <span>{record.crop}</span>
           </span>
         </div>
 
         {/* Practice Title */}
         <h4 style={{
           margin: '0 0 0.35rem 0',
-          color: '#0F172A',
+          color: tokens.colors.textPrimary,
           fontSize: '0.96rem',
           fontWeight: 800,
           lineHeight: '1.3'
@@ -72,57 +79,98 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
           {record.practice}
         </h4>
 
-        {/* What farmers do (One short sentence) */}
+        {/* Concise Summary */}
         <p style={{
-          margin: '0 0 0.55rem 0',
-          color: '#475569',
-          fontSize: '0.78rem',
+          margin: '0 0 0.6rem 0',
+          color: tokens.colors.textSecondary,
+          fontSize: tokens.typography.small,
           lineHeight: '1.4'
         }}>
           {record.summary}
         </p>
 
-        {/* Why it helps: 2-3 visual indicators */}
+        {/* Indicators: Impact & Topic */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '0.4rem',
           marginBottom: '0.65rem'
         }}>
-          <div style={{ background: '#FFFBEB', padding: '0.35rem 0.5rem', borderRadius: '6px', border: '1px solid #FEF3C7', fontSize: '0.7rem', color: '#92400E', fontWeight: 700 }}>
-            ⚡ {record.impactMetric}
+          <div style={{
+            background: tokens.colors.statusWatchBg,
+            padding: '0.35rem 0.5rem',
+            borderRadius: tokens.radii.xs,
+            border: `1px solid ${tokens.colors.statusWatchBorder}`,
+            fontSize: tokens.typography.micro,
+            color: tokens.colors.statusWatch,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>bolt</span>
+            <span>{record.impactMetric}</span>
           </div>
-          <div style={{ background: '#F0FDF4', padding: '0.35rem 0.5rem', borderRadius: '6px', border: '1px solid #BBF7D0', fontSize: '0.7rem', color: '#15803D', fontWeight: 700 }}>
-            🌱 {record.topicLabel}
+
+          <div style={{
+            background: tokens.colors.primaryBg,
+            padding: '0.35rem 0.5rem',
+            borderRadius: tokens.radii.xs,
+            border: `1px solid ${tokens.colors.statusGoodBorder}`,
+            fontSize: tokens.typography.micro,
+            color: tokens.colors.primaryLeaf,
+            fontWeight: 700,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>eco</span>
+            <span>{record.topicLabel}</span>
           </div>
         </div>
       </div>
 
-      {/* Footer with [ See how → ] & Collapsible Details */}
-      <div style={{ borderTop: '1px solid #EFEAE2', paddingTop: '0.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Footer with [ Use in my field → ] & [ Details ] */}
+      <div style={{ borderTop: `1px solid ${tokens.colors.borderDefault}`, paddingTop: '0.55rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
           <button
-            onClick={() => setShowDetails(!showDetails)}
+            onClick={() => navigate('/build-ai/regenerative-ai')}
             style={{
-              background: '#FDFBF7',
-              color: '#15803D',
-              border: '1px solid #EFEAE2',
-              borderRadius: '6px',
+              background: tokens.colors.primaryLeaf,
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: tokens.radii.xs,
               padding: '3px 8px',
-              fontSize: '0.72rem',
+              fontSize: tokens.typography.micro,
               fontWeight: 800,
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '3px'
+              gap: '4px',
+              boxShadow: '0 1px 3px rgba(47, 125, 70, 0.25)'
+            }}
+          >
+            <span>{t('buildAi.brics.useInField')}</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>arrow_forward</span>
+          </button>
+
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            style={{
+              background: 'transparent',
+              color: tokens.colors.textMuted,
+              border: 'none',
+              padding: '2px 4px',
+              fontSize: tokens.typography.micro,
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '2px'
             }}
           >
             <span>{showDetails ? t('buildAi.brics.hideDetailsBtn') : t('buildAi.brics.seeHowBtn')}</span>
           </button>
-
-          <span style={{ fontSize: '0.68rem', color: '#64748B' }}>
-            📅 {record.sourceDate}
-          </span>
         </div>
 
         {/* Detailed technical information tucked behind Details */}
@@ -130,11 +178,11 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
           <div style={{
             marginTop: '0.5rem',
             padding: '0.5rem 0.65rem',
-            background: '#FDFBF7',
-            borderRadius: '6px',
-            border: '1px solid #EFEAE2',
-            fontSize: '0.7rem',
-            color: '#475569',
+            background: tokens.colors.surfaceAlt,
+            borderRadius: tokens.radii.xs,
+            border: `1px solid ${tokens.colors.borderDefault}`,
+            fontSize: tokens.typography.micro,
+            color: tokens.colors.textSecondary,
             display: 'flex',
             flexDirection: 'column',
             gap: '0.3rem'
@@ -142,7 +190,7 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
             <div><strong>{t('buildAi.brics.researchSource')}</strong> {record.source}</div>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '2px' }}>
               {record.tags.map((tag, idx) => (
-                <span key={idx} style={{ background: '#E2E8F0', color: '#334155', padding: '1px 5px', borderRadius: '3px', fontSize: '0.66rem' }}>
+                <span key={idx} style={{ background: '#E2E8F0', color: tokens.colors.textPrimary, padding: '1px 5px', borderRadius: '3px', fontSize: '10px' }}>
                   #{tag}
                 </span>
               ))}

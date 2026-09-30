@@ -8,6 +8,7 @@ import { SoilRecommendationsCard } from '../components/SoilRecommendationsCard.j
 import { BuildAiShell } from '../../components/BuildAiShell.js';
 import { useSharedField } from '../../context/SharedFieldContext.js';
 import { useLanguage } from '../../../../context/LanguageContext.js';
+import { tokens } from '../../theme.js';
 
 export const SoilHealthPage: React.FC = () => {
   const navigate = useNavigate();
@@ -89,27 +90,27 @@ export const SoilHealthPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/soil-health" pageTitle={t('buildAi.soilHealth')}>
-      {/* Field Selector & Demo Transparency Pill */}
+      {/* 1. Field Selector & Transparency Badge */}
       <div style={{
-        background: '#FFFFFF',
-        borderRadius: '14px',
-        padding: '0.75rem 0.9rem',
-        border: '1px solid #E2E8F0',
-        marginBottom: '0.75rem',
+        background: tokens.colors.surfaceLight,
+        borderRadius: tokens.radii.md,
+        padding: '0.65rem 0.85rem',
+        border: `1.5px solid ${tokens.colors.borderDefault}`,
+        marginBottom: '0.85rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '0.6rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+        gap: '0.5rem',
+        boxShadow: tokens.shadows.subtle
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 200px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 auto', minWidth: 0 }}>
           <div style={{
             width: '32px',
             height: '32px',
-            borderRadius: '8px',
-            background: '#F0FDF4',
-            color: '#16A34A',
+            borderRadius: tokens.radii.sm,
+            background: tokens.colors.primaryBg,
+            color: tokens.colors.primaryLeaf,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -117,32 +118,33 @@ export const SoilHealthPage: React.FC = () => {
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>potted_plant</span>
           </div>
+
           <div style={{ minWidth: 0, flex: '1 1 auto' }}>
-            <div style={{ fontSize: '0.62rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
+            <label htmlFor="soil-field-select" style={{ display: 'block', fontSize: tokens.typography.micro, color: tokens.colors.textMuted, fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
               {t('buildAi.fieldSelect')}
-            </div>
+            </label>
             <select
+              id="soil-field-select"
               value={selectedFieldId}
               onChange={(e) => setSelectedFieldId(e.target.value)}
               style={{
-                background: '#F8FAFC',
-                color: '#0F172A',
-                border: '1.5px solid #CBD5E1',
-                borderRadius: '8px',
-                padding: '0.25rem 0.4rem',
-                fontSize: '0.8rem',
+                background: tokens.colors.surfaceAlt,
+                color: tokens.colors.textPrimary,
+                border: `1.5px solid #CBD5E1`,
+                borderRadius: tokens.radii.sm,
+                padding: '0.25rem 0.45rem',
+                fontSize: tokens.typography.small,
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer',
                 width: '100%',
                 maxWidth: '100%',
-                boxSizing: 'border-box',
-                textOverflow: 'ellipsis'
+                boxSizing: 'border-box'
               }}
             >
               {fields.map(f => (
                 <option key={f.id} value={f.id}>
-                  🌾 {f.field_name} ({f.crop_name})
+                  {f.field_name} ({f.crop_name})
                 </option>
               ))}
             </select>
@@ -153,91 +155,163 @@ export const SoilHealthPage: React.FC = () => {
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.3rem',
+          gap: '0.35rem',
           padding: '2px 8px',
-          borderRadius: '9999px',
-          fontSize: '0.68rem',
+          borderRadius: tokens.radii.full,
+          fontSize: tokens.typography.micro,
           fontWeight: 800,
-          background: '#FEF3C7',
-          color: '#92400E',
-          border: '1px solid #FDE68A'
+          background: tokens.colors.statusWatchBg,
+          color: tokens.colors.statusWatch,
+          border: `1px solid ${tokens.colors.statusWatchBorder}`
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
           <span>{t('buildAi.sampleFieldDemo')}</span>
         </div>
       </div>
 
-      {/* 1. FIRST: SOIL HEALTH 74/100 🟢 Good */}
-      {analysisResult && (
-        <div style={{
-          background: '#F0FDF4',
-          border: '1.5px solid #BBF7D0',
-          borderRadius: '14px',
-          padding: '0.85rem 1rem',
-          marginBottom: '0.75rem',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-            <span style={{ fontSize: '0.74rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-              {t('buildAi.soil.cardTitle')}
-            </span>
-            <span style={{
-              fontSize: '0.7rem',
-              fontWeight: 800,
-              padding: '2px 8px',
-              borderRadius: '9999px',
-              background: '#DCFCE7',
-              color: '#15803D'
+      {/* Main Responsive Layout (Desktop Multi-Column, Mobile Diagnostic Flow) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '1rem',
+        alignItems: 'start'
+      }}>
+        {/* Left Column: Soil Health Score, Main Need & Climate Context */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          {/* SOIL HEALTH 74/100 Visual Gauge */}
+          {analysisResult && (
+            <div style={{
+              background: tokens.colors.surfaceLight,
+              border: `1.5px solid ${tokens.colors.borderDefault}`,
+              borderRadius: tokens.radii.md,
+              padding: '1rem',
+              boxShadow: tokens.shadows.subtle
             }}>
-              🟢 {t('buildAi.good')}
-            </span>
-          </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <span style={{ fontSize: tokens.typography.micro, color: tokens.colors.clay, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  {t('buildAi.soil.cardTitle')}
+                </span>
+                <span style={{
+                  fontSize: tokens.typography.micro,
+                  fontWeight: 800,
+                  padding: '2px 8px',
+                  borderRadius: tokens.radii.full,
+                  background: tokens.colors.statusGoodBg,
+                  color: tokens.colors.statusGood
+                }}>
+                  {t('buildAi.good')}
+                </span>
+              </div>
 
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '2px 0 0.2rem 0' }}>
-            <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
-              {analysisResult.score}/100
-            </span>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#15803D' }}>
-              {t('buildAi.soil.fertileCropDesc').replace('{crop}', inputForm.crop || '')}
-            </span>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '2px 0 0.4rem 0' }}>
+                <span style={{ fontSize: '2.2rem', fontWeight: 900, color: tokens.colors.textPrimary, lineHeight: 1 }}>
+                  {analysisResult.score}/100
+                </span>
+                <span style={{ fontSize: '0.86rem', fontWeight: 700, color: tokens.colors.primaryLeaf }}>
+                  {t('buildAi.soil.fertileCropDesc').replace('{crop}', inputForm.crop || '')}
+                </span>
+              </div>
+
+              {/* Radial or Visual Meter Scale */}
+              <div style={{
+                width: '100%',
+                height: '8px',
+                background: '#E2E8F0',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                marginTop: '0.4rem'
+              }}>
+                <div style={{
+                  width: `${analysisResult.score}%`,
+                  height: '100%',
+                  background: 'linear-gradient(to right, #B45F43, #15803D)',
+                  borderRadius: '4px'
+                }} />
+              </div>
+
+              {/* Main Need Notice */}
+              <div style={{
+                marginTop: '0.85rem',
+                background: tokens.colors.surfaceAlt,
+                border: `1px solid ${tokens.colors.borderDefault}`,
+                borderRadius: tokens.radii.sm,
+                padding: '0.55rem 0.75rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem'
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px', color: tokens.colors.statusWatch }}>priority_high</span>
+                <div>
+                  <div style={{ fontSize: tokens.typography.micro, color: tokens.colors.textMuted, fontWeight: 700, textTransform: 'uppercase' }}>
+                    Main Need
+                  </div>
+                  <div style={{ fontSize: '0.82rem', fontWeight: 800, color: tokens.colors.textPrimary }}>
+                    Nitrogen & Organic Carbon need attention
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Climate Context Component */}
+          <div style={{
+            background: tokens.colors.surfaceLight,
+            border: `1.5px solid ${tokens.colors.borderDefault}`,
+            borderRadius: tokens.radii.md,
+            padding: '0.85rem 1rem',
+            boxShadow: tokens.shadows.subtle
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: tokens.colors.sky }}>cloudy</span>
+              <span style={{ fontSize: tokens.typography.micro, fontWeight: 800, color: tokens.colors.textSecondary, textTransform: 'uppercase' }}>
+                {t('buildAi.regenerative.whyModalSignalWeather')} Context
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: '1.15rem', fontWeight: 900, color: tokens.colors.textPrimary }}>28°C · Rain possible</span>
+              <span style={{ fontSize: tokens.typography.micro, fontWeight: 700, color: tokens.colors.textMuted }}>68% humidity</span>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* 2. SECOND: Visual nutrient health progress bars */}
-      {analysisResult && (
-        <NutrientBreakdownCard metrics={analysisResult.metrics} />
-      )}
+        {/* Right Column: Nutrient Breakdown & Action Recommendations */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+          {/* Visual Nutrient Breakdown Progress Bars */}
+          {analysisResult && (
+            <NutrientBreakdownCard metrics={analysisResult.metrics} />
+          )}
 
-      {/* 3. THIRD: 🌱 WHAT YOUR SOIL NEEDS (Top 2-3 priorities) */}
-      {analysisResult && (
-        <SoilRecommendationsCard
-          recommendations={analysisResult.recommendations}
-          warnings={analysisResult.warnings}
-          source={analysisResult.source}
-        />
-      )}
+          {/* WHAT YOUR SOIL NEEDS (Prioritized Actions) */}
+          {analysisResult && (
+            <SoilRecommendationsCard
+              recommendations={analysisResult.recommendations}
+              warnings={analysisResult.warnings}
+              source={analysisResult.source}
+            />
+          )}
 
-      {/* 4. FOURTH: Collapsible Soil Test Input Form (Secondary) */}
-      <SoilFormCard
-        input={inputForm}
-        onChange={setInputForm}
-        onSubmit={handleAnalyze}
-        onLoadSample={handleLoadSample}
-        fields={fields}
-        isAnalyzing={isAnalyzing}
-      />
+          {/* Collapsible Soil Test Input Form (Secondary) */}
+          <SoilFormCard
+            input={inputForm}
+            onChange={setInputForm}
+            onSubmit={handleAnalyze}
+            onLoadSample={handleLoadSample}
+            fields={fields}
+            isAnalyzing={isAnalyzing}
+          />
+        </div>
+      </div>
 
       {/* Error state if any */}
       {error && (
         <div style={{
-          background: '#FEF2F2',
-          border: '1px solid #FCA5A5',
-          borderRadius: '12px',
+          background: tokens.colors.statusAlertBg,
+          border: `1px solid ${tokens.colors.statusAlertBorder}`,
+          borderRadius: tokens.radii.md,
           padding: '0.75rem',
-          color: '#991B1B',
-          marginBottom: '0.75rem',
-          fontSize: '0.82rem'
+          color: tokens.colors.statusAlert,
+          marginTop: '0.75rem',
+          fontSize: tokens.typography.small
         }}>
           {error}
         </div>

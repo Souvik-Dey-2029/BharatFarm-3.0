@@ -87,7 +87,8 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
           borderRadius: '6px',
           fontSize: '0.74rem'
         }}>
-          ⚠️ {error}
+          <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>warning</span>
+          <span>{error}</span>
         </div>
       )}
 

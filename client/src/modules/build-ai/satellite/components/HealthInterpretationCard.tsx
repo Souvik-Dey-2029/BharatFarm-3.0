@@ -53,8 +53,8 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
 
         {/* 👨‍🌾 What should you check? */}
         <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '0.65rem', paddingTop: '0.65rem', marginBottom: '0.65rem' }}>
-          <div style={{ fontSize: '0.76rem', color: '#0F172A', fontWeight: 900, marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-            <span>👨‍🌾</span>
+          <div style={{ fontSize: '0.76rem', color: '#0F172A', fontWeight: 900, marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#15803D' }}>fact_check</span>
             <span>{t('buildAi.satellite.whatCheckTitle')}</span>
           </div>
 
@@ -79,7 +79,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
           </div>
         </div>
 
-        {/* NEXT STEP: [ 🧪 Check Soil ] [ 🤖 Get AI Advice ] */}
+        {/* NEXT STEP: Check Soil | Get AI Advice */}
         <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '0.65rem' }}>
           <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.4rem' }}>
             {t('buildAi.satellite.nextStepTitle')}
@@ -108,8 +108,8 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
                 boxShadow: '0 1px 3px rgba(22, 163, 74, 0.25)'
               }}
             >
-              <span>{t('buildAi.satellite.btnCheckSoil')}</span>
-              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>arrow_forward</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>potted_plant</span>
+              <span>{t('buildAi.checkSoilAction')}</span>
             </button>
 
             <button
@@ -129,8 +129,8 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
                 gap: '0.35rem'
               }}
             >
-              <span>{t('buildAi.satellite.btnGetAdvice')}</span>
               <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>psychology</span>
+              <span>{t('buildAi.getAiAdviceAction')}</span>
             </button>
           </div>
         </div>
@@ -159,7 +159,10 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
             width: '100%'
           }}
         >
-          <span>🛰️ {t('buildAi.satellite.techDetailsBtn')}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>settings</span>
+            <span>{t('buildAi.satellite.techDetailsBtn')}</span>
+          </span>
           <span>{showTechnicalDetails ? '▲' : '▼'}</span>
         </button>
 

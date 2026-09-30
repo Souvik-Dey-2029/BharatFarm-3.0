@@ -53,6 +53,30 @@ export const BricsHubPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/brics-hub" pageTitle={t('buildAi.bricsKnowledge')}>
+      {/* Editorial Knowledge Flow Banner: GLOBAL PRACTICE → RELEVANCE → MY FIELD */}
+      <div style={{
+        background: '#F0FDF4',
+        border: '1.5px solid #BBF7D0',
+        borderRadius: '12px',
+        padding: '0.65rem 0.85rem',
+        marginBottom: '0.75rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.4rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#15803D' }}>public</span>
+          <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#15803D', textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+            GLOBAL PRACTICE → RELEVANCE → MY FIELD
+          </span>
+        </div>
+        <span style={{ fontSize: '0.7rem', color: '#475569', fontWeight: 600 }}>
+          {records.length} {t('buildAi.brics.practicesCount').replace('{count}', '')}
+        </span>
+      </div>
+
       {/* Filter controls: [ Country ▼ ] [ Crop ▼ ] */}
       <BricsFilterBar
         filters={filters}
@@ -74,7 +98,9 @@ export const BricsHubPage: React.FC = () => {
           border: '1.5px solid #EFEAE2',
           boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
         }}>
-          <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>⌛</div>
+          <div style={{ display: 'inline-flex', padding: '6px', background: '#F1F5F9', borderRadius: '50%', marginBottom: '0.4rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '24px', color: '#15803D' }}>hourglass_empty</span>
+          </div>
           <div style={{ fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>{t('common.loading')}</div>
         </div>
       )}
@@ -134,7 +160,9 @@ export const BricsHubPage: React.FC = () => {
                 textAlign: 'center',
                 color: '#64748B'
               }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.4rem' }}>🔍</div>
+                <div style={{ display: 'inline-flex', padding: '6px', background: '#F1F5F9', borderRadius: '50%', marginBottom: '0.4rem' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '24px', color: '#64748B' }}>search_off</span>
+                </div>
                 <div style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.9rem' }}>{t('buildAi.brics.noMatchesTitle')}</div>
                 <p style={{ margin: '4px 0 0 0', fontSize: '0.75rem' }}>{t('buildAi.brics.noMatchesSub')}</p>
               </div>

@@ -49,9 +49,12 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
       {/* Header with Current NDVI and Real Trend Direction */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.4rem' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
-            📈 {t('buildAi.satellite.trendTitle')}
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#15803D' }}>trending_up</span>
+            <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
+              {t('buildAi.satellite.trendTitle')}
+            </h3>
+          </div>
           <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
             {t('buildAi.cropHealthTrend')}
           </p>

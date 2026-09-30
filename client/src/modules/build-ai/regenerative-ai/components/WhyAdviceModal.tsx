@@ -97,8 +97,8 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             borderRadius: '10px',
             padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#15803D', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🛰</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#15803D', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>satellite_alt</span>
               <span>{t('buildAi.regenerative.whyModalSignalSatellite')}</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
@@ -113,8 +113,8 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             borderRadius: '10px',
             padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#B45309', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🧪</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#B45309', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>science</span>
               <span>{t('buildAi.regenerative.whyModalSignalSoil')}</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
@@ -129,8 +129,8 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             borderRadius: '10px',
             padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🌤</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>wb_sunny</span>
               <span>{t('buildAi.regenerative.whyModalSignalWeather')}</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
@@ -145,8 +145,8 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             borderRadius: '10px',
             padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0284C7', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🌾</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0284C7', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>grass</span>
               <span>{t('buildAi.regenerative.whyModalSignalCrop')}</span>
             </div>
             <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
@@ -163,8 +163,8 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
           padding: '0.65rem 0.75rem',
           marginBottom: '0.85rem'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '3px' }}>
-            <span style={{ fontSize: '0.9rem' }}>🌍</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '3px' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#15803D' }}>public</span>
             <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#15803D' }}>
               {t('buildAi.regenerative.whyModalKnowledgeUsed')}
             </span>

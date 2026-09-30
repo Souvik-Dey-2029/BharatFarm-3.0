@@ -49,7 +49,10 @@ export const BricsComparisonTable: React.FC<Props> = ({ groups }) => {
             gap: '0.4rem',
             flexWrap: 'wrap'
           }}>
-            <span>⚖️ {t('buildAi.brics.comparativeDomain')} {group.topicLabel}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>balance</span>
+              <span>{t('buildAi.brics.comparativeDomain')} {group.topicLabel}</span>
+            </span>
             <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600 }}>
               ({t('buildAi.brics.practicesCount').replace('{count}', group.records.length.toString())})
             </span>
