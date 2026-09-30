@@ -210,24 +210,34 @@ export const BuildAiLauncherPage: React.FC = () => {
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
           align-items: start;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .home-grid-column {
+          display: flex;
+          flex-direction: column;
+          gap: 0.9rem;
+          width: 100%;
+          box-sizing: border-box;
         }
         @media (max-width: 860px) {
           .home-grid-container {
             display: flex;
             flex-direction: column;
             gap: 0.9rem;
+            align-items: stretch;
+            width: 100%;
           }
-          .home-slot-snapshot { order: 1; }
-          .home-slot-priority { order: 2; }
-          .home-slot-diagnostics { order: 3; }
-          .home-slot-brics { order: 4; }
+          .home-grid-column {
+            width: 100% !important;
+          }
         }
       `}</style>
 
       {/* Responsive Layout Grid: Desktop 2-Column Split, Mobile Strict Priority Flow */}
       <div className="home-grid-container">
         {/* Left Column / Mobile Flow */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+        <div className="home-grid-column">
           {/* 2. FIELD SNAPSHOT: Unified "Field Today" Composition */}
           <div className="home-slot-snapshot" style={{
             background: tokens.colors.surfaceLight,
@@ -347,6 +357,22 @@ export const BuildAiLauncherPage: React.FC = () => {
               boxShadow: tokens.shadows.subtle
             }}>
               <div>
+                {/* Crop Satellite Image Banner */}
+                <div style={{
+                  width: '100%',
+                  height: '75px',
+                  borderRadius: tokens.radii.sm,
+                  overflow: 'hidden',
+                  marginBottom: '0.5rem',
+                  border: `1px solid ${tokens.colors.borderDefault}`
+                }}>
+                  <img
+                    src="/images/tools/satellite.jpg"
+                    alt="Crop Vegetation Satellite"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <span className="material-symbols-outlined" style={{ fontSize: '17px', color: tokens.colors.primaryLeaf }}>satellite_alt</span>
@@ -424,6 +450,22 @@ export const BuildAiLauncherPage: React.FC = () => {
               boxShadow: tokens.shadows.subtle
             }}>
               <div>
+                {/* Soil Health Image Banner */}
+                <div style={{
+                  width: '100%',
+                  height: '75px',
+                  borderRadius: tokens.radii.sm,
+                  overflow: 'hidden',
+                  marginBottom: '0.5rem',
+                  border: `1px solid ${tokens.colors.borderDefault}`
+                }}>
+                  <img
+                    src="/images/tools/soil.jpg"
+                    alt="Soil Chemistry Testing"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                     <span className="material-symbols-outlined" style={{ fontSize: '17px', color: tokens.colors.clay }}>potted_plant</span>
@@ -491,7 +533,7 @@ export const BuildAiLauncherPage: React.FC = () => {
         </div>
 
         {/* Right Column / Mobile Secondary Stack */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+        <div className="home-grid-column">
           {/* 3. PRIMARY ACTION: High-Contrast "Today's Decision" Panel */}
           <div className="home-slot-priority" style={{
             background: tokens.colors.primaryDeep,
