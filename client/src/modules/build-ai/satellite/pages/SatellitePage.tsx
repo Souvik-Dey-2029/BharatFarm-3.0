@@ -12,11 +12,12 @@ import { useLanguage } from '../../../../context/LanguageContext.js';
 export const SatellitePage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { fields, selectedFieldId, selectedField, setSelectedFieldId, isLoadingFields } = useSharedField();
+  const { fields, selectedFieldId, selectedField, setSelectedFieldId } = useSharedField();
 
   const [satelliteData, setSatelliteData] = useState<SatelliteFieldData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showNdviDetails, setShowNdviDetails] = useState<boolean>(false);
 
   const loadSatelliteData = async (fieldId: string) => {
     setIsLoading(true);
@@ -38,9 +39,14 @@ export const SatellitePage: React.FC = () => {
     }
   }, [selectedFieldId]);
 
+  // Compute 0-100 Crop Health Score from current NDVI (e.g., 0.72 -> 72/100)
+  const healthScore = satelliteData ? Math.round(satelliteData.ndviSummary.currentNdvi * 100) : 72;
+  const isHealthy = healthScore >= 65;
+  const isWatch = healthScore >= 45 && healthScore < 65;
+
   return (
     <BuildAiShell activeRoute="/build-ai/satellite" pageTitle={t('buildAi.cropHealth')}>
-      {/* Field Selector & Source Pill */}
+      {/* Field Selector & Demo Transparency Pill */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
@@ -98,18 +104,18 @@ export const SatellitePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Live vs Demo Telemetry Badge */}
+        {/* Demo Transparency Badge */}
         {satelliteData && (
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.3rem',
-            padding: '3px 8px',
+            padding: '2px 8px',
             borderRadius: '9999px',
             fontSize: '0.68rem',
             fontWeight: 800,
             background: satelliteData.source === 'live' ? '#DCFCE7' : '#FEF3C7',
-            color: satelliteData.source === 'live' ? '#15803D' : '#B45309',
+            color: satelliteData.source === 'live' ? '#15803D' : '#92400E',
             border: `1px solid ${satelliteData.source === 'live' ? '#BBF7D0' : '#FDE68A'}`
           }}>
             <span style={{
@@ -118,7 +124,7 @@ export const SatellitePage: React.FC = () => {
               borderRadius: '50%',
               background: satelliteData.source === 'live' ? '#16A34A' : '#D97706'
             }} />
-            <span>{satelliteData.source === 'live' ? t('buildAi.liveDataBadge') : t('buildAi.demoDataBadge')}</span>
+            <span>{satelliteData.source === 'live' ? 'LIVE SATELLITE' : 'Sample field · Demo analysis'}</span>
           </div>
         )}
       </div>
@@ -180,95 +186,76 @@ export const SatellitePage: React.FC = () => {
       {/* Main Content Layout */}
       {!isLoading && !error && satelliteData && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {/* Answer Farmer Question: "Is my crop healthy?" */}
-          {/* 2 SIDE-BY-SIDE CARDS (NO LONG VERTICAL SCROLL) */}
+          {/* Top Card: 🌾 CROP HEALTH [Health score / status] */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '0.65rem'
+            background: isHealthy ? '#F0FDF4' : isWatch ? '#FFFBEB' : '#FEF2F2',
+            border: `1.5px solid ${isHealthy ? '#BBF7D0' : isWatch ? '#FDE68A' : '#FECACA'}`,
+            borderRadius: '14px',
+            padding: '0.85rem 1rem',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
           }}>
-            {/* Card 1: 🌿 Crop Health */}
-            <div style={{
-              background: '#FFFFFF',
-              border: '1.5px solid #BBF7D0',
-              borderRadius: '14px',
-              padding: '0.75rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                  🌿 {t('buildAi.cropHealth')}
-                </div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0F172A', marginTop: '2px', lineHeight: 1.2 }}>
-                  {satelliteData.ndviSummary.healthStatus === 'EXCELLENT' || satelliteData.ndviSummary.healthStatus === 'HEALTHY'
-                    ? t('buildAi.healthy')
-                    : satelliteData.ndviSummary.healthStatus === 'MODERATE'
-                    ? t('buildAi.moderate')
-                    : t('buildAi.stressed')}
-                </div>
-              </div>
-              <div style={{
-                fontSize: '0.72rem',
-                color: '#15803D',
-                fontWeight: 700,
-                marginTop: '0.4rem',
-                background: '#F0FDF4',
-                padding: '2px 6px',
-                borderRadius: '6px',
-                alignSelf: 'flex-start'
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+              <span style={{ fontSize: '0.74rem', color: isHealthy ? '#15803D' : isWatch ? '#92400E' : '#991B1B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                🌾 Crop Health
+              </span>
+              <span style={{
+                fontSize: '0.7rem',
+                fontWeight: 800,
+                padding: '2px 8px',
+                borderRadius: '9999px',
+                background: isHealthy ? '#DCFCE7' : isWatch ? '#FEF3C7' : '#FEE2E2',
+                color: isHealthy ? '#15803D' : isWatch ? '#B45309' : '#B91C1C'
               }}>
-                ✓ {t('buildAi.lookingGood')}
-              </div>
+                {isHealthy ? '🟢 Healthy' : isWatch ? '🟡 Watch' : '🔴 Needs Attention'}
+              </span>
             </div>
 
-            {/* Card 2: 📊 NDVI Score */}
-            <div style={{
-              background: '#FFFFFF',
-              border: '1.5px solid #BAE6FD',
-              borderRadius: '14px',
-              padding: '0.75rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-            }}>
-              <div>
-                <div style={{ fontSize: '0.68rem', color: '#0369A1', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                  📊 {t('buildAi.ndviScore')}
-                </div>
-                <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#16A34A', marginTop: '2px', lineHeight: 1.2 }}>
-                  {satelliteData.ndviSummary.currentNdvi}
-                </div>
-              </div>
-              <div style={{
-                fontSize: '0.72rem',
-                color: '#0369A1',
-                fontWeight: 700,
-                marginTop: '0.4rem',
-                background: '#F0F9FF',
-                padding: '2px 6px',
-                borderRadius: '6px',
-                alignSelf: 'flex-start'
-              }}>
-                {t('buildAi.normalRange')}
-              </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '2px 0 0.35rem 0' }}>
+              <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+                {healthScore}/100
+              </span>
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: isHealthy ? '#15803D' : isWatch ? '#B45309' : '#B91C1C' }}>
+                {isHealthy ? 'Crop is growing well' : isWatch ? 'Growth is moderate' : 'Vegetation stress detected'}
+              </span>
             </div>
+
+            {/* Technical NDVI secondary behind Details */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.4rem', fontSize: '0.72rem', color: '#64748B' }}>
+              <span>Satellite Index: <strong>{satelliteData.ndviSummary.currentNdvi}</strong></span>
+              <button
+                onClick={() => setShowNdviDetails(!showNdviDetails)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#15803D',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+              >
+                {showNdviDetails ? 'Hide details ▲' : 'Details →'}
+              </button>
+            </div>
+
+            {showNdviDetails && (
+              <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: '#475569', background: '#FFFFFF', padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
+                NDVI measures canopy greenness from 0.0 to 1.0. A score of {satelliteData.ndviSummary.currentNdvi} indicates normal photosynthetic absorption.
+              </div>
+            )}
           </div>
 
-          {/* Bi-Weekly NDVI Trend Chart */}
-          <NdviTimeSeriesChart observations={satelliteData.observations} />
-
-          {/* Field Boundary & Satellite Map */}
+          {/* Meaningful Visual Field Map */}
           <SatelliteMapCard
             field={satelliteData.field}
             currentNdvi={satelliteData.ndviSummary.currentNdvi}
             healthStatus={satelliteData.ndviSummary.healthStatus}
           />
 
-          {/* Actionable Health Interpretation */}
+          {/* Compact Month Trend Visualization (Mar ─ Apr ─ May ─ Jun) */}
+          <NdviTimeSeriesChart observations={satelliteData.observations} />
+
+          {/* Actionable Health Interpretation ("What this means" & "What you can do") */}
           <HealthInterpretationCard
             interpretation={satelliteData.interpretation}
             modelMetadata={satelliteData.modelMetadata}

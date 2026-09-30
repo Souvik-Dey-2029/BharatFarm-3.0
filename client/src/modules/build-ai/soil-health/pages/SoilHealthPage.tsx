@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { soilClientService } from '../soil.service.js';
 import { SoilAnalysisInput, SoilAnalysisResult } from '../types.js';
 import { SoilFormCard } from '../components/SoilFormCard.js';
-import { SoilScoreGauge } from '../components/SoilScoreGauge.js';
 import { NutrientBreakdownCard } from '../components/NutrientBreakdownCard.js';
 import { SoilRecommendationsCard } from '../components/SoilRecommendationsCard.js';
 import { BuildAiShell } from '../../components/BuildAiShell.js';
@@ -90,7 +89,7 @@ export const SoilHealthPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/soil-health" pageTitle={t('buildAi.soilHealth')}>
-      {/* Field Selector & Source Pill */}
+      {/* Field Selector & Demo Transparency Pill */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
@@ -147,109 +146,76 @@ export const SoilHealthPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Source Badge */}
-        {analysisResult && (
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.3rem',
-            padding: '3px 8px',
-            borderRadius: '9999px',
-            fontSize: '0.68rem',
-            fontWeight: 800,
-            background: analysisResult.source === 'live_ai' ? '#DCFCE7' : '#E0F2FE',
-            color: analysisResult.source === 'live_ai' ? '#15803D' : '#0369A1',
-            border: `1px solid ${analysisResult.source === 'live_ai' ? '#BBF7D0' : '#BAE6FD'}`
-          }}>
-            <span style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: analysisResult.source === 'live_ai' ? '#16A34A' : '#0284C7'
-            }} />
-            <span>{analysisResult.source === 'live_ai' ? t('buildAi.liveDataBadge') : 'LAB REPORT'}</span>
-          </div>
-        )}
+        {/* Demo Transparency Badge */}
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.3rem',
+          padding: '2px 8px',
+          borderRadius: '9999px',
+          fontSize: '0.68rem',
+          fontWeight: 800,
+          background: '#FEF3C7',
+          color: '#92400E',
+          border: '1px solid #FDE68A'
+        }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
+          <span>Sample field · Demo analysis</span>
+        </div>
       </div>
 
-      {/* Answer: "Is my soil okay?" */}
-      {/* 2-Column Compact Top Health Indicator Cards */}
+      {/* 1. FIRST: SOIL HEALTH 74/100 🟢 Good */}
       {analysisResult && (
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gap: '0.65rem',
-          marginBottom: '0.75rem'
+          background: '#F0FDF4',
+          border: '1.5px solid #BBF7D0',
+          borderRadius: '14px',
+          padding: '0.85rem 1rem',
+          marginBottom: '0.75rem',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
         }}>
-          {/* Card 1: 🧪 Soil Health Score */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1.5px solid #BBF7D0',
-            borderRadius: '14px',
-            padding: '0.75rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                🧪 {t('buildAi.soilScore')}
-              </div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#16A34A', marginTop: '2px', lineHeight: 1.2 }}>
-                {analysisResult.score} / 100
-              </div>
-            </div>
-            <div style={{
-              fontSize: '0.72rem',
-              color: '#15803D',
-              fontWeight: 700,
-              marginTop: '0.4rem',
-              background: '#F0FDF4',
-              padding: '2px 6px',
-              borderRadius: '6px',
-              alignSelf: 'flex-start'
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+            <span style={{ fontSize: '0.74rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+              🧪 Soil Health
+            </span>
+            <span style={{
+              fontSize: '0.7rem',
+              fontWeight: 800,
+              padding: '2px 8px',
+              borderRadius: '9999px',
+              background: '#DCFCE7',
+              color: '#15803D'
             }}>
-              ✓ {t('buildAi.good')}
-            </div>
+              🟢 Good
+            </span>
           </div>
 
-          {/* Card 2: 🌾 Crop Suitability */}
-          <div style={{
-            background: '#FFFFFF',
-            border: '1.5px solid #BAE6FD',
-            borderRadius: '14px',
-            padding: '0.75rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.68rem', color: '#0369A1', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                🌾 Crop Suitability
-              </div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#0284C7', marginTop: '2px', lineHeight: 1.2 }}>
-                {analysisResult.cropContext.suitabilityScore}%
-              </div>
-            </div>
-            <div style={{
-              fontSize: '0.72rem',
-              color: '#0369A1',
-              fontWeight: 700,
-              marginTop: '0.4rem',
-              background: '#F0F9FF',
-              padding: '2px 6px',
-              borderRadius: '6px',
-              alignSelf: 'flex-start'
-            }}>
-              {inputForm.crop}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '2px 0 0.2rem 0' }}>
+            <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+              {analysisResult.score}/100
+            </span>
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#15803D' }}>
+              Fertile soil suitable for {inputForm.crop}
+            </span>
           </div>
         </div>
       )}
 
-      {/* Soil Form Card (Compact 2-Column Inputs) */}
+      {/* 2. SECOND: Visual nutrient health progress bars */}
+      {analysisResult && (
+        <NutrientBreakdownCard metrics={analysisResult.metrics} />
+      )}
+
+      {/* 3. THIRD: 🌱 WHAT YOUR SOIL NEEDS (Top 2-3 priorities) */}
+      {analysisResult && (
+        <SoilRecommendationsCard
+          recommendations={analysisResult.recommendations}
+          warnings={analysisResult.warnings}
+          source={analysisResult.source}
+        />
+      )}
+
+      {/* 4. FOURTH: Collapsible Soil Test Input Form (Secondary) */}
       <SoilFormCard
         input={inputForm}
         onChange={setInputForm}
@@ -271,18 +237,6 @@ export const SoilHealthPage: React.FC = () => {
           fontSize: '0.82rem'
         }}>
           {error}
-        </div>
-      )}
-
-      {/* Diagnostic & Recommendations */}
-      {analysisResult && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <NutrientBreakdownCard metrics={analysisResult.metrics} />
-          <SoilRecommendationsCard
-            recommendations={analysisResult.recommendations}
-            warnings={analysisResult.warnings}
-            source={analysisResult.source}
-          />
         </div>
       )}
     </BuildAiShell>

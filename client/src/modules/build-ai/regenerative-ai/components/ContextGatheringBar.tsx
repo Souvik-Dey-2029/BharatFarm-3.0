@@ -33,46 +33,14 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
       padding: '0.75rem 0.85rem',
       border: '1px solid #E2E8F0',
       boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
-      marginBottom: '0.85rem'
+      marginBottom: '0.75rem'
     }}>
-      <div style={{
-        fontSize: '0.75rem',
-        fontWeight: 800,
-        color: '#0F172A',
-        marginBottom: '0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '0.4rem'
-      }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: '#15803D' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>hub</span>
-          <span>{t('buildAi.availableData')}</span>
-        </span>
-        <button
-          onClick={onRefresh}
-          disabled={isGenerating}
-          style={{
-            padding: '3px 8px',
-            borderRadius: '6px',
-            fontSize: '0.72rem',
-            fontWeight: 800,
-            border: 'none',
-            background: '#F0FDF4',
-            color: '#16A34A',
-            cursor: isGenerating ? 'not-allowed' : 'pointer'
-          }}
-        >
-          {isGenerating ? '...' : `🔄 ${t('weatherPage.refreshBtn')}`}
-        </button>
-      </div>
-
-      {/* Very Compact Visual Row: 🛰️ Satellite ✓ | 🧪 Soil ✓ | 🌾 Crop ✓ */}
+      {/* Visual Signals Row: Satellite ✓ | Soil ✓ | Crop ✓ */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '0.4rem'
+        gap: '0.4rem',
+        marginBottom: '0.45rem'
       }}>
         {/* Satellite Checkbox */}
         <div
@@ -81,13 +49,13 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
             background: includeSatellite ? '#F0FDF4' : '#F8FAFC',
             border: `1.5px solid ${includeSatellite ? '#BBF7D0' : '#E2E8F0'}`,
             borderRadius: '8px',
-            padding: '0.45rem 0.5rem',
+            padding: '0.4rem 0.45rem',
             cursor: 'pointer',
             textAlign: 'center'
           }}
         >
-          <div style={{ color: includeSatellite ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.74rem' }}>
-            🛰️ {t('buildAi.connectedSatellite')}
+          <div style={{ color: includeSatellite ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.72rem' }}>
+            🛰️ Satellite ✓
           </div>
         </div>
 
@@ -98,13 +66,13 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
             background: includeSoil ? '#F0FDF4' : '#F8FAFC',
             border: `1.5px solid ${includeSoil ? '#BBF7D0' : '#E2E8F0'}`,
             borderRadius: '8px',
-            padding: '0.45rem 0.5rem',
+            padding: '0.4rem 0.45rem',
             cursor: 'pointer',
             textAlign: 'center'
           }}
         >
-          <div style={{ color: includeSoil ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.74rem' }}>
-            🧪 {t('buildAi.connectedSoil')}
+          <div style={{ color: includeSoil ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.72rem' }}>
+            🧪 Soil ✓
           </div>
         </div>
 
@@ -114,14 +82,29 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
             background: '#F0FDF4',
             border: '1.5px solid #BBF7D0',
             borderRadius: '8px',
-            padding: '0.45rem 0.5rem',
+            padding: '0.4rem 0.45rem',
             textAlign: 'center'
           }}
         >
-          <div style={{ color: '#15803D', fontWeight: 800, fontSize: '0.74rem' }}>
-            🌾 {t('buildAi.connectedCrop')}
+          <div style={{ color: '#15803D', fontWeight: 800, fontSize: '0.72rem' }}>
+            🌾 Crop ✓
           </div>
         </div>
+      </div>
+
+      {/* Trust Line */}
+      <div style={{
+        fontSize: '0.72rem',
+        color: '#64748B',
+        textAlign: 'center',
+        fontWeight: 500,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.3rem'
+      }}>
+        <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#16A34A' }}>verified</span>
+        <span>BharatFarm combined these signals to generate your advice.</span>
       </div>
     </div>
   );

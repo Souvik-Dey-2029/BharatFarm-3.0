@@ -51,7 +51,7 @@ export const RegenerativeAiPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/regenerative-ai" pageTitle={t('buildAi.regenAi')}>
-      {/* Field Selector & Source Pill */}
+      {/* Field Selector & Demo Transparency Pill */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
@@ -108,31 +108,63 @@ export const RegenerativeAiPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Demo Transparency Badge */}
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.3rem',
+          padding: '2px 8px',
+          borderRadius: '9999px',
+          fontSize: '0.68rem',
+          fontWeight: 800,
+          background: '#FEF3C7',
+          color: '#92400E',
+          border: '1px solid #FDE68A'
+        }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
+          <span>Sample field · Demo analysis</span>
+        </div>
+      </div>
+
+      {/* Main Farmer Question: "🌾 What should I do today?" */}
+      <div style={{
+        background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+        borderRadius: '14px',
+        padding: '0.85rem 1rem',
+        border: '1.5px solid #BBF7D0',
+        marginBottom: '0.75rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '0.65rem'
+      }}>
+        <div>
+          <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '2px' }}>
+            🌾 What should I do today?
+          </div>
+          <h2 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.25 }}>
+            {planData?.headline || `Farm Action Advice for ${selectedField?.crop_name || 'Rice'}`}
+          </h2>
+        </div>
+
         {planData && (
           <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.3rem',
-            padding: '3px 8px',
-            borderRadius: '9999px',
-            fontSize: '0.68rem',
-            fontWeight: 800,
-            background: planData.source === 'live_ai' ? '#DCFCE7' : '#FEF3C7',
-            color: planData.source === 'live_ai' ? '#15803D' : '#B45309',
-            border: `1px solid ${planData.source === 'live_ai' ? '#BBF7D0' : '#FDE68A'}`
+            background: '#FFFFFF',
+            border: '1px solid #BBF7D0',
+            borderRadius: '10px',
+            padding: '0.35rem 0.75rem',
+            textAlign: 'center'
           }}>
-            <span style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: planData.source === 'live_ai' ? '#16A34A' : '#D97706'
-            }} />
-            <span>{planData.source === 'live_ai' ? 'LIVE AI' : 'REGENERATIVE ENGINE'}</span>
+            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 700 }}>Sustainability</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#16A34A' }}>
+              {planData.sustainabilityScore}/100
+            </div>
           </div>
         )}
       </div>
 
-      {/* Available Data Row: 🛰️ Satellite ✓ | 🧪 Soil ✓ | 🌾 Crop ✓ */}
+      {/* Visual Ingested Data Row: 🛰️ Satellite ✓ | 🧪 Soil ✓ | 🌾 Crop ✓ */}
       <ContextGatheringBar
         availableFields={fields}
         selectedFieldId={selectedFieldId}
@@ -151,33 +183,6 @@ export const RegenerativeAiPage: React.FC = () => {
         isGenerating={isGenerating}
       />
 
-      {/* Primary Action Button: [ Get Advice ] */}
-      <div style={{ marginBottom: '0.85rem' }}>
-        <button
-          onClick={() => loadPlan()}
-          disabled={isGenerating}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            background: '#16A34A',
-            color: '#FFFFFF',
-            border: 'none',
-            borderRadius: '12px',
-            fontSize: '0.92rem',
-            fontWeight: 900,
-            cursor: isGenerating ? 'not-allowed' : 'pointer',
-            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.4rem'
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>psychology</span>
-          <span>{isGenerating ? t('buildAi.gettingAdvice') : t('buildAi.getAdviceBtn')}</span>
-        </button>
-      </div>
-
       {/* Loading Skeleton */}
       {isGenerating && (
         <div style={{
@@ -191,7 +196,7 @@ export const RegenerativeAiPage: React.FC = () => {
         }}>
           <div style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>🌱</div>
           <p style={{ margin: 0, fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>
-            {t('buildAi.gettingAdvice')}
+            Preparing your advice...
           </p>
         </div>
       )}
@@ -211,81 +216,39 @@ export const RegenerativeAiPage: React.FC = () => {
         </div>
       )}
 
-      {/* Plan Content */}
+      {/* Priority Action Cards: Immediate (Priority 1, 2), Soil, Water */}
       {!isGenerating && !error && planData && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-          {/* Main Answer: 🌱 TODAY'S ADVICE Headline & Sustainability Score */}
-          <div style={{
-            background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
-            borderRadius: '14px',
-            padding: '0.85rem 1rem',
-            border: '1.5px solid #BBF7D0',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '0.65rem'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '2px' }}>
-                🌱 {t('buildAi.todayAdvice')}
-              </div>
-              <h2 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.25 }}>
-                {planData.headline}
-              </h2>
-            </div>
-
-            <div style={{
-              background: '#FFFFFF',
-              border: '1px solid #BBF7D0',
-              borderRadius: '10px',
-              padding: '0.4rem 0.8rem',
-              textAlign: 'center'
-            }}>
-              <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 700 }}>Rating</div>
-              <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#16A34A' }}>
-                {planData.sustainabilityScore}/100
-              </div>
-            </div>
-          </div>
-
-          {/* Action Group Cards (Collapsible and Compact) */}
+          {/* Highest Priority Recommendations */}
           <ActionGroupCard
-            title={t('buildAi.todayAdvice')}
+            title="Today's Priority Actions"
             icon="flash_on"
             actions={planData.immediateActions}
             defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title={t('buildAi.soilHealth')}
+            title="Soil Improvement Actions"
             icon="potted_plant"
             actions={planData.soilActions}
             defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title="Water Management"
+            title="Water Management Actions"
             icon="water_drop"
             actions={planData.waterActions}
             defaultExpanded={false}
           />
 
           <ActionGroupCard
-            title="Pest & Risk Mitigation"
+            title="Pest & Seasonal Risk Actions"
             icon="shield"
             actions={planData.riskMitigation}
             defaultExpanded={false}
           />
 
-          <ActionGroupCard
-            title="Seasonal Cover Crops"
-            icon="calendar_month"
-            actions={planData.seasonalActions}
-            defaultExpanded={false}
-          />
-
-          {/* Evidence Provenance (Collapsible) */}
+          {/* Evidence Details behind collapsible card */}
           <EvidenceAndLimitationsCard
             evidence={planData.evidence}
             assumptions={planData.assumptions}

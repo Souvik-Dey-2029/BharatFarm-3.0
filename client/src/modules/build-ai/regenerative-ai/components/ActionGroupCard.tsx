@@ -21,14 +21,23 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
 }) => {
   const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState<boolean>(defaultExpanded);
+  const [completedIds, setCompletedIds] = useState<Record<string, boolean>>({});
+  const [expandedWhyIds, setExpandedWhyIds] = useState<Record<string, boolean>>({});
 
   if (!actions || actions.length === 0) return null;
 
-  const getPriorityStyle = (priority: string) => {
-    if (priority === 'URGENT' || priority === 'HIGH') {
-      return { bg: '#FEF2F2', text: '#991B1B', border: '#FCA5A5', label: t('buildAi.urgent') };
-    }
-    return { bg: '#F8FAFC', text: '#475569', border: '#E2E8F0', label: t('buildAi.good') };
+  const toggleComplete = (id: string) => {
+    setCompletedIds(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleWhy = (id: string) => {
+    setExpandedWhyIds(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const getPriorityBadge = (idx: number, priority: string) => {
+    if (idx === 0) return { label: '🔴 PRIORITY 1', color: '#DC2626', bg: '#FEE2E2', border: '#FECACA' };
+    if (idx === 1) return { label: '🟡 PRIORITY 2', color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
+    return { label: '🟢 PRIORITY 3', color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' };
   };
 
   return (
@@ -40,7 +49,7 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
       boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
       marginBottom: '0.65rem'
     }}>
-      {/* Clickable Header for Collapsible Action Groups */}
+      {/* Header */}
       <div
         onClick={() => setIsExpanded(!isExpanded)}
         style={{
@@ -65,57 +74,108 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
       {isExpanded && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginTop: '0.65rem' }}>
           {actions.map((act, idx) => {
-            const prioStyle = getPriorityStyle(act.priority);
+            const prio = getPriorityBadge(idx, act.priority);
+            const isDone = !!completedIds[act.id || `${idx}`];
+            const isWhyOpen = !!expandedWhyIds[act.id || `${idx}`];
+
             return (
-              <div key={act.id || idx} style={{
-                background: '#F8FAFC',
-                padding: '0.65rem 0.75rem',
-                borderRadius: '10px',
-                border: '1px solid #E2E8F0'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem', flexWrap: 'wrap', gap: '0.3rem' }}>
-                  <span style={{ fontWeight: 800, fontSize: '0.86rem', color: '#0F172A' }}>
-                    🟢 {idx + 1}. {act.title}
+              <div
+                key={act.id || idx}
+                style={{
+                  background: isDone ? '#F1F5F9' : '#FFFFFF',
+                  padding: '0.75rem 0.85rem',
+                  borderRadius: '10px',
+                  border: isDone ? '1px solid #CBD5E1' : `1.5px solid ${prio.border}`,
+                  opacity: isDone ? 0.75 : 1,
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {/* Priority Flag & Timing */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                  <span style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 900,
+                    padding: '2px 7px',
+                    borderRadius: '4px',
+                    background: prio.bg,
+                    color: prio.color,
+                    letterSpacing: '0.02em'
+                  }}>
+                    {prio.label}
                   </span>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                    <span style={{ fontSize: '0.68rem', color: '#64748B', background: '#E2E8F0', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
-                      {act.timing}
-                    </span>
-                    <span style={{
-                      fontSize: '0.66rem',
-                      fontWeight: 800,
-                      padding: '1px 6px',
-                      borderRadius: '4px',
-                      background: prioStyle.bg,
-                      color: prioStyle.text,
-                      border: `1px solid ${prioStyle.border}`
-                    }}>
-                      {prioStyle.label}
-                    </span>
-                  </div>
+                  <span style={{ fontSize: '0.68rem', color: '#64748B', background: '#F1F5F9', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                    {act.timing}
+                  </span>
                 </div>
 
-                <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.8rem', color: '#334155', lineHeight: 1.4 }}>
+                {/* Title */}
+                <div style={{
+                  fontWeight: 900,
+                  fontSize: '0.9rem',
+                  color: isDone ? '#64748B' : '#0F172A',
+                  textDecoration: isDone ? 'line-through' : 'none',
+                  marginBottom: '0.3rem'
+                }}>
+                  {act.title}
+                </div>
+
+                {/* Practical Action Instruction */}
+                <p style={{ margin: '0 0 0.45rem 0', fontSize: '0.8rem', color: '#334155', lineHeight: 1.4 }}>
                   {act.description}
                 </p>
 
-                {/* Short farmer-friendly "Why?" Reason */}
-                {act.evidenceTrace && (
+                {/* Footer with "Why?" and "Mark as done" Button */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #F1F5F9', paddingTop: '0.45rem' }}>
+                  {act.evidenceTrace ? (
+                    <button
+                      onClick={() => toggleWhy(act.id || `${idx}`)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#15803D',
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        padding: 0
+                      }}
+                    >
+                      {isWhyOpen ? 'Hide reason ▲' : 'WHY? →'}
+                    </button>
+                  ) : <span />}
+
+                  <button
+                    onClick={() => toggleComplete(act.id || `${idx}`)}
+                    style={{
+                      background: isDone ? '#E2E8F0' : '#DCFCE7',
+                      color: isDone ? '#475569' : '#15803D',
+                      border: `1px solid ${isDone ? '#CBD5E1' : '#BBF7D0'}`,
+                      padding: '3px 8px',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '3px'
+                    }}
+                  >
+                    <span>{isDone ? '✓ Done' : 'Mark as done'}</span>
+                  </button>
+                </div>
+
+                {/* Expanded "Why?" Explanation */}
+                {isWhyOpen && act.evidenceTrace && (
                   <div style={{
+                    marginTop: '0.4rem',
                     fontSize: '0.72rem',
                     color: '#15803D',
                     background: '#F0FDF4',
-                    border: '1px solid #BBF7D0',
-                    padding: '3px 6px',
+                    padding: '0.4rem 0.6rem',
                     borderRadius: '6px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    fontWeight: 700
+                    border: '1px solid #BBF7D0'
                   }}>
-                    <span>{t('buildAi.whyQuestion')}</span>
-                    <span style={{ color: '#0F172A', fontWeight: 500 }}>{act.evidenceTrace}</span>
+                    <strong>WHY?</strong> {act.evidenceTrace}
                   </div>
                 )}
               </div>
