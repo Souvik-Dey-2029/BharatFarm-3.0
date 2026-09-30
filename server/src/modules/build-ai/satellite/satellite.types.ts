@@ -28,6 +28,17 @@ export interface SatelliteFieldSummary {
   location_address?: string;
 }
 
+export interface FieldZoneDetail {
+  id: string;
+  name: string;
+  ndvi: number;
+  vegetation: 'Healthy' | 'Moderate' | 'Stressed';
+  status: 'Good' | 'Watch' | 'Needs attention';
+  color: string;
+  description: string;
+  moisturePercent: number;
+}
+
 export interface SatelliteFieldData {
   field: SatelliteFieldSummary;
   observations: SatelliteObservation[];
@@ -48,6 +59,7 @@ export interface SatelliteFieldData {
     cloudCoverMax: string;
     updateFrequency: string;
   };
+  zones?: FieldZoneDetail[];
   source: 'live' | 'demo';
   generatedAt: string;
 }

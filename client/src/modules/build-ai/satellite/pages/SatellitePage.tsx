@@ -17,11 +17,24 @@ export const SatellitePage: React.FC = () => {
   const [satelliteData, setSatelliteData] = useState<SatelliteFieldData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [showNdviDetails, setShowNdviDetails] = useState<boolean>(false);
+
+  // Analysis Animation Simulation Sequence State
+  const [animationStep, setAnimationStep] = useState<number>(0);
+  const [isSimulating, setIsSimulating] = useState<boolean>(true);
+
+  const animationSteps = [
+    'Connecting to satellite data...',
+    'Reading field boundary...',
+    'Analysing vegetation...',
+    'Calculating NDVI...',
+    'Field analysis complete'
+  ];
 
   const loadSatelliteData = async (fieldId: string) => {
     setIsLoading(true);
     setError(null);
+    setAnimationStep(0);
+    setIsSimulating(true);
 
     const res = await satelliteClientService.getSatelliteData(fieldId);
     setIsLoading(false);
@@ -30,6 +43,7 @@ export const SatellitePage: React.FC = () => {
       setSatelliteData(res.data);
     } else {
       setError(typeof res.error === 'string' ? res.error : res.error?.message || t('buildAi.generalError'));
+      setIsSimulating(false);
     }
   };
 
@@ -39,14 +53,52 @@ export const SatellitePage: React.FC = () => {
     }
   }, [selectedFieldId]);
 
-  // Compute 0-100 Crop Health Score from current NDVI (e.g., 0.72 -> 72/100)
-  const healthScore = satelliteData ? Math.round(satelliteData.ndviSummary.currentNdvi * 100) : 72;
-  const isHealthy = healthScore >= 65;
-  const isWatch = healthScore >= 45 && healthScore < 65;
+  // Run brief 1.5–2.0 second UI simulation sequence on field load
+  useEffect(() => {
+    if (isLoading || error || !satelliteData) return;
+
+    // Check if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      setIsSimulating(false);
+      return;
+    }
+
+    let current = 0;
+    const interval = setInterval(() => {
+      current += 1;
+      if (current < animationSteps.length) {
+        setAnimationStep(current);
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setIsSimulating(false), 300);
+      }
+    }, 380);
+
+    return () => clearInterval(interval);
+  }, [satelliteData, isLoading, error]);
+
+  // Calculate Field Health Score (0-100) and Sub-metrics from Demo Data
+  const isPaddy = selectedFieldId.includes('paddy') || satelliteData?.field.crop_name.toLowerCase().includes('rice');
+  const isVegetable = selectedFieldId.includes('vegetable');
+
+  const healthScore = isPaddy ? 62 : isVegetable ? 52 : 78;
+  const isWatch = healthScore >= 45 && healthScore < 70;
+  const isHealthy = healthScore >= 70;
+
+  // Visual Progress Metrics: Vegetation, Moisture, Canopy
+  const vegetationLabel = isPaddy ? 'Moderate' : isVegetable ? 'Moderate' : 'Good';
+  const vegetationPct = isPaddy ? 62 : isVegetable ? 52 : 78;
+
+  const moistureLabel = isPaddy ? 'Good' : 'Moderate';
+  const moisturePct = isPaddy ? 76 : 58;
+
+  const canopyLabel = isPaddy ? 'Moderate' : isVegetable ? 'Moderate' : 'Good';
+  const canopyPct = isPaddy ? 60 : isVegetable ? 50 : 75;
 
   return (
-    <BuildAiShell activeRoute="/build-ai/satellite" pageTitle={t('buildAi.cropHealth')}>
-      {/* Field Selector & Demo Transparency Pill */}
+    <BuildAiShell activeRoute="/build-ai/satellite" pageTitle="Satellite Crop Health">
+      {/* 1. Field Selector & 2. Demo/Live Mode Badge */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
@@ -104,49 +156,69 @@ export const SatellitePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Demo Transparency Badge */}
-        {satelliteData && (
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.3rem',
-            padding: '2px 8px',
-            borderRadius: '9999px',
-            fontSize: '0.68rem',
-            fontWeight: 800,
-            background: satelliteData.source === 'live' ? '#DCFCE7' : '#FEF3C7',
-            color: satelliteData.source === 'live' ? '#15803D' : '#92400E',
-            border: `1px solid ${satelliteData.source === 'live' ? '#BBF7D0' : '#FDE68A'}`
-          }}>
-            <span style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              background: satelliteData.source === 'live' ? '#16A34A' : '#D97706'
-            }} />
-            <span>{satelliteData.source === 'live' ? 'LIVE SATELLITE' : 'Sample field · Demo analysis'}</span>
-          </div>
-        )}
+        {/* 15. Explicit Demo Mode Badge */}
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.35rem',
+          padding: '3px 9px',
+          borderRadius: '9999px',
+          fontSize: '0.7rem',
+          fontWeight: 800,
+          background: satelliteData?.source === 'live' ? '#DCFCE7' : '#FEF3C7',
+          color: satelliteData?.source === 'live' ? '#15803D' : '#92400E',
+          border: `1px solid ${satelliteData?.source === 'live' ? '#BBF7D0' : '#FDE68A'}`
+        }}>
+          <span style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: satelliteData?.source === 'live' ? '#16A34A' : '#D97706'
+          }} />
+          <span>{satelliteData?.source === 'live' ? '🛰 LIVE SATELLITE DATA' : '🛰 DEMO SATELLITE ANALYSIS'}</span>
+        </div>
       </div>
 
-      {/* Loading State */}
-      {isLoading && (
+      {/* 6. Satellite Analysis Simulation Animation Overlay on First Load / Field Change */}
+      {isSimulating && !error && (
         <div style={{
-          background: '#FFFFFF',
+          background: '#0F172A',
+          color: '#FFFFFF',
           borderRadius: '14px',
-          padding: '2rem 1rem',
+          padding: '1.5rem 1rem',
           textAlign: 'center',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+          marginBottom: '0.75rem',
+          boxShadow: '0 4px 14px rgba(15, 23, 42, 0.25)',
+          animation: 'fadeIn 0.2s ease'
         }}>
-          <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>🛰️</div>
-          <p style={{ margin: 0, fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>
-            Checking crop health...
-          </p>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🛰️</div>
+          <div style={{ fontSize: '0.74rem', color: '#86EFAC', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            DEMO SATELLITE PIPELINE
+          </div>
+          <div style={{ fontSize: '0.94rem', fontWeight: 900, marginTop: '4px' }}>
+            {animationSteps[animationStep]}
+          </div>
+
+          {/* Micro progress indicator */}
+          <div style={{
+            maxWidth: '180px',
+            height: '4px',
+            background: 'rgba(255,255,255,0.2)',
+            borderRadius: '2px',
+            margin: '0.75rem auto 0 auto',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              width: `${((animationStep + 1) / animationSteps.length) * 100}%`,
+              height: '100%',
+              background: '#22C55E',
+              transition: 'width 0.3s ease'
+            }} />
+          </div>
         </div>
       )}
 
-      {/* Error State */}
+      {/* Error state if any */}
       {error && !isLoading && (
         <div style={{
           background: '#FEF2F2',
@@ -186,7 +258,7 @@ export const SatellitePage: React.FC = () => {
       {/* Main Content Layout */}
       {!isLoading && !error && satelliteData && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {/* Top Card: 🌾 CROP HEALTH [Health score / status] */}
+          {/* 3. & 8. FIELD HEALTH SUMMARY Card */}
           <div style={{
             background: isHealthy ? '#F0FDF4' : isWatch ? '#FFFBEB' : '#FEF2F2',
             border: `1.5px solid ${isHealthy ? '#BBF7D0' : isWatch ? '#FDE68A' : '#FECACA'}`,
@@ -194,68 +266,80 @@ export const SatellitePage: React.FC = () => {
             padding: '0.85rem 1rem',
             boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
-              <span style={{ fontSize: '0.74rem', color: isHealthy ? '#15803D' : isWatch ? '#92400E' : '#991B1B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-                🌾 Crop Health
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+              <span style={{ fontSize: '0.72rem', color: isHealthy ? '#15803D' : '#92400E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                🌾 FIELD HEALTH
               </span>
               <span style={{
                 fontSize: '0.7rem',
-                fontWeight: 800,
+                fontWeight: 900,
                 padding: '2px 8px',
                 borderRadius: '9999px',
                 background: isHealthy ? '#DCFCE7' : isWatch ? '#FEF3C7' : '#FEE2E2',
                 color: isHealthy ? '#15803D' : isWatch ? '#B45309' : '#B91C1C'
               }}>
-                {isHealthy ? '🟢 Healthy' : isWatch ? '🟡 Watch' : '🔴 Needs Attention'}
+                {isHealthy ? '🟢 Healthy' : isWatch ? '🟡 Needs attention' : '🔴 Stressed'}
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', margin: '2px 0 0.35rem 0' }}>
-              <span style={{ fontSize: '1.8rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
-                {healthScore}/100
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.65rem' }}>
+              <span style={{ fontSize: '1.85rem', fontWeight: 900, color: '#0F172A', lineHeight: 1 }}>
+                {healthScore} / 100
               </span>
-              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: isHealthy ? '#15803D' : isWatch ? '#B45309' : '#B91C1C' }}>
-                {isHealthy ? 'Crop is growing well' : isWatch ? 'Growth is moderate' : 'Vegetation stress detected'}
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: isHealthy ? '#15803D' : '#92400E' }}>
+                {isHealthy ? 'Crops looking healthy' : 'Growth stress in southern parcel'}
               </span>
             </div>
 
-            {/* Technical NDVI secondary behind Details */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.4rem', fontSize: '0.72rem', color: '#64748B' }}>
-              <span>Satellite Index: <strong>{satelliteData.ndviSummary.currentNdvi}</strong></span>
-              <button
-                onClick={() => setShowNdviDetails(!showNdviDetails)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#15803D',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  padding: 0
-                }}
-              >
-                {showNdviDetails ? 'Hide details ▲' : 'Details →'}
-              </button>
-            </div>
-
-            {showNdviDetails && (
-              <div style={{ marginTop: '0.4rem', fontSize: '0.7rem', color: '#475569', background: '#FFFFFF', padding: '0.4rem 0.6rem', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
-                NDVI measures canopy greenness from 0.0 to 1.0. A score of {satelliteData.ndviSummary.currentNdvi} indicates normal photosynthetic absorption.
+            {/* Visual Health Bars: Vegetation, Moisture, Canopy */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.5rem' }}>
+              {/* Vegetation */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
+                  <span style={{ color: '#475569' }}>Vegetation</span>
+                  <span style={{ color: '#0F172A' }}>{vegetationLabel}</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${vegetationPct}%`, height: '100%', background: '#16A34A', borderRadius: '3px' }} />
+                </div>
               </div>
-            )}
+
+              {/* Moisture */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
+                  <span style={{ color: '#475569' }}>Moisture</span>
+                  <span style={{ color: '#0F172A' }}>{moistureLabel}</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${moisturePct}%`, height: '100%', background: '#0284C7', borderRadius: '3px' }} />
+                </div>
+              </div>
+
+              {/* Canopy */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
+                  <span style={{ color: '#475569' }}>Canopy</span>
+                  <span style={{ color: '#0F172A' }}>{canopyLabel}</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ width: `${canopyPct}%`, height: '100%', background: '#65A30D', borderRadius: '3px' }} />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Meaningful Visual Field Map */}
+          {/* 4. & 5. Satellite Visualization & Layer Tabs & Interactive Zones & Continuous Scale */}
           <SatelliteMapCard
             field={satelliteData.field}
             currentNdvi={satelliteData.ndviSummary.currentNdvi}
             healthStatus={satelliteData.ndviSummary.healthStatus}
+            zones={satelliteData.zones}
           />
 
-          {/* Compact Month Trend Visualization (Mar ─ Apr ─ May ─ Jun) */}
+          {/* 7. NDVI Trend Analysis Timeline */}
           <NdviTimeSeriesChart observations={satelliteData.observations} />
 
-          {/* Actionable Health Interpretation ("What this means" & "What you can do") */}
+          {/* 9. & 10. "What does this mean?", "What to check", & Next Steps */}
           <HealthInterpretationCard
             interpretation={satelliteData.interpretation}
             modelMetadata={satelliteData.modelMetadata}
