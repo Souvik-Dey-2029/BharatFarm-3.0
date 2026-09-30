@@ -122,29 +122,30 @@ export const RegenerativeAiPage: React.FC = () => {
           border: '1px solid #FDE68A'
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
-          <span>Sample field · Demo analysis</span>
+          <span>{t('buildAi.sampleFieldDemo')}</span>
         </div>
       </div>
 
       {/* Main Farmer Question: "🌾 What should I do today?" */}
       <div style={{
-        background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
+        background: 'linear-gradient(135deg, #FDFBF7 0%, #DCFCE7 100%)',
         borderRadius: '14px',
         padding: '0.85rem 1rem',
-        border: '1.5px solid #BBF7D0',
+        border: '1.5px solid #EFEAE2',
         marginBottom: '0.75rem',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
-        gap: '0.65rem'
+        gap: '0.65rem',
+        boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)'
       }}>
         <div>
           <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '2px' }}>
-            🌾 What should I do today?
+            {t('buildAi.regenerative.heading')}
           </div>
           <h2 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.25 }}>
-            {planData?.headline || `Farm Action Advice for ${selectedField?.crop_name || 'Rice'}`}
+            {planData?.headline || `${t('buildAi.regenAi')} (${selectedField?.crop_name || 'Rice'})`}
           </h2>
         </div>
 
@@ -156,7 +157,7 @@ export const RegenerativeAiPage: React.FC = () => {
             padding: '0.35rem 0.75rem',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 700 }}>Sustainability</div>
+            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 700 }}>{t('buildAi.regenerative.sustainabilityScore')}</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#16A34A' }}>
               {planData.sustainabilityScore}/100
             </div>

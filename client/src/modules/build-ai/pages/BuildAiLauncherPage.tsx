@@ -95,7 +95,7 @@ export const BuildAiLauncherPage: React.FC = () => {
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
-        border: '1px solid #E2E8F0',
+        border: '1.5px solid #EFEAE2',
         padding: '0.75rem 0.9rem',
         marginBottom: '0.85rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
@@ -124,14 +124,14 @@ export const BuildAiLauncherPage: React.FC = () => {
               {t('buildAi.fieldSelect')}
             </div>
             {isLoadingFields ? (
-              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Loading fields...</div>
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>{t('common.loading')}</div>
             ) : fields.length > 0 ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginTop: '2px' }}>
                 <select
                   value={selectedFieldId}
                   onChange={(e) => setSelectedFieldId(e.target.value)}
                   style={{
-                    background: '#F8FAFC',
+                    background: '#FDFBF7',
                     color: '#0F172A',
                     border: '1.5px solid #CBD5E1',
                     borderRadius: '8px',
@@ -300,7 +300,7 @@ export const BuildAiLauncherPage: React.FC = () => {
             style={{
               background: '#FFFFFF',
               borderRadius: '14px',
-              border: '1.5px solid #E2E8F0',
+              border: '1.5px solid #EFEAE2',
               overflow: 'hidden',
               boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
               cursor: 'pointer',

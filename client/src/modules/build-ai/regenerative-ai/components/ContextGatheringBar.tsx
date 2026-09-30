@@ -31,7 +31,7 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.75rem 0.85rem',
-      border: '1px solid #E2E8F0',
+      border: '1.5px solid #EFEAE2',
       boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
       marginBottom: '0.75rem'
     }}>
@@ -46,8 +46,8 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
         <div
           onClick={() => onToggleSatellite(!includeSatellite)}
           style={{
-            background: includeSatellite ? '#F0FDF4' : '#F8FAFC',
-            border: `1.5px solid ${includeSatellite ? '#BBF7D0' : '#E2E8F0'}`,
+            background: includeSatellite ? '#F0FDF4' : '#FDFBF7',
+            border: `1.5px solid ${includeSatellite ? '#BBF7D0' : '#EFEAE2'}`,
             borderRadius: '8px',
             padding: '0.4rem 0.45rem',
             cursor: 'pointer',
@@ -55,7 +55,7 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
           }}
         >
           <div style={{ color: includeSatellite ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.72rem' }}>
-            🛰️ Satellite ✓
+            {t('buildAi.regenerative.contextSatellite')}
           </div>
         </div>
 
@@ -63,8 +63,8 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
         <div
           onClick={() => onToggleSoil(!includeSoil)}
           style={{
-            background: includeSoil ? '#F0FDF4' : '#F8FAFC',
-            border: `1.5px solid ${includeSoil ? '#BBF7D0' : '#E2E8F0'}`,
+            background: includeSoil ? '#F0FDF4' : '#FDFBF7',
+            border: `1.5px solid ${includeSoil ? '#BBF7D0' : '#EFEAE2'}`,
             borderRadius: '8px',
             padding: '0.4rem 0.45rem',
             cursor: 'pointer',
@@ -72,7 +72,7 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
           }}
         >
           <div style={{ color: includeSoil ? '#15803D' : '#64748B', fontWeight: 800, fontSize: '0.72rem' }}>
-            🧪 Soil ✓
+            {t('buildAi.regenerative.contextSoil')}
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
           }}
         >
           <div style={{ color: '#15803D', fontWeight: 800, fontSize: '0.72rem' }}>
-            🌾 Crop ✓
+            {t('buildAi.regenerative.contextCrop')}
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
         gap: '0.3rem'
       }}>
         <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#16A34A' }}>verified</span>
-        <span>BharatFarm combined these signals to generate your advice.</span>
+        <span>{t('buildAi.regenerative.combinedSignals')}</span>
       </div>
     </div>
   );

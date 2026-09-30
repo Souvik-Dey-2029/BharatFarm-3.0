@@ -34,8 +34,8 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.75rem 0.9rem',
-      border: '1px solid #E2E8F0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+      border: '1.5px solid #EFEAE2',
+      boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
       marginBottom: '0.75rem'
     }}>
       {/* Clickable Header: Visually secondary to the soil interpretation results */}
@@ -52,10 +52,10 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
           <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#16A34A' }}>tune</span>
           <div>
             <h4 style={{ margin: 0, fontSize: '0.86rem', color: '#0F172A', fontWeight: 800 }}>
-              Adjust Soil Test Values
+              {t('buildAi.soil.adjustValuesTitle')}
             </h4>
             <span style={{ fontSize: '0.7rem', color: '#64748B' }}>
-              Sample field data • Tap to modify
+              {t('buildAi.soil.sampleFieldTap')}
             </span>
           </div>
         </div>
@@ -78,7 +78,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               cursor: 'pointer'
             }}
           >
-            Reset Sample
+            {t('buildAi.resetSample')}
           </button>
           <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 700 }}>
             {isFormOpen ? '▲' : '▼'}
@@ -92,7 +92,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.55rem', marginBottom: '0.65rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.68rem', color: '#475569', fontWeight: 700, marginBottom: '2px' }}>
-                Field:
+                {t('buildAi.soil.fieldLabel')}
               </label>
               <select
                 value={input.fieldId || ''}
@@ -302,7 +302,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               cursor: isAnalyzing ? 'not-allowed' : 'pointer'
             }}
           >
-            {isAnalyzing ? t('buildAi.checkingSoil') : 'Re-calculate Soil Health'}
+            {isAnalyzing ? t('buildAi.checkingSoil') : t('buildAi.recalculateSoilBtn')}
           </button>
         </form>
       )}

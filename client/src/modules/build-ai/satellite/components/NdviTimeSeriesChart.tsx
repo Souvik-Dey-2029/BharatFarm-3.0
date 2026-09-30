@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { SatelliteObservation } from '../satellite.types.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 interface NdviTimeSeriesChartProps {
   observations: SatelliteObservation[];
 }
 
 export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observations }) => {
+  const { t } = useLanguage();
   const [showTechnicalNdvi, setShowTechnicalNdvi] = useState<boolean>(false);
   const [activeObs, setActiveObs] = useState<SatelliteObservation | null>(
     observations && observations.length > 0 ? observations[observations.length - 1] : null
@@ -30,8 +32,8 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
 
   const getStatusDirection = (obs: SatelliteObservation, prevObs?: SatelliteObservation) => {
     if (!prevObs) return { icon: '•', color: '#16A34A', label: 'Start' };
-    if (obs.ndvi > prevObs.ndvi + 0.02) return { icon: '↑', color: '#16A34A', label: 'Growing' };
-    if (obs.ndvi < prevObs.ndvi - 0.02) return { icon: '↓', color: '#DC2626', label: 'Declining' };
+    if (obs.ndvi > prevObs.ndvi + 0.02) return { icon: '↑', color: '#16A34A', label: t('buildAi.satellite.trendImproving') };
+    if (obs.ndvi < prevObs.ndvi - 0.02) return { icon: '↓', color: '#DC2626', label: t('buildAi.satellite.trendDeclining') };
     return { icon: '→', color: '#16A34A', label: 'Stable' };
   };
 
@@ -40,18 +42,18 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.85rem 1rem',
-      border: '1px solid #E2E8F0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+      border: '1.5px solid #EFEAE2',
+      boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
       marginBottom: '0.75rem'
     }}>
       {/* Header with Current NDVI and Real Trend Direction */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem', flexWrap: 'wrap', gap: '0.4rem' }}>
         <div>
           <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
-            📈 NDVI Growth Timeline
+            📈 {t('buildAi.satellite.trendTitle')}
           </h3>
           <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
-            Bi-weekly Sentinel-2 observation history
+            {t('buildAi.cropHealthTrend')}
           </p>
         </div>
 
@@ -68,7 +70,7 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
           fontWeight: 800,
           color: isDeclining ? '#DC2626' : '#15803D'
         }}>
-          <span>{isDeclining ? '↓ Declining' : '↑ Improving'}</span>
+          <span>{isDeclining ? `↓ ${t('buildAi.satellite.trendDeclining')}` : `↑ ${t('buildAi.satellite.trendImproving')}`}</span>
           <span style={{ color: '#475569', fontWeight: 600 }}>({currentObs.ndvi})</span>
         </div>
       </div>
@@ -78,10 +80,10 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
         display: 'grid',
         gridTemplateColumns: `repeat(${observations.length}, 1fr)`,
         gap: '0.35rem',
-        background: '#F8FAFC',
+        background: '#FDFBF7',
         padding: '0.55rem 0.5rem',
         borderRadius: '10px',
-        border: '1px solid #E2E8F0',
+        border: '1px solid #EFEAE2',
         textAlign: 'center'
       }}>
         {observations.map((obs, idx) => {
@@ -129,14 +131,14 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
             padding: 0
           }}
         >
-          {showTechnicalNdvi ? 'Hide analysis curve ▲' : 'View analysis curve ▼'}
+          {showTechnicalNdvi ? `${t('buildAi.moreDetails')} ▲` : `${t('buildAi.moreDetails')} ▼`}
         </button>
 
         {showTechnicalNdvi && (
           <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid #F1F5F9', textAlign: 'left' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#64748B', marginBottom: '0.35rem', fontWeight: 600 }}>
-              <span>Inspecting date: <strong>{activeObs?.date}</strong></span>
-              <span>Observed NDVI: <strong style={{ color: '#15803D' }}>{activeObs?.ndvi}</strong></span>
+              <span>{activeObs?.date}</span>
+              <span>NDVI: <strong style={{ color: '#15803D' }}>{activeObs?.ndvi}</strong></span>
             </div>
 
             <div style={{ width: '100%', height: '80px', background: '#F8FAFC', borderRadius: '8px', padding: '6px', boxSizing: 'border-box' }}>

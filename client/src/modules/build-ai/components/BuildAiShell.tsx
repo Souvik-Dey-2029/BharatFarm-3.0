@@ -71,7 +71,7 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#F8FAFC',
+      background: '#FDFBF7', // Natural warm off-white / light cream farm background
       color: '#0F172A',
       fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
       display: 'flex',
@@ -80,7 +80,7 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
       {/* Mobile-First Header: ← Back | Title | Language | Tools */}
       <header style={{
         background: '#FFFFFF',
-        borderBottom: '1.5px solid #E2E8F0',
+        borderBottom: '1.5px solid #EFEAE2', // Natural clay/warm border
         padding: '0.5rem 0.85rem',
         display: 'flex',
         alignItems: 'center',
@@ -88,7 +88,7 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
         position: 'sticky',
         top: 0,
         zIndex: 50,
-        boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
+        boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
         gap: '0.4rem',
         minHeight: '50px',
         boxSizing: 'border-box'

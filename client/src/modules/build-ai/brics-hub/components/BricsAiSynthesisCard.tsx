@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { BricsKnowledgeRecord, BricsAiSummaryResponse } from '../types.js';
 import { BricsKnowledgeService } from '../brics.service.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 interface Props {
   records: BricsKnowledgeRecord[];
 }
 
 export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
+  const { t } = useLanguage();
   const [synthesis, setSynthesis] = useState<BricsAiSummaryResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +22,7 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
       setSynthesis(res);
       setIsOpen(true);
     } catch (err: any) {
-      setError(err.message || 'Synthesis failed');
+      setError(err.message || t('buildAi.generalError'));
     } finally {
       setLoading(false);
     }
@@ -28,8 +30,8 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
 
   return (
     <div style={{
-      background: '#F0FDF4',
-      border: '1.5px solid #BBF7D0',
+      background: '#FDFBF7',
+      border: '1.5px solid #EFEAE2',
       borderRadius: '14px',
       padding: '0.75rem 0.9rem',
       marginBottom: '0.75rem',
@@ -46,10 +48,10 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
           <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '18px' }}>psychology</span>
           <div>
             <h4 style={{ margin: 0, color: '#0F172A', fontSize: '0.86rem', fontWeight: 800 }}>
-              Practical Farming Summary
+              {t('buildAi.brics.summaryTitle')}
             </h4>
             <span style={{ fontSize: '0.7rem', color: '#64748B' }}>
-              Insights from {records.length} global farming practices
+              {t('buildAi.brics.summarySub').replace('{count}', records.length.toString())}
             </span>
           </div>
         </div>
@@ -71,7 +73,7 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
             gap: '0.3rem'
           }}
         >
-          {loading ? 'Synthesizing...' : 'Summarize Insights'}
+          {loading ? t('buildAi.brics.summarizingBtn') : t('buildAi.brics.summarizeBtn')}
         </button>
       </div>
 
@@ -95,16 +97,16 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
           background: '#FFFFFF',
           borderRadius: '10px',
           padding: '0.75rem',
-          border: '1px solid #BBF7D0'
+          border: '1px solid #EFEAE2'
         }}>
           <p style={{ color: '#334155', fontSize: '0.8rem', lineHeight: '1.45', margin: '0 0 0.6rem 0' }}>
             {synthesis.summary}
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem' }}>
-            <div style={{ background: '#F8FAFC', padding: '0.6rem', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+            <div style={{ background: '#FDFBF7', padding: '0.6rem', borderRadius: '8px', border: '1px solid #EFEAE2' }}>
               <div style={{ margin: '0 0 0.35rem 0', color: '#15803D', fontSize: '0.76rem', fontWeight: 800 }}>
-                📌 Key Takeaways
+                {t('buildAi.brics.keyTakeaways')}
               </div>
               <ul style={{ margin: 0, paddingLeft: '1rem', color: '#475569', fontSize: '0.74rem', lineHeight: 1.4 }}>
                 {synthesis.keyTakeaways.slice(0, 2).map((item, idx) => (
@@ -113,9 +115,9 @@ export const BricsAiSynthesisCard: React.FC<Props> = ({ records }) => {
               </ul>
             </div>
 
-            <div style={{ background: '#F8FAFC', padding: '0.6rem', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+            <div style={{ background: '#FDFBF7', padding: '0.6rem', borderRadius: '8px', border: '1px solid #EFEAE2' }}>
               <div style={{ margin: '0 0 0.35rem 0', color: '#0369A1', fontSize: '0.76rem', fontWeight: 800 }}>
-                💡 Local Adaptation
+                {t('buildAi.brics.localAdaptation')}
               </div>
               <ul style={{ margin: 0, paddingLeft: '1rem', color: '#475569', fontSize: '0.74rem', lineHeight: 1.4 }}>
                 {synthesis.recommendedAdaptations.slice(0, 2).map((item, idx) => (

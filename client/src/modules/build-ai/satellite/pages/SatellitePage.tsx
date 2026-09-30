@@ -23,11 +23,11 @@ export const SatellitePage: React.FC = () => {
   const [isSimulating, setIsSimulating] = useState<boolean>(true);
 
   const animationSteps = [
-    'Connecting to satellite data...',
-    'Reading field boundary...',
-    'Analysing vegetation...',
-    'Calculating NDVI...',
-    'Field analysis complete'
+    t('buildAi.satellite.simConnecting'),
+    t('buildAi.satellite.simReading'),
+    t('buildAi.satellite.simAnalysing'),
+    t('buildAi.satellite.simCalculating'),
+    t('buildAi.satellite.simComplete')
   ];
 
   const loadSatelliteData = async (fieldId: string) => {
@@ -273,7 +273,7 @@ export const SatellitePage: React.FC = () => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
               <span style={{ fontSize: '0.72rem', color: isHealthy ? '#15803D' : '#92400E', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                🌾 FIELD HEALTH
+                {t('buildAi.satellite.fieldHealthTitle')}
               </span>
               <span style={{
                 fontSize: '0.7rem',
@@ -283,7 +283,7 @@ export const SatellitePage: React.FC = () => {
                 background: isHealthy ? '#DCFCE7' : isWatch ? '#FEF3C7' : '#FEE2E2',
                 color: isHealthy ? '#15803D' : isWatch ? '#B45309' : '#B91C1C'
               }}>
-                {isHealthy ? '🟢 Healthy' : isWatch ? '🟡 Needs attention' : '🔴 Stressed'}
+                {isHealthy ? `🟢 ${t('buildAi.healthy')}` : isWatch ? `🟡 ${t('buildAi.needsCare')}` : `🔴 ${t('buildAi.critical')}`}
               </span>
             </div>
 
@@ -292,7 +292,7 @@ export const SatellitePage: React.FC = () => {
                 {healthScore} / 100
               </span>
               <span style={{ fontSize: '0.82rem', fontWeight: 700, color: isHealthy ? '#15803D' : '#92400E' }}>
-                {isHealthy ? 'Crops looking healthy' : 'Growth stress in southern parcel'}
+                {isHealthy ? t('buildAi.satellite.cropsLookingHealthy') : t('buildAi.satellite.growthStressSouthern')}
               </span>
             </div>
 
@@ -301,7 +301,7 @@ export const SatellitePage: React.FC = () => {
               {/* Vegetation */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
-                  <span style={{ color: '#475569' }}>Vegetation</span>
+                  <span style={{ color: '#475569' }}>{t('buildAi.satellite.barVegetation')}</span>
                   <span style={{ color: '#0F172A' }}>{vegetationLabel}</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -312,7 +312,7 @@ export const SatellitePage: React.FC = () => {
               {/* Moisture */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
-                  <span style={{ color: '#475569' }}>Moisture</span>
+                  <span style={{ color: '#475569' }}>{t('buildAi.satellite.barMoisture')}</span>
                   <span style={{ color: '#0F172A' }}>{moistureLabel}</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -323,7 +323,7 @@ export const SatellitePage: React.FC = () => {
               {/* Canopy */}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', fontWeight: 700, marginBottom: '2px' }}>
-                  <span style={{ color: '#475569' }}>Canopy</span>
+                  <span style={{ color: '#475569' }}>{t('buildAi.satellite.barCanopy')}</span>
                   <span style={{ color: '#0F172A' }}>{canopyLabel}</span>
                 </div>
                 <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>

@@ -65,13 +65,13 @@ export const NutrientBreakdownCard: React.FC<NutrientBreakdownCardProps> = ({ me
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.85rem 1rem',
-      border: '1px solid #E2E8F0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+      border: '1.5px solid #EFEAE2',
+      boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
       marginBottom: '0.75rem'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
         <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 800 }}>
-          📊 Nutrient Levels
+          {t('buildAi.soil.nutrientLevelsTitle')}
         </h3>
         <button
           onClick={() => setShowTargets(!showTargets)}
@@ -85,55 +85,60 @@ export const NutrientBreakdownCard: React.FC<NutrientBreakdownCardProps> = ({ me
             padding: 0
           }}
         >
-          {showTargets ? 'Hide targets ▲' : 'Details →'}
+          {showTargets ? t('buildAi.soil.hideTargets') : t('buildAi.soil.showDetails')}
         </button>
       </div>
 
       {/* Visual Nutrient Health Progress Bars */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-        {nutrientBars.map((item, idx) => (
-          <div key={idx} style={{ background: '#F8FAFC', padding: '0.55rem 0.65rem', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.78rem' }}>
-              <span style={{ fontWeight: 800, color: '#0F172A' }}>{item.name}</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.74rem' }}>{item.valueStr}</span>
-                <span style={{
-                  fontSize: '0.66rem',
-                  fontWeight: 800,
-                  padding: '1px 6px',
-                  borderRadius: '4px',
-                  background: item.color === '#16A34A' ? '#DCFCE7' : item.color === '#D97706' ? '#FEF3C7' : '#FEE2E2',
-                  color: item.color
-                }}>
-                  {item.status}
-                </span>
-              </div>
-            </div>
+        {nutrientBars.map((item, idx) => {
+          const localizedName = idx === 0 ? t('buildAi.soilPh') : idx === 1 ? t('buildAi.nitrogen') : idx === 2 ? t('buildAi.phosphorus') : idx === 3 ? t('buildAi.potassium') : t('buildAi.organicCarbon');
+          const localizedStatus = item.status === 'Optimal' ? t('buildAi.optimal') : item.status === 'Good' ? t('buildAi.good') : item.status === 'Moderate' ? t('buildAi.moderate') : t('buildAi.low');
 
-            {/* Visual Bar Indicator */}
-            <div style={{
-              width: '100%',
-              height: '7px',
-              borderRadius: '4px',
-              background: '#E2E8F0',
-              overflow: 'hidden'
-            }}>
+          return (
+            <div key={idx} style={{ background: '#FDFBF7', padding: '0.55rem 0.65rem', borderRadius: '8px', border: '1px solid #EFEAE2' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: '0.78rem' }}>
+                <span style={{ fontWeight: 800, color: '#0F172A' }}>{localizedName}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.74rem' }}>{item.valueStr}</span>
+                  <span style={{
+                    fontSize: '0.66rem',
+                    fontWeight: 800,
+                    padding: '1px 6px',
+                    borderRadius: '4px',
+                    background: item.color === '#16A34A' ? '#DCFCE7' : item.color === '#D97706' ? '#FEF3C7' : '#FEE2E2',
+                    color: item.color
+                  }}>
+                    {localizedStatus}
+                  </span>
+                </div>
+              </div>
+
+              {/* Visual Bar Indicator */}
               <div style={{
-                width: `${item.percent}%`,
-                height: '100%',
-                background: item.color,
+                width: '100%',
+                height: '7px',
                 borderRadius: '4px',
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-
-            {showTargets && (
-              <div style={{ fontSize: '0.68rem', color: '#64748B', marginTop: '3px', fontWeight: 600 }}>
-                Optimal range: {item.target}
+                background: '#EFEAE2',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  width: `${item.percent}%`,
+                  height: '100%',
+                  background: item.color,
+                  borderRadius: '4px',
+                  transition: 'width 0.3s ease'
+                }} />
               </div>
-            )}
-          </div>
-        ))}
+
+              {showTargets && (
+                <div style={{ fontSize: '0.68rem', color: '#64748B', marginTop: '3px', fontWeight: 600 }}>
+                  {t('buildAi.soil.optimalRange')}: {item.target}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

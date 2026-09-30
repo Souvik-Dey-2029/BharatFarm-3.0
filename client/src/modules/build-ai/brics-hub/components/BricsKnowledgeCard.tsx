@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BricsKnowledgeRecord } from '../types.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 interface Props {
   record: BricsKnowledgeRecord;
@@ -14,13 +15,14 @@ const COUNTRY_FLAGS: Record<string, string> = {
 };
 
 export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
+  const { t } = useLanguage();
   const flag = COUNTRY_FLAGS[record.country] || '🌍';
   const [showDetails, setShowDetails] = useState<boolean>(false);
 
   return (
     <div style={{
       background: '#FFFFFF',
-      border: '1.5px solid #E2E8F0',
+      border: '1.5px solid #EFEAE2',
       borderRadius: '14px',
       padding: '0.85rem 1rem',
       display: 'flex',
@@ -47,9 +49,9 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
           </span>
 
           <span style={{
-            background: '#F0F9FF',
-            border: '1px solid #BAE6FD',
-            color: '#0369A1',
+            background: '#FDFBF7',
+            border: '1px solid #EFEAE2',
+            color: '#92400E',
             padding: '2px 7px',
             borderRadius: '6px',
             fontSize: '0.72rem',
@@ -97,14 +99,14 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
       </div>
 
       {/* Footer with [ See how → ] & Collapsible Details */}
-      <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '0.5rem' }}>
+      <div style={{ borderTop: '1px solid #EFEAE2', paddingTop: '0.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button
             onClick={() => setShowDetails(!showDetails)}
             style={{
-              background: '#F0FDF4',
+              background: '#FDFBF7',
               color: '#15803D',
-              border: '1px solid #BBF7D0',
+              border: '1px solid #EFEAE2',
               borderRadius: '6px',
               padding: '3px 8px',
               fontSize: '0.72rem',
@@ -115,7 +117,7 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
               gap: '3px'
             }}
           >
-            <span>{showDetails ? 'Hide details ▲' : 'See how →'}</span>
+            <span>{showDetails ? t('buildAi.brics.hideDetailsBtn') : t('buildAi.brics.seeHowBtn')}</span>
           </button>
 
           <span style={{ fontSize: '0.68rem', color: '#64748B' }}>
@@ -128,16 +130,16 @@ export const BricsKnowledgeCard: React.FC<Props> = ({ record }) => {
           <div style={{
             marginTop: '0.5rem',
             padding: '0.5rem 0.65rem',
-            background: '#F8FAFC',
+            background: '#FDFBF7',
             borderRadius: '6px',
-            border: '1px solid #E2E8F0',
+            border: '1px solid #EFEAE2',
             fontSize: '0.7rem',
             color: '#475569',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.3rem'
           }}>
-            <div><strong>Research Source:</strong> {record.source}</div>
+            <div><strong>{t('buildAi.brics.researchSource')}</strong> {record.source}</div>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '2px' }}>
               {record.tags.map((tag, idx) => (
                 <span key={idx} style={{ background: '#E2E8F0', color: '#334155', padding: '1px 5px', borderRadius: '3px', fontSize: '0.66rem' }}>

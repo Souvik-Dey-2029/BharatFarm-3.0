@@ -29,7 +29,7 @@ export const BricsFilterBar: React.FC<Props> = ({
   return (
     <div style={{
       background: '#FFFFFF',
-      border: '1px solid #E2E8F0',
+      border: '1.5px solid #EFEAE2',
       borderRadius: '14px',
       padding: '0.75rem 0.85rem',
       marginBottom: '0.75rem',

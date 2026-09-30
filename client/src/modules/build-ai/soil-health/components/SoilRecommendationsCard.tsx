@@ -34,16 +34,16 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
         background: '#FFFFFF',
         borderRadius: '14px',
         padding: '0.85rem 1rem',
-        border: '1.5px solid #BBF7D0',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+        border: '1.5px solid #EFEAE2',
+        boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
           <div>
             <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 800 }}>
-              🌱 What Your Soil Needs
+              {t('buildAi.soil.whatSoilNeedsTitle')}
             </h3>
             <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
-              Top recommended actions to restore fertility
+              {t('buildAi.soil.whatSoilNeedsSub')}
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
             background: '#DCFCE7',
             color: '#15803D'
           }}>
-            3 Priorities
+            {t('buildAi.soil.prioritiesCount')}
           </span>
         </div>
 
@@ -63,10 +63,10 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', marginBottom: '0.75rem' }}>
           {topPriorities.map((rec, idx) => (
             <div key={idx} style={{
-              background: '#F0FDF4',
+              background: '#FDFBF7',
               padding: '0.6rem 0.75rem',
               borderRadius: '8px',
-              border: '1px solid #BBF7D0'
+              border: '1px solid #EFEAE2'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
                 <span style={{ fontWeight: 800, fontSize: '0.84rem', color: '#15803D' }}>
@@ -80,7 +80,7 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
                   background: '#DCFCE7',
                   color: '#15803D'
                 }}>
-                  Recommended
+                  {t('buildAi.soil.recommendedBadge')}
                 </span>
               </div>
               <p style={{ margin: 0, fontSize: '0.78rem', color: '#334155', lineHeight: 1.35 }}>
@@ -151,7 +151,7 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
           border: '1px solid #FECACA'
         }}>
           <div style={{ fontSize: '0.78rem', color: '#991B1B', fontWeight: 800, marginBottom: '2px' }}>
-            ⚠️ Deficiency Notice:
+            ⚠️ {t('buildAi.soil.deficiencyNotice')}
           </div>
           {warnings.map((w, idx) => (
             <div key={idx} style={{ fontSize: '0.74rem', color: '#7F1D1D' }}>

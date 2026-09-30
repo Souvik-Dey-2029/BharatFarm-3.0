@@ -71,11 +71,11 @@ export const BricsHubPage: React.FC = () => {
           borderRadius: '14px',
           padding: '2rem 1rem',
           textAlign: 'center',
-          border: '1px solid #E2E8F0',
+          border: '1.5px solid #EFEAE2',
           boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
         }}>
           <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>⌛</div>
-          <div style={{ fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>Loading practices...</div>
+          <div style={{ fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>{t('common.loading')}</div>
         </div>
       )}
 
@@ -128,15 +128,15 @@ export const BricsHubPage: React.FC = () => {
             ) : (
               <div style={{
                 background: '#FFFFFF',
-                border: '1px solid #E2E8F0',
+                border: '1.5px solid #EFEAE2',
                 borderRadius: '14px',
                 padding: '2rem 1rem',
                 textAlign: 'center',
                 color: '#64748B'
               }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.4rem' }}>🔍</div>
-                <div style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.9rem' }}>No matching practices found</div>
-                <p style={{ margin: '4px 0 0 0', fontSize: '0.75rem' }}>Try adjusting your filters above.</p>
+                <div style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.9rem' }}>{t('buildAi.brics.noMatchesTitle')}</div>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.75rem' }}>{t('buildAi.brics.noMatchesSub')}</p>
               </div>
             )
           ) : (

@@ -35,9 +35,9 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
   };
 
   const getPriorityBadge = (idx: number, priority: string) => {
-    if (idx === 0) return { label: '🔴 PRIORITY 1', color: '#DC2626', bg: '#FEE2E2', border: '#FECACA' };
-    if (idx === 1) return { label: '🟡 PRIORITY 2', color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
-    return { label: '🟢 PRIORITY 3', color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' };
+    if (idx === 0) return { label: `🔴 ${t('buildAi.todayPriority')} 1`, color: '#DC2626', bg: '#FEE2E2', border: '#FECACA' };
+    if (idx === 1) return { label: `🟡 ${t('buildAi.todayPriority')} 2`, color: '#D97706', bg: '#FEF3C7', border: '#FDE68A' };
+    return { label: `🟢 ${t('buildAi.todayPriority')} 3`, color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' };
   };
 
   return (
@@ -45,8 +45,8 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.75rem 0.85rem',
-      border: '1px solid #E2E8F0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+      border: '1.5px solid #EFEAE2',
+      boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
       marginBottom: '0.65rem'
     }}>
       {/* Header */}
@@ -104,7 +104,7 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
                     {prio.label}
                   </span>
 
-                  <span style={{ fontSize: '0.68rem', color: '#64748B', background: '#F1F5F9', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                  <span style={{ fontSize: '0.68rem', color: '#64748B', background: '#FDFBF7', padding: '1px 6px', borderRadius: '4px', fontWeight: 600 }}>
                     {act.timing}
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
                         padding: 0
                       }}
                     >
-                      {isWhyOpen ? 'Hide reason ▲' : 'WHY? →'}
+                      {isWhyOpen ? t('buildAi.regenerative.hideReason') : t('buildAi.regenerative.showWhy')}
                     </button>
                   ) : <span />}
 
@@ -160,7 +160,7 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
                       gap: '3px'
                     }}
                   >
-                    <span>{isDone ? '✓ Done' : 'Mark as done'}</span>
+                    <span>{isDone ? t('buildAi.doneBadge') : t('buildAi.markAsDone')}</span>
                   </button>
                 </div>
 
@@ -170,12 +170,12 @@ export const ActionGroupCard: React.FC<ActionGroupCardProps> = ({
                     marginTop: '0.4rem',
                     fontSize: '0.72rem',
                     color: '#15803D',
-                    background: '#F0FDF4',
+                    background: '#FDFBF7',
                     padding: '0.4rem 0.6rem',
                     borderRadius: '6px',
-                    border: '1px solid #BBF7D0'
+                    border: '1px solid #EFEAE2'
                   }}>
-                    <strong>WHY?</strong> {act.evidenceTrace}
+                    <strong>{t('buildAi.regenerative.whyReason')}:</strong> {act.evidenceTrace}
                   </div>
                 )}
               </div>

@@ -40,7 +40,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
       }}>
         <div style={{ fontSize: '0.74rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '0.25rem' }}>
-          🌱 What does this mean?
+          {t('buildAi.satellite.whatMeansTitle')}
         </div>
 
         <div style={{ fontSize: '0.94rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.35, marginBottom: '0.35rem' }}>
@@ -55,7 +55,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
         <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '0.65rem', paddingTop: '0.65rem', marginBottom: '0.65rem' }}>
           <div style={{ fontSize: '0.76rem', color: '#0F172A', fontWeight: 900, marginBottom: '0.4rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <span>👨‍🌾</span>
-            <span>What should you check?</span>
+            <span>{t('buildAi.satellite.whatCheckTitle')}</span>
           </div>
 
           {/* Practical Checkpoints: Irrigation, Nutrient availability, Possible crop stress */}
@@ -67,10 +67,10 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
                 gap: '0.45rem',
                 fontSize: '0.78rem',
                 color: '#334155',
-                background: '#F8FAFC',
+                background: '#FDFBF7',
                 padding: '0.45rem 0.65rem',
                 borderRadius: '8px',
-                border: '1px solid #E2E8F0'
+                border: '1px solid #EFEAE2'
               }}>
                 <span style={{ color: '#16A34A', fontWeight: 900, fontSize: '0.85rem' }}>•</span>
                 <span style={{ fontWeight: 600 }}>{act}</span>
@@ -82,7 +82,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
         {/* NEXT STEP: [ 🧪 Check Soil ] [ 🤖 Get AI Advice ] */}
         <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '0.65rem' }}>
           <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.4rem' }}>
-            NEXT STEP
+            {t('buildAi.satellite.nextStepTitle')}
           </div>
 
           <div style={{
@@ -108,7 +108,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
                 boxShadow: '0 1px 3px rgba(22, 163, 74, 0.25)'
               }}
             >
-              <span>🧪 Check Soil</span>
+              <span>{t('buildAi.satellite.btnCheckSoil')}</span>
               <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>arrow_forward</span>
             </button>
 
@@ -116,7 +116,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
               onClick={() => navigate('/build-ai/regenerative-ai')}
               style={{
                 padding: '0.55rem 0.6rem',
-                background: '#F8FAFC',
+                background: '#FDFBF7',
                 color: '#0F172A',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
@@ -129,7 +129,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
                 gap: '0.35rem'
               }}
             >
-              <span>🤖 Get AI Advice</span>
+              <span>{t('buildAi.satellite.btnGetAdvice')}</span>
               <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>psychology</span>
             </button>
           </div>
@@ -138,9 +138,9 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
 
       {/* Collapsible Technical Metadata */}
       <div style={{
-        background: '#F8FAFC',
+        background: '#FDFBF7',
         borderRadius: '10px',
-        border: '1px solid #E2E8F0',
+        border: '1px solid #EFEAE2',
         padding: '0.5rem 0.75rem'
       }}>
         <button
@@ -159,7 +159,7 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
             width: '100%'
           }}
         >
-          <span>🛰️ Satellite Sensor Specifications</span>
+          <span>🛰️ {t('buildAi.satellite.techDetailsBtn')}</span>
           <span>{showTechnicalDetails ? '▲' : '▼'}</span>
         </button>
 
@@ -170,14 +170,14 @@ export const HealthInterpretationCard: React.FC<HealthInterpretationCardProps> =
             gap: '0.35rem',
             marginTop: '0.45rem',
             paddingTop: '0.45rem',
-            borderTop: '1px solid #E2E8F0',
+            borderTop: '1px solid #EFEAE2',
             fontSize: '0.7rem',
             color: '#64748B'
           }}>
-            <div><strong>Constellation:</strong> {modelMetadata.satellite}</div>
-            <div><strong>Resolution:</strong> {modelMetadata.resolution}</div>
-            <div><strong>Bands:</strong> {modelMetadata.bandCombination}</div>
-            <div><strong>Cadence:</strong> {modelMetadata.updateFrequency}</div>
+            <div><strong>{t('buildAi.satellite.satelliteSource')}:</strong> {modelMetadata.satellite}</div>
+            <div><strong>{t('buildAi.satellite.resolution')}:</strong> {modelMetadata.resolution}</div>
+            <div><strong>{t('buildAi.satellite.provider')}:</strong> {modelMetadata.provider}</div>
+            <div><strong>{t('buildAi.satellite.passFrequency')}:</strong> {modelMetadata.updateFrequency}</div>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SatelliteFieldSummary, FieldZoneDetail } from '../satellite.types.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 interface SatelliteMapCardProps {
   field: SatelliteFieldSummary;
@@ -14,6 +15,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
   healthStatus,
   zones
 }) => {
+  const { t } = useLanguage();
   const [activeLayer, setActiveLayer] = useState<'ndvi' | 'truecolor' | 'moisture'>('ndvi');
   const [selectedZone, setSelectedZone] = useState<FieldZoneDetail | null>(
     zones && zones.length > 0 ? zones.find(z => z.status === 'Needs attention') || zones[0] : null
@@ -77,8 +79,8 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
       background: '#FFFFFF',
       borderRadius: '14px',
       padding: '0.85rem 1rem',
-      border: '1.5px solid #E2E8F0',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+      border: '1.5px solid #EFEAE2',
+      boxShadow: '0 1px 3px rgba(180, 83, 9, 0.03)',
       marginBottom: '0.75rem'
     }}>
       {/* Header & Satellite Layer Switching Tabs */}
@@ -86,7 +88,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <h3 style={{ margin: 0, fontSize: '0.94rem', color: '#0F172A', fontWeight: 900 }}>
-              🛰️ Satellite Analysis Preview
+              🛰️ {t('buildAi.satellite.previewTitle')}
             </h3>
             <span style={{
               fontSize: '0.62rem',
@@ -96,11 +98,11 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
               padding: '1px 5px',
               borderRadius: '4px'
             }}>
-              DEMO
+              {t('buildAi.demoDataBadge')}
             </span>
           </div>
           <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B' }}>
-            Tap any field zone below to inspect local crop health
+            {t('buildAi.satellite.tapInstruction')}
           </p>
         </div>
 
@@ -120,7 +122,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
               boxShadow: activeLayer === 'ndvi' ? '0 1px 2px rgba(0,0,0,0.08)' : 'none'
             }}
           >
-            NDVI Heatmap
+            {t('buildAi.satellite.tabNdvi')}
           </button>
           <button
             onClick={() => setActiveLayer('truecolor')}
@@ -136,7 +138,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
               boxShadow: activeLayer === 'truecolor' ? '0 1px 2px rgba(0,0,0,0.08)' : 'none'
             }}
           >
-            True Color
+            {t('buildAi.satellite.tabTrueColor')}
           </button>
           <button
             onClick={() => setActiveLayer('moisture')}
@@ -152,7 +154,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
               boxShadow: activeLayer === 'moisture' ? '0 1px 2px rgba(0,0,0,0.08)' : 'none'
             }}
           >
-            Moisture
+            {t('buildAi.satellite.tabMoisture')}
           </button>
         </div>
       </div>
@@ -205,7 +207,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
             padding: '2px 8px',
             borderRadius: '6px'
           }}>
-            {activeLayer === 'ndvi' ? 'NDVI Vegetation Mode' : activeLayer === 'moisture' ? 'NDWI Moisture Mode' : 'Natural RGB Preview'}
+            {activeLayer === 'ndvi' ? t('buildAi.satellite.modeNdvi') : activeLayer === 'moisture' ? t('buildAi.satellite.modeMoisture') : t('buildAi.satellite.modeTrueColor')}
           </span>
         </div>
 
@@ -292,20 +294,20 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16A34A', display: 'inline-block' }} />
-              <span>Healthy</span>
+              <span>{t('buildAi.satellite.zoneLegendHealthy')}</span>
             </span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#D97706', display: 'inline-block' }} />
-              <span>Watch</span>
+              <span>{t('buildAi.satellite.zoneLegendWatch')}</span>
             </span>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#DC2626', display: 'inline-block' }} />
-              <span>Stressed</span>
+              <span>{t('buildAi.satellite.zoneLegendStressed')}</span>
             </span>
           </div>
 
           <span style={{ color: '#86EFAC', fontWeight: 700 }}>
-            {selectedZone ? `Inspecting: ${selectedZone.name}` : 'Tap zone to inspect'}
+            {selectedZone ? `${selectedZone.name}` : t('buildAi.satellite.tapInstruction')}
           </span>
         </div>
       </div>
@@ -326,7 +328,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
         }}>
           <div>
             <div style={{ fontSize: '0.68rem', fontWeight: 800, color: currentZone.color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              FIELD ZONE INSPECTION
+              {t('buildAi.satellite.zoneSelectedTitle')}
             </div>
             <div style={{ fontSize: '0.94rem', fontWeight: 900, color: '#0F172A', marginTop: '1px' }}>
               {currentZone.name}
@@ -337,7 +339,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
           </div>
 
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.66rem', color: '#64748B', fontWeight: 700 }}>ZONE NDVI</div>
+            <div style={{ fontSize: '0.66rem', color: '#64748B', fontWeight: 700 }}>{t('buildAi.satellite.zoneNdviLabel')}</div>
             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: currentZone.color, lineHeight: 1 }}>
               {currentZone.ndvi}
             </div>
@@ -347,18 +349,18 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
               marginTop: '3px',
               color: currentZone.color
             }}>
-              {currentZone.status}
+              {currentZone.status === 'Needs attention' ? t('buildAi.needsCare') : currentZone.status === 'Watch' ? t('buildAi.moderate') : t('buildAi.good')}
             </div>
           </div>
         </div>
       )}
 
       {/* Section 5: NDVI Continuous Scale Bar */}
-      <div style={{ marginTop: '0.65rem', padding: '0.45rem 0.65rem', background: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+      <div style={{ marginTop: '0.65rem', padding: '0.45rem 0.65rem', background: '#FDFBF7', borderRadius: '8px', border: '1px solid #EFEAE2' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: '#475569', fontWeight: 700, marginBottom: '3px' }}>
-          <span>Low vegetation (0.0)</span>
-          <span style={{ color: '#0F172A', fontWeight: 800 }}>NDVI Scale</span>
-          <span>Healthy (1.0)</span>
+          <span>{t('buildAi.satellite.scaleLow')} (0.0)</span>
+          <span style={{ color: '#0F172A', fontWeight: 800 }}>NDVI</span>
+          <span>{t('buildAi.satellite.scaleHealthy')} (1.0)</span>
         </div>
         <div style={{
           width: '100%',
@@ -382,7 +384,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
           }} />
         </div>
         <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#64748B', marginTop: '4px', fontWeight: 600 }}>
-          Field average: <strong>{currentNdvi}</strong> ({healthStatus})
+          {t('buildAi.ndviScore')}: <strong>{currentNdvi}</strong> ({healthStatus === 'GOOD' ? t('buildAi.good') : healthStatus === 'STRESSED' ? t('buildAi.needsCare') : t('buildAi.moderate')})
         </div>
       </div>
     </div>

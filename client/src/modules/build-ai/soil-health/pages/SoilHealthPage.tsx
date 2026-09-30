@@ -163,7 +163,7 @@ export const SoilHealthPage: React.FC = () => {
           border: '1px solid #FDE68A'
         }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706' }} />
-          <span>Sample field · Demo analysis</span>
+          <span>{t('buildAi.sampleFieldDemo')}</span>
         </div>
       </div>
 
@@ -179,7 +179,7 @@ export const SoilHealthPage: React.FC = () => {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
             <span style={{ fontSize: '0.74rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
-              🧪 Soil Health
+              {t('buildAi.soil.cardTitle')}
             </span>
             <span style={{
               fontSize: '0.7rem',
@@ -189,7 +189,7 @@ export const SoilHealthPage: React.FC = () => {
               background: '#DCFCE7',
               color: '#15803D'
             }}>
-              🟢 Good
+              🟢 {t('buildAi.good')}
             </span>
           </div>
 
@@ -198,7 +198,7 @@ export const SoilHealthPage: React.FC = () => {
               {analysisResult.score}/100
             </span>
             <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#15803D' }}>
-              Fertile soil suitable for {inputForm.crop}
+              {t('buildAi.soil.fertileCropDesc').replace('{crop}', inputForm.crop || '')}
             </span>
           </div>
         </div>
