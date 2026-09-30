@@ -5,6 +5,7 @@ import { useSharedField } from '../context/SharedFieldContext.js';
 import { useLanguage } from '../../../context/LanguageContext.js';
 import { tokens } from '../theme.js';
 import { WhatsAppSimulatorModal } from '../../sih/sahayak/components/WhatsAppSimulatorModal.js';
+import { CallSimulatorModal } from '../../sih/sahayak/components/CallSimulatorModal.js';
 
 export const BuildAiLauncherPage: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export const BuildAiLauncherPage: React.FC = () => {
   const { fields, selectedFieldId, selectedField, setSelectedFieldId, isLoadingFields } = useSharedField();
   const [isFieldDropdownOpen, setIsFieldDropdownOpen] = useState(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [isCallModalOpen, setIsCallModalOpen] = useState(false);
 
   // Field details fallback
   const fieldName = selectedField?.field_name || 'East Wheat Parcel';
@@ -660,85 +662,169 @@ export const BuildAiLauncherPage: React.FC = () => {
             </span>
           </div>
 
-          {/* 6. WHATSAPP ACCESS CHANNEL: WhatsApp Sahayak AI Demo */}
-          <div
-            className="home-slot-sahayak"
-            onClick={() => setIsSimulatorOpen(true)}
-            style={{
-              background: 'linear-gradient(135deg, #064E3B 0%, #065F46 100%)',
-              borderRadius: tokens.radii.md,
-              border: '1.5px solid rgba(52, 211, 153, 0.35)',
-              padding: '0.85rem 1rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              cursor: 'pointer',
-              gap: '0.75rem',
-              boxShadow: '0 4px 14px rgba(6, 78, 59, 0.25)',
-              color: '#FFFFFF'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <div style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: tokens.radii.sm,
-                background: '#25D366',
-                color: '#FFFFFF',
+          {/* 6. LOW-LITERACY FARMER ACCESS CHANNELS: WhatsApp AI & Voice Call Bot */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            {/* Channel 1: WhatsApp Sahayak AI Demo */}
+            <div
+              className="home-slot-sahayak"
+              onClick={() => setIsSimulatorOpen(true)}
+              style={{
+                background: 'linear-gradient(135deg, #064E3B 0%, #065F46 100%)',
+                borderRadius: tokens.radii.md,
+                border: '1.5px solid rgba(52, 211, 153, 0.35)',
+                padding: '0.85rem 1rem',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
-              }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chat</span>
-              </div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span style={{ fontSize: '0.84rem', fontWeight: 800, color: '#FFFFFF' }}>
-                    {t('buildAi.sahayakDemoTitle')}
-                  </span>
-                  <span style={{
-                    fontSize: '9px',
-                    fontWeight: 900,
-                    background: '#25D366',
-                    color: '#064E3B',
-                    padding: '1px 5px',
-                    borderRadius: '4px',
-                    textTransform: 'uppercase'
-                  }}>
-                    Demo
-                  </span>
-                </div>
-                <div style={{ fontSize: tokens.typography.micro, color: '#D1FAE5', marginTop: '2px', fontWeight: 500 }}>
-                  {t('buildAi.sahayakDemoDesc')}
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsSimulatorOpen(true);
-              }}
-              style={{
-                background: '#25D366',
-                color: '#FFFFFF',
-                border: 'none',
-                borderRadius: tokens.radii.xs,
-                padding: '4px 10px',
-                fontSize: tokens.typography.micro,
-                fontWeight: 800,
+                justifyContent: 'space-between',
                 cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '3px',
-                flexShrink: 0
+                gap: '0.75rem',
+                boxShadow: '0 4px 14px rgba(6, 78, 59, 0.25)',
+                color: '#FFFFFF'
               }}
             >
-              <span>{t('buildAi.sahayakDemoBtn')}</span>
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>
-            </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: tokens.radii.sm,
+                  background: '#25D366',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chat</span>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ fontSize: '0.84rem', fontWeight: 800, color: '#FFFFFF' }}>
+                      {t('buildAi.sahayakDemoTitle')}
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      fontWeight: 900,
+                      background: '#25D366',
+                      color: '#064E3B',
+                      padding: '1px 5px',
+                      borderRadius: '4px',
+                      textTransform: 'uppercase'
+                    }}>
+                      WhatsApp
+                    </span>
+                  </div>
+                  <div style={{ fontSize: tokens.typography.micro, color: '#D1FAE5', marginTop: '2px', fontWeight: 500 }}>
+                    {t('buildAi.sahayakDemoDesc')}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsSimulatorOpen(true);
+                }}
+                style={{
+                  background: '#25D366',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: tokens.radii.xs,
+                  padding: '4px 10px',
+                  fontSize: tokens.typography.micro,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  flexShrink: 0
+                }}
+              >
+                <span>{t('buildAi.sahayakDemoBtn')}</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>
+              </button>
+            </div>
+
+            {/* Channel 2: AI Voice Call Helpline 1800 Demo */}
+            <div
+              onClick={() => setIsCallModalOpen(true)}
+              style={{
+                background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+                borderRadius: tokens.radii.md,
+                border: '1.5px solid #334155',
+                padding: '0.85rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                gap: '0.75rem',
+                boxShadow: '0 4px 14px rgba(15, 23, 42, 0.3)',
+                color: '#FFFFFF'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: tokens.radii.sm,
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  boxShadow: '0 2px 6px rgba(16, 185, 129, 0.3)'
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>support_agent</span>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span style={{ fontSize: '0.84rem', fontWeight: 800, color: '#FFFFFF' }}>
+                      {t('buildAi.callBotDemoTitle')}
+                    </span>
+                    <span style={{
+                      fontSize: '9px',
+                      fontWeight: 900,
+                      background: 'rgba(52, 211, 153, 0.2)',
+                      color: '#34D399',
+                      border: '1px solid rgba(52, 211, 153, 0.4)',
+                      padding: '1px 5px',
+                      borderRadius: '4px',
+                      textTransform: 'uppercase'
+                    }}>
+                      Toll-Free
+                    </span>
+                  </div>
+                  <div style={{ fontSize: tokens.typography.micro, color: '#CBD5E1', marginTop: '2px', fontWeight: 500 }}>
+                    {t('buildAi.callBotDemoDesc')}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsCallModalOpen(true);
+                }}
+                style={{
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  borderRadius: tokens.radii.xs,
+                  padding: '4px 10px',
+                  fontSize: tokens.typography.micro,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  flexShrink: 0
+                }}
+              >
+                <span>{t('buildAi.callBotDemoBtn')}</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>dialpad</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -747,6 +833,12 @@ export const BuildAiLauncherPage: React.FC = () => {
       <WhatsAppSimulatorModal
         isOpen={isSimulatorOpen}
         onClose={() => setIsSimulatorOpen(false)}
+      />
+
+      {/* Realistic AI Call Assistant Telephony Modal */}
+      <CallSimulatorModal
+        isOpen={isCallModalOpen}
+        onClose={() => setIsCallModalOpen(false)}
       />
     </BuildAiShell>
   );

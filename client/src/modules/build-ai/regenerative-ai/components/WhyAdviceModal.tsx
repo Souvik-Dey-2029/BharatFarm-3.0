@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../../context/LanguageContext.js';
 import { WhatsAppSimulatorModal } from '../../../sih/sahayak/components/WhatsAppSimulatorModal.js';
+import { CallSimulatorModal } from '../../../sih/sahayak/components/CallSimulatorModal.js';
 
 interface WhyAdviceModalProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
+  const [isCallModalOpen, setIsCallModalOpen] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -229,26 +231,49 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
           <p style={{ margin: '0 0 0.45rem 0', fontSize: '0.72rem', color: '#D1FAE5', lineHeight: 1.35 }}>
             {t('buildAi.sahayakDemoDesc')}
           </p>
-          <button
-            onClick={() => setIsSimulatorOpen(true)}
-            style={{
-              background: '#25D366',
-              border: 'none',
-              color: '#FFFFFF',
-              borderRadius: '6px',
-              padding: '4px 9px',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
-            }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>smartphone</span>
-            <span>{t('buildAi.sahayakDemoBtn')}</span>
-          </button>
+          <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setIsSimulatorOpen(true)}
+              style={{
+                background: '#25D366',
+                border: 'none',
+                color: '#FFFFFF',
+                borderRadius: '6px',
+                padding: '4px 9px',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>chat</span>
+              <span>{t('buildAi.sahayakDemoBtn')}</span>
+            </button>
+
+            <button
+              onClick={() => setIsCallModalOpen(true)}
+              style={{
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                border: 'none',
+                color: '#FFFFFF',
+                borderRadius: '6px',
+                padding: '4px 9px',
+                fontSize: '0.72rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>dialpad</span>
+              <span>{t('buildAi.callBotDemoBtn')}</span>
+            </button>
+          </div>
         </div>
 
         {/* Explanatory Notice */}
@@ -287,6 +312,12 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
       <WhatsAppSimulatorModal
         isOpen={isSimulatorOpen}
         onClose={() => setIsSimulatorOpen(false)}
+      />
+
+      {/* Realistic AI Call Assistant Telephony Modal */}
+      <CallSimulatorModal
+        isOpen={isCallModalOpen}
+        onClose={() => setIsCallModalOpen(false)}
       />
     </div>
   );

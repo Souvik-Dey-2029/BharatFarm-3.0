@@ -8,6 +8,7 @@ import { useSharedField } from '../../context/SharedFieldContext.js';
 import { useLanguage } from '../../../../context/LanguageContext.js';
 import { tokens } from '../../theme.js';
 import { WhatsAppSimulatorModal } from '../../../sih/sahayak/components/WhatsAppSimulatorModal.js';
+import { CallSimulatorModal } from '../../../sih/sahayak/components/CallSimulatorModal.js';
 
 export const RegenerativeAiPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export const RegenerativeAiPage: React.FC = () => {
 
   const [isWhyModalOpen, setIsWhyModalOpen] = useState<boolean>(false);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
+  const [isCallModalOpen, setIsCallModalOpen] = useState<boolean>(false);
   const [showFieldDetails, setShowFieldDetails] = useState<boolean>(false);
   const [completedActions, setCompletedActions] = useState<Record<string, boolean>>({});
   const [expandedActionId, setExpandedActionId] = useState<string | null>(null);
@@ -496,6 +498,28 @@ export const RegenerativeAiPage: React.FC = () => {
             <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#34D399' }}>chat</span>
             <span>{t('buildAi.sahayakDemoBtn')}</span>
           </button>
+
+          {/* Try on Voice Call Helpline Button */}
+          <button
+            onClick={() => setIsCallModalOpen(true)}
+            style={{
+              background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+              border: '1.5px solid #334155',
+              borderRadius: tokens.radii.sm,
+              padding: '0.55rem 0.9rem',
+              color: '#FFFFFF',
+              fontSize: tokens.typography.small,
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: tokens.shadows.subtle
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#34D399' }}>dialpad</span>
+            <span>{t('buildAi.callBotDemoBtn')}</span>
+          </button>
         </div>
 
         {/* More field details Toggle */}
@@ -579,6 +603,12 @@ export const RegenerativeAiPage: React.FC = () => {
       <WhatsAppSimulatorModal
         isOpen={isSimulatorOpen}
         onClose={() => setIsSimulatorOpen(false)}
+      />
+
+      {/* Realistic AI Call Assistant Telephony Modal */}
+      <CallSimulatorModal
+        isOpen={isCallModalOpen}
+        onClose={() => setIsCallModalOpen(false)}
       />
     </BuildAiShell>
   );
