@@ -261,6 +261,40 @@ export class WhatsAppStateMachineService {
       return ResponseFormatterService.buildMainMenu(lang);
     }
 
+    // === DEMO FARMER QUICK-CONNECT ===
+    const demoFarmerMap: Record<string, string> = {
+      'DEMO_FARMER_NASHIK': '9876543210',
+      'DEMO_FARMER_HALDIA': '9831200001',
+      'DEMO_FARMER_PUNJAB': '9812345678'
+    };
+    if (action && demoFarmerMap[action]) {
+      const demoPhone = demoFarmerMap[action];
+      const matchedFarmer = WhatsAppUserService.findFarmerByPhone(demoPhone);
+      if (matchedFarmer) {
+        session.accountStatus = 'CONNECTED';
+        session.farmerId = matchedFarmer.id;
+        session.phoneNumber = demoPhone;
+        session.farmerProfile = {
+          name: matchedFarmer.name,
+          location: matchedFarmer.location,
+          crop: matchedFarmer.crop,
+          land: matchedFarmer.land,
+          season: matchedFarmer.season
+        };
+        session.state = 'MAIN_MENU';
+        this.pushHistory(user, 'MAIN_MENU');
+        WhatsAppUserService.updateSession(user.id, {
+          accountStatus: 'CONNECTED',
+          farmerId: matchedFarmer.id,
+          phoneNumber: demoPhone,
+          farmerProfile: session.farmerProfile,
+          state: 'MAIN_MENU'
+        });
+        // Show field context instead of plain main menu
+        return ResponseFormatterService.buildFieldContext(matchedFarmer, lang);
+      }
+    }
+
     const inputPhone = payload?.phone || text;
     const cleanPhone = (inputPhone || '').replace(/[^0-9]/g, '');
 
@@ -304,16 +338,8 @@ export class WhatsAppStateMachineService {
         state: 'MAIN_MENU'
       });
 
-      // Format connected success message followed by main menu
-      const successMsg = ResponseFormatterService.buildAccountConnected(matchedFarmer, lang);
-      const mainMenu = ResponseFormatterService.buildMainMenu(lang);
-
-      return {
-        text: `${successMsg}\n\n────────────────────\n\n${mainMenu.text}`,
-        interactiveType: mainMenu.interactiveType,
-        listTitle: mainMenu.listTitle,
-        buttons: mainMenu.buttons
-      };
+      // Show field context card after successful account link
+      return ResponseFormatterService.buildFieldContext(matchedFarmer, lang);
     }
 
     // Account not found
@@ -331,19 +357,25 @@ export class WhatsAppStateMachineService {
     const session = WhatsAppUserService.getSession(user.id);
     const lang = session.language;
 
-    // Check if user selected one of the 6 services via button/list/number
+    // Check if user selected one of the services via button/list/number
     let chosenService: string | null = null;
-    if (action === 'SRV_PRICE_RISK' || /^(1|price\s*risk|before\s*you\s*sow)/i.test(text)) {
+    if (action === 'SRV_FIELD_ADVICE' || /^(0|1|my field advice|field advice|aaj ki salah|aaj ki salaah|mere khet|meri fasal|salah|apna khet)/i.test(text)) {
+      chosenService = 'FIELD_ADVICE';
+    } else if (action === 'SRV_CROP_HEALTH' || /^(2|crop health|fasal ka swasthya|crop status|ndvi|fasal ki sthiti)/i.test(text)) {
+      chosenService = 'CROP_HEALTH';
+    } else if (action === 'SRV_PRICE_RISK' || /^(6|price\s*risk|before\s*you\s*sow)/i.test(text)) {
       chosenService = 'PRICE_RISK';
-    } else if (action === 'SRV_CLIMATE_RISK' || /^(2|climate\s*risk|weather|mausam)/i.test(text)) {
+    } else if (action === 'SRV_CLIMATE_RISK' || /^(3|climate\s*risk|weather|mausam)/i.test(text)) {
       chosenService = 'CLIMATE_RISK';
-    } else if (action === 'SRV_AGGREGATION' || /^(3|aggregation|group\s*selling)/i.test(text)) {
+    } else if (action === 'SRV_AGGREGATION' || /^(aggregation|group\s*selling)/i.test(text)) {
       chosenService = 'AGGREGATION';
-    } else if (action === 'SRV_CROP_INSURANCE' || /^(4|crop\s*insurance|insurance|bima)/i.test(text)) {
+    } else if (action === 'SRV_CROP_INSURANCE' || /^(crop\s*insurance|insurance|bima)/i.test(text)) {
       chosenService = 'CROP_INSURANCE';
-    } else if (action === 'SRV_SMART_MANDI' || /^(5|smart\s*mandi|mandi|bhav)/i.test(text)) {
+    } else if (action === 'SRV_SMART_MANDI' || /^(4|smart\s*mandi|mandi|bhav)/i.test(text)) {
       chosenService = 'SMART_MANDI';
-    } else if (action === 'SRV_BASIC_NEEDS' || /^(6|basic\s*farmer\s*needs|farmer\s*needs)/i.test(text)) {
+    } else if (action === 'SRV_CROP_DISEASE' || /^(5|crop\s*disease|disease|bimari|roga|daag)/i.test(text)) {
+      chosenService = 'CROP_DISEASE';
+    } else if (action === 'SRV_BASIC_NEEDS' || /^(basic\s*farmer\s*needs|farmer\s*needs)/i.test(text)) {
       chosenService = 'BASIC_FARMER_NEEDS';
     }
 
@@ -351,8 +383,9 @@ export class WhatsAppStateMachineService {
     if (!chosenService && text.length > 2) {
       const intentClass = await IntentRouterService.classify(text);
       if (intentClass.intent === 'CLIMATE_RISK') chosenService = 'CLIMATE_RISK';
-      else if (intentClass.intent === 'SMART_MANDI' || intentClass.intent === 'PRICE_INFORMATION') chosenService = 'SMART_MANDI';
-      else if (intentClass.intent === 'CROP_DISEASE') chosenService = 'BASIC_FARMER_NEEDS';
+      else if (intentClass.intent === 'SMART_MANDI' || intentClass.intent === 'PRICE_INFORMATION') {
+        chosenService = 'SMART_MANDI';
+      } else if (intentClass.intent === 'CROP_DISEASE') chosenService = 'CROP_DISEASE';
       else if (intentClass.intent === 'GOVERNMENT_SCHEME') chosenService = 'BASIC_FARMER_NEEDS';
     }
 
@@ -385,6 +418,94 @@ export class WhatsAppStateMachineService {
     });
 
     switch (service) {
+      // 0. FIELD ADVICE (Hero) — Satellite + Soil + Weather integrated
+      case 'FIELD_ADVICE': {
+        const location = farmer?.location || user.locationName || 'Nashik';
+        const crop = farmer?.crop || 'Tomato';
+        const isHaldia = location.toLowerCase().includes('haldia') || location.toLowerCase().includes('west bengal');
+
+        // Demo satellite values based on farmer location
+        const ndvi = isHaldia ? 0.54 : 0.62;
+        const soilScore = isHaldia ? 68 : 74;
+
+        // Try live weather, graceful fallback
+        let weatherTemp: number | undefined;
+        let weatherCondition: string | undefined;
+        let rainProbability: number | undefined;
+        let assessmentRiskLevel: string | undefined;
+
+        try {
+          const weather = await fetchWeatherData(location);
+          const flood = await fetchFloodRisk(weather, location);
+          const assessment = ClimateEngine.analyze(weather, flood, crop, 'Vegetative');
+          weatherTemp = Math.round(weather.temperatureCelsius);
+          weatherCondition = weather.condition;
+          rainProbability = weather.rainfallProbability;
+          assessmentRiskLevel = assessment?.overallRiskLevel;
+        } catch {
+          // Use demo fallback values
+          weatherTemp = 29;
+          weatherCondition = 'Partly Cloudy';
+          rainProbability = 65;
+        }
+
+        return ResponseFormatterService.buildFieldAdviceResult({
+          farmer: farmer || { name: 'Demo Farmer', location, crop, land: '2 Acres' },
+          ndvi,
+          soilScore,
+          weatherTemp,
+          weatherCondition,
+          rainProbability,
+          assessmentRiskLevel,
+          isDemo: true
+        }, lang);
+      }
+
+      // 0b. CROP HEALTH — Satellite NDVI report
+      case 'CROP_HEALTH': {
+        const location = farmer?.location || user.locationName || 'Nashik';
+        const crop = farmer?.crop || 'Tomato';
+        const isHaldia = location.toLowerCase().includes('haldia') || location.toLowerCase().includes('west bengal');
+        const ndvi = isHaldia ? 0.54 : 0.62;
+        const trend: 'INCREASING' | 'STABLE' | 'DECREASING' = isHaldia ? 'STABLE' : 'STABLE';
+
+        return ResponseFormatterService.buildCropHealthResult({
+          ndvi,
+          trend,
+          location,
+          crop,
+          isDemo: true
+        }, lang);
+      }
+
+      // 0c. CROP DISEASE — Demo diagnosis
+      case 'CROP_DISEASE': {
+        const crop = farmer?.crop || 'Tomato';
+        const isRice = crop.toLowerCase().includes('paddy') || crop.toLowerCase().includes('rice');
+        return ResponseFormatterService.buildCropDiseaseDetected({
+          crop,
+          disease: isRice ? 'Blast (Blast Fungus)' : 'Early Blight (Alternaria solani)',
+          confidence: 0.78,
+          actions: [
+            lang === 'hi'
+              ? 'प्रभावित पत्तियों को हटाकर जलाएं।'
+              : lang === 'bn'
+              ? 'ক্ষতিগ্রস্ত পাতা সরিয়ে পুড়িয়ে ফেলুন।'
+              : 'Remove and burn heavily affected leaves.',
+            lang === 'hi'
+              ? 'ऊपर से अनावश्यक पानी देना बंद करें।'
+              : lang === 'bn'
+              ? 'অতিরিক্ত উপরি-সেচ বন্ধ করুন।'
+              : 'Avoid unnecessary overhead watering.',
+            lang === 'hi'
+              ? 'Mancozeb 2.5 g/L पानी में मिलाकर छिड़काव करें।'
+              : lang === 'bn'
+              ? 'Mancozeb ২.৫ g/L জলে মিশিয়ে স্প্রে করুন।'
+              : 'Spray Mancozeb 2.5 g/L solution on affected areas.'
+          ]
+        }, lang);
+      }
+
       // 1. PRICE RISK / BEFORE YOU SOW
       case 'PRICE_RISK': {
         const crop = subSelection || farmer?.crop || 'Tomato';

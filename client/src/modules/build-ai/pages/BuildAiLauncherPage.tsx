@@ -4,12 +4,14 @@ import { BuildAiShell } from '../components/BuildAiShell.js';
 import { useSharedField } from '../context/SharedFieldContext.js';
 import { useLanguage } from '../../../context/LanguageContext.js';
 import { tokens } from '../theme.js';
+import { WhatsAppSimulatorModal } from '../../sih/sahayak/components/WhatsAppSimulatorModal.js';
 
 export const BuildAiLauncherPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { fields, selectedFieldId, selectedField, setSelectedFieldId, isLoadingFields } = useSharedField();
   const [isFieldDropdownOpen, setIsFieldDropdownOpen] = useState(false);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
 
   // Field details fallback
   const fieldName = selectedField?.field_name || 'East Wheat Parcel';
@@ -657,8 +659,95 @@ export const BuildAiLauncherPage: React.FC = () => {
               arrow_forward
             </span>
           </div>
+
+          {/* 6. WHATSAPP ACCESS CHANNEL: WhatsApp Sahayak AI Demo */}
+          <div
+            className="home-slot-sahayak"
+            onClick={() => setIsSimulatorOpen(true)}
+            style={{
+              background: 'linear-gradient(135deg, #064E3B 0%, #065F46 100%)',
+              borderRadius: tokens.radii.md,
+              border: '1.5px solid rgba(52, 211, 153, 0.35)',
+              padding: '0.85rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              gap: '0.75rem',
+              boxShadow: '0 4px 14px rgba(6, 78, 59, 0.25)',
+              color: '#FFFFFF'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: tokens.radii.sm,
+                background: '#25D366',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chat</span>
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <span style={{ fontSize: '0.84rem', fontWeight: 800, color: '#FFFFFF' }}>
+                    {t('buildAi.sahayakDemoTitle')}
+                  </span>
+                  <span style={{
+                    fontSize: '9px',
+                    fontWeight: 900,
+                    background: '#25D366',
+                    color: '#064E3B',
+                    padding: '1px 5px',
+                    borderRadius: '4px',
+                    textTransform: 'uppercase'
+                  }}>
+                    Demo
+                  </span>
+                </div>
+                <div style={{ fontSize: tokens.typography.micro, color: '#D1FAE5', marginTop: '2px', fontWeight: 500 }}>
+                  {t('buildAi.sahayakDemoDesc')}
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSimulatorOpen(true);
+              }}
+              style={{
+                background: '#25D366',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: tokens.radii.xs,
+                padding: '4px 10px',
+                fontSize: tokens.typography.micro,
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+                flexShrink: 0
+              }}
+            >
+              <span>{t('buildAi.sahayakDemoBtn')}</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Realistic WhatsApp Smartphone Interface Modal */}
+      <WhatsAppSimulatorModal
+        isOpen={isSimulatorOpen}
+        onClose={() => setIsSimulatorOpen(false)}
+      />
     </BuildAiShell>
   );
 };

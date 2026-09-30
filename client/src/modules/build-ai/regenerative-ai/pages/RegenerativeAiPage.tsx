@@ -7,6 +7,7 @@ import { BuildAiShell } from '../../components/BuildAiShell.js';
 import { useSharedField } from '../../context/SharedFieldContext.js';
 import { useLanguage } from '../../../../context/LanguageContext.js';
 import { tokens } from '../../theme.js';
+import { WhatsAppSimulatorModal } from '../../../sih/sahayak/components/WhatsAppSimulatorModal.js';
 
 export const RegenerativeAiPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export const RegenerativeAiPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isWhyModalOpen, setIsWhyModalOpen] = useState<boolean>(false);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
   const [showFieldDetails, setShowFieldDetails] = useState<boolean>(false);
   const [completedActions, setCompletedActions] = useState<Record<string, boolean>>({});
   const [expandedActionId, setExpandedActionId] = useState<string | null>(null);
@@ -450,27 +452,51 @@ export const RegenerativeAiPage: React.FC = () => {
         paddingTop: '0.5rem',
         borderTop: `1px solid ${tokens.colors.borderDefault}`
       }}>
-        {/* Why this advice? Button */}
-        <button
-          onClick={() => setIsWhyModalOpen(true)}
-          style={{
-            background: tokens.colors.surfaceLight,
-            border: `1.5px solid ${tokens.colors.statusGoodBorder}`,
-            borderRadius: tokens.radii.sm,
-            padding: '0.55rem 0.9rem',
-            color: tokens.colors.primaryLeaf,
-            fontSize: tokens.typography.small,
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            boxShadow: tokens.shadows.subtle
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '17px' }}>help_outline</span>
-          <span>{t('buildAi.regenerative.whyModalTitle')}</span>
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* Why this advice? Button */}
+          <button
+            onClick={() => setIsWhyModalOpen(true)}
+            style={{
+              background: tokens.colors.surfaceLight,
+              border: `1.5px solid ${tokens.colors.statusGoodBorder}`,
+              borderRadius: tokens.radii.sm,
+              padding: '0.55rem 0.9rem',
+              color: tokens.colors.primaryLeaf,
+              fontSize: tokens.typography.small,
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: tokens.shadows.subtle
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '17px' }}>help_outline</span>
+            <span>{t('buildAi.regenerative.whyModalTitle')}</span>
+          </button>
+
+          {/* Try on WhatsApp Button */}
+          <button
+            onClick={() => setIsSimulatorOpen(true)}
+            style={{
+              background: 'linear-gradient(135deg, #064E3B 0%, #065F46 100%)',
+              border: '1.5px solid rgba(52, 211, 153, 0.4)',
+              borderRadius: tokens.radii.sm,
+              padding: '0.55rem 0.9rem',
+              color: '#FFFFFF',
+              fontSize: tokens.typography.small,
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              boxShadow: tokens.shadows.subtle
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#34D399' }}>chat</span>
+            <span>{t('buildAi.sahayakDemoBtn')}</span>
+          </button>
+        </div>
 
         {/* More field details Toggle */}
         <button
@@ -547,6 +573,12 @@ export const RegenerativeAiPage: React.FC = () => {
         weatherInfo={t('buildAi.regenerative.climateCondition')}
         soilInfo="pH 6.5 · Organic Carbon 0.62% · Score 74/100"
         satelliteInfo="NDVI 0.72 · Field Average Good"
+      />
+
+      {/* Realistic WhatsApp Smartphone Interface Modal */}
+      <WhatsAppSimulatorModal
+        isOpen={isSimulatorOpen}
+        onClose={() => setIsSimulatorOpen(false)}
       />
     </BuildAiShell>
   );

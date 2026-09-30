@@ -29,6 +29,7 @@ export type SahayakStateMachineState =
   | 'END_SESSION';
 
 export type SahayakServiceCategory =
+  | 'FIELD_ADVICE'
   | 'PRICE_RISK'
   | 'CLIMATE_RISK'
   | 'AGGREGATION'

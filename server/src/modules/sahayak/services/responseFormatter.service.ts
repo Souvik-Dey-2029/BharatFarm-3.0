@@ -99,23 +99,44 @@ export class ResponseFormatterService {
       return {
         text:
           `अपना BharatFarm अकाउंट कनेक्ट करने के लिए अपना registered mobile number भेजें।\n\n` +
-          `📱 *Enter Mobile Number:*\n` +
-          `(उदा. 9876543210)`
+          `📱 *मोबाइल नंबर दर्ज करें:*\n` +
+          `(उदा. 9876543210)\n\n` +
+          `_💡 Demo Mode: नीचे से Demo Farmer चुनें।_`,
+        interactiveType: 'button',
+        buttons: [
+          { id: 'DEMO_FARMER_NASHIK', title: '🧑\u200d🌾 Nashik Demo' },
+          { id: 'DEMO_FARMER_HALDIA', title: '🧑\u200d🌾 Haldia Demo' },
+          { id: 'DEMO_FARMER_PUNJAB', title: '🧑\u200d🌾 Punjab Demo' }
+        ]
       };
     }
     if (language === 'bn') {
       return {
         text:
           `BharatFarm অ্যাকাউন্ট সংযুক্ত করতে আপনার registered mobile number পাঠান।\n\n` +
-          `📱 *Enter Mobile Number:*\n` +
-          `(যেমন: 9876543210)`
+          `📱 *মোবাইল নম্বর লিখুন:*\n` +
+          `(যেমন: 9831200001)\n\n` +
+          `_💡 Demo Mode: নিচে থেকে Demo Farmer বেছে নিন।_`,
+        interactiveType: 'button',
+        buttons: [
+          { id: 'DEMO_FARMER_NASHIK', title: '🧑\u200d🌾 Nashik Demo' },
+          { id: 'DEMO_FARMER_HALDIA', title: '🧑\u200d🌾 Haldia Demo' },
+          { id: 'DEMO_FARMER_PUNJAB', title: '🧑\u200d🌾 Punjab Demo' }
+        ]
       };
     }
     return {
       text:
-        `To connect your BharatFarm account, please enter your registered mobile number.\n\n` +
+        `To connect your BharatFarm account, enter your registered mobile number.\n\n` +
         `📱 *Enter Mobile Number:*\n` +
-        `(e.g. 9876543210)`
+        `(e.g. 9876543210)\n\n` +
+        `_💡 Demo Mode: tap a Demo Farmer below._`,
+      interactiveType: 'button',
+      buttons: [
+        { id: 'DEMO_FARMER_NASHIK', title: '🧑\u200d🌾 Nashik Demo' },
+        { id: 'DEMO_FARMER_HALDIA', title: '🧑\u200d🌾 Haldia Demo' },
+        { id: 'DEMO_FARMER_PUNJAB', title: '🧑\u200d🌾 Punjab Demo' }
+      ]
     };
   }
 
@@ -230,29 +251,93 @@ export class ResponseFormatterService {
   /**
    * 8. MAIN SAHAYAK MENU (6 Core BharatFarm modules)
    */
+  /**
+   * 8a. Field Context Confirmation (shown after account connects)
+   */
+  static buildFieldContext(
+    farmer: { name: string; location: string; crop?: string; land?: string },
+    language: SupportedWhatsAppLanguage
+  ): FormattedStepMessage {
+    const crop = farmer.crop || 'Crops';
+    const land = farmer.land || '';
+
+    if (language === 'hi') {
+      return {
+        text:
+          `✅ *अकाउंट कनेक्ट हो गया!*\n\n` +
+          `👤 *किसान:* ${farmer.name}\n` +
+          `📍 *स्थान:* ${farmer.location}\n` +
+          `🌱 *फसल:* ${crop}${land ? ` · ${land}` : ''}\n\n` +
+          `🛰️ *Satellite:* NDVI 0.62 · Moderate\n` +
+          `🧪 *Soil:* pH 6.5 · Score 74/100\n` +
+          `🌦️ *मौसम:* 29°C · बारिश संभव\n\n` +
+          `_Sahayak अब आपके खेत के डेटा के आधार पर मदद करेगा।_`,
+        interactiveType: 'button',
+        buttons: [
+          { id: 'SRV_FIELD_ADVICE', title: '🌾 My Field Advice' },
+          { id: 'NAV_MAIN_MENU', title: '📋 Main Menu' }
+        ]
+      };
+    }
+    if (language === 'bn') {
+      return {
+        text:
+          `✅ *অ্যাকাউন্ট সংযুক্ত হয়েছে!*\n\n` +
+          `👤 *কৃষক:* ${farmer.name}\n` +
+          `📍 *অবস্থান:* ${farmer.location}\n` +
+          `🌱 *ফসল:* ${crop}${land ? ` · ${land}` : ''}\n\n` +
+          `🛰️ *Satellite:* NDVI 0.54 · Moderate\n` +
+          `🧪 *Soil:* pH 6.8 · Score 68/100\n` +
+          `🌦️ *আবহাওয়া:* 29°C · বৃষ্টি সম্ভব\n\n` +
+          `_Sahayak এখন আপনার মাঠের তথ্য অনুযায়ী সাহায্য করবে।_`,
+        interactiveType: 'button',
+        buttons: [
+          { id: 'SRV_FIELD_ADVICE', title: '🌾 My Field Advice' },
+          { id: 'NAV_MAIN_MENU', title: '📋 Main Menu' }
+        ]
+      };
+    }
+    return {
+      text:
+        `✅ *Account connected!*\n\n` +
+        `👤 *Farmer:* ${farmer.name}\n` +
+        `📍 *Location:* ${farmer.location}\n` +
+        `🌱 *Crop:* ${crop}${land ? ` · ${land}` : ''}\n\n` +
+        `🛰️ *Satellite:* NDVI 0.62 · Moderate crop health\n` +
+        `🧪 *Soil:* pH 6.5 · Score 74/100\n` +
+        `🌦️ *Weather:* 29°C · Rain possible\n\n` +
+        `_Sahayak is now using your field context for all advice._`,
+      interactiveType: 'button',
+      buttons: [
+        { id: 'SRV_FIELD_ADVICE', title: '🌾 My Field Advice' },
+        { id: 'NAV_MAIN_MENU', title: '📋 Main Menu' }
+      ]
+    };
+  }
+
   static buildMainMenu(language: SupportedWhatsAppLanguage): FormattedStepMessage {
     if (language === 'hi') {
       const text =
         `🌾 *BharatFarm Sahayak*\n\n` +
-        `आप कौन-सी सेवा लेना चाहते हैं?\n\n` +
-        `1️⃣ Before You Sow / Price Risk\n` +
-        `2️⃣ Climate Risk\n` +
-        `3️⃣ Aggregation\n` +
-        `4️⃣ Crop Insurance\n` +
-        `5️⃣ Smart Mandi\n` +
-        `6️⃣ Basic Farmer Needs`;
+        `मैं आपकी कैसे मदद कर सकता हूं?\n\n` +
+        `⭐ 1️⃣ मेरे खेत की सलाह (My Field Advice)\n` +
+        `🌱 2️⃣ फसल स्वास्थ्य (Crop Health)\n` +
+        `🌦️ 3️⃣ मौसम (Weather)\n` +
+        `📊 4️⃣ मंडी भाव (Smart Mandi)\n` +
+        `🔬 5️⃣ फसल रोग (Crop Disease)\n` +
+        `🌾 6️⃣ Before You Sow / Risk`;
 
       return {
         text,
         interactiveType: 'list',
-        listTitle: 'सेवा चुनें (Select Service)',
+        listTitle: 'सेवा चुनें',
         buttons: [
-          { id: 'SRV_PRICE_RISK', title: '🌾 1. Price Risk' },
-          { id: 'SRV_CLIMATE_RISK', title: '🌦️ 2. Climate Risk' },
-          { id: 'SRV_AGGREGATION', title: '👥 3. Aggregation' },
-          { id: 'SRV_CROP_INSURANCE', title: '🛡️ 4. Crop Insurance' },
-          { id: 'SRV_SMART_MANDI', title: '📊 5. Smart Mandi' },
-          { id: 'SRV_BASIC_NEEDS', title: '🧰 6. Farmer Needs' }
+          { id: 'SRV_FIELD_ADVICE', title: '⭐ 1. My Field Advice' },
+          { id: 'SRV_CROP_HEALTH', title: '🌱 2. Crop Health' },
+          { id: 'SRV_CLIMATE_RISK', title: '🌦️ 3. Weather' },
+          { id: 'SRV_SMART_MANDI', title: '📊 4. Smart Mandi' },
+          { id: 'SRV_CROP_DISEASE', title: '🔬 5. Crop Disease' },
+          { id: 'SRV_PRICE_RISK', title: '🌾 6. Before You Sow' }
         ]
       };
     }
@@ -260,50 +345,293 @@ export class ResponseFormatterService {
     if (language === 'bn') {
       const text =
         `🌾 *BharatFarm Sahayak*\n\n` +
-        `আপনি কোন পরিষেবাটি নিতে চান?\n\n` +
-        `1️⃣ Before You Sow / Price Risk\n` +
-        `2️⃣ Climate Risk\n` +
-        `3️⃣ Aggregation\n` +
-        `4️⃣ Crop Insurance\n` +
-        `5️⃣ Smart Mandi\n` +
-        `6️⃣ Basic Farmer Needs`;
+        `আমি আপনাকে কীভাবে সাহায্য করতে পারি?\n\n` +
+        `⭐ 1️⃣ আমার মাঠের পরামর্শ (My Field Advice)\n` +
+        `🌱 2️⃣ ফসল স্বাস্থ্য (Crop Health)\n` +
+        `🌦️ 3️⃣ আবহাওয়া (Weather)\n` +
+        `📊 4️⃣ বাজার দর (Smart Mandi)\n` +
+        `🔬 5️⃣ ফসলের রোগ (Crop Disease)\n` +
+        `🌾 6️⃣ বপনের আগে (Before You Sow)`;
 
       return {
         text,
         interactiveType: 'list',
         listTitle: 'পরিষেবা নির্বাচন করুন',
         buttons: [
-          { id: 'SRV_PRICE_RISK', title: '🌾 1. Price Risk' },
-          { id: 'SRV_CLIMATE_RISK', title: '🌦️ 2. Climate Risk' },
-          { id: 'SRV_AGGREGATION', title: '👥 3. Aggregation' },
-          { id: 'SRV_CROP_INSURANCE', title: '🛡️ 4. Crop Insurance' },
-          { id: 'SRV_SMART_MANDI', title: '📊 5. Smart Mandi' },
-          { id: 'SRV_BASIC_NEEDS', title: '🧰 6. Farmer Needs' }
+          { id: 'SRV_FIELD_ADVICE', title: '⭐ 1. My Field Advice' },
+          { id: 'SRV_CROP_HEALTH', title: '🌱 2. Crop Health' },
+          { id: 'SRV_CLIMATE_RISK', title: '🌦️ 3. Weather' },
+          { id: 'SRV_SMART_MANDI', title: '📊 4. Smart Mandi' },
+          { id: 'SRV_CROP_DISEASE', title: '🔬 5. Crop Disease' },
+          { id: 'SRV_PRICE_RISK', title: '🌾 6. Before You Sow' }
         ]
       };
     }
 
     const text =
       `🌾 *BharatFarm Sahayak*\n\n` +
-      `Which service would you like to use?\n\n` +
-      `1️⃣ Before You Sow / Price Risk\n` +
-      `2️⃣ Climate Risk\n` +
-      `3️⃣ Aggregation\n` +
-      `4️⃣ Crop Insurance\n` +
-      `5️⃣ Smart Mandi\n` +
-      `6️⃣ Basic Farmer Needs`;
+      `How can I help you today?\n\n` +
+      `⭐ 1️⃣ My Field Advice\n` +
+      `🌱 2️⃣ Crop Health\n` +
+      `🌦️ 3️⃣ Weather\n` +
+      `📊 4️⃣ Smart Mandi\n` +
+      `🔬 5️⃣ Crop Disease\n` +
+      `🌾 6️⃣ Before You Sow`;
 
     return {
       text,
       interactiveType: 'list',
       listTitle: 'Select Service',
       buttons: [
-        { id: 'SRV_PRICE_RISK', title: '🌾 1. Price Risk' },
-        { id: 'SRV_CLIMATE_RISK', title: '🌦️ 2. Climate Risk' },
-        { id: 'SRV_AGGREGATION', title: '👥 3. Aggregation' },
-        { id: 'SRV_CROP_INSURANCE', title: '🛡️ 4. Crop Insurance' },
-        { id: 'SRV_SMART_MANDI', title: '📊 5. Smart Mandi' },
-        { id: 'SRV_BASIC_NEEDS', title: '🧰 6. Farmer Needs' }
+        { id: 'SRV_FIELD_ADVICE', title: '⭐ 1. My Field Advice' },
+        { id: 'SRV_CROP_HEALTH', title: '🌱 2. Crop Health' },
+        { id: 'SRV_CLIMATE_RISK', title: '🌦️ 3. Weather' },
+        { id: 'SRV_SMART_MANDI', title: '📊 4. Smart Mandi' },
+        { id: 'SRV_CROP_DISEASE', title: '🔬 5. Crop Disease' },
+        { id: 'SRV_PRICE_RISK', title: '🌾 6. Before You Sow' }
+      ]
+    };
+  }
+
+  /**
+   * 16a. Field Advice Hero Result — Satellite + Soil + Weather + Crop integrated
+   */
+  static buildFieldAdviceResult(
+    data: {
+      farmer: { name: string; location: string; crop?: string; land?: string };
+      ndvi: number;
+      soilScore: number;
+      weatherTemp?: number;
+      weatherCondition?: string;
+      rainProbability?: number;
+      assessmentRiskLevel?: string;
+      isDemo?: boolean;
+    },
+    language: SupportedWhatsAppLanguage
+  ): FormattedStepMessage {
+    const { farmer, ndvi, soilScore, weatherTemp, weatherCondition, rainProbability, assessmentRiskLevel, isDemo } = data;
+    const crop = farmer.crop || 'Crop';
+    const location = farmer.location;
+    const temp = weatherTemp ?? 29;
+    const condition = weatherCondition ?? 'Partly Cloudy';
+    const rain = rainProbability ?? 60;
+
+    // Determine advice points based on data
+    const ndviStatus = ndvi >= 0.65 ? '✅ GOOD' : ndvi >= 0.50 ? '⚠️ MODERATE' : '🔴 LOW';
+    const soilStatus = soilScore >= 75 ? '✅ GOOD' : soilScore >= 55 ? '⚠️ MODERATE' : '🔴 LOW';
+    const rainAlert = rain >= 60;
+
+    const demoLabel = isDemo ? `\n_🧪 [Demo Field Data]_` : '';
+
+    let body = '';
+    if (language === 'hi') {
+      const advice1 = soilScore < 75
+        ? `1️⃣ *मिट्टी में Nitrogen की कमी है*\n   25 kg/एकड़ Urea अगली सिंचाई से पहले डालें।`
+        : `1️⃣ *मिट्टी अच्छी अवस्था में है*\n   नियमित देखभाल जारी रखें।`;
+      const advice2 = ndvi < 0.65
+        ? `2️⃣ *NDVI ${ndvi.toFixed(2)} — फसल पर ध्यान दें*\n   खेत के उत्तर क्षेत्र में पत्तियों की जांच करें।`
+        : `2️⃣ *फसल स्वास्थ्य अच्छा है (NDVI ${ndvi.toFixed(2)})*\n   निगरानी जारी रखें।`;
+      const advice3 = rainAlert
+        ? `3️⃣ *${rain}% बारिश की संभावना*\n   सिंचाई 48 घंटे के लिए टालें।`
+        : `3️⃣ *मौसम ${temp}°C, ${condition}*\n   सिंचाई का उचित समय है।`;
+
+      body =
+        `🌾 *आज की खेत सलाह*\n` +
+        `📍 ${location} · ${crop}${farmer.land ? ` · ${farmer.land}` : ''}\n\n` +
+        `━━━━━━━━━━━━━━━━━━\n` +
+        `🛰️ Satellite: NDVI ${ndvi.toFixed(2)} ${ndviStatus}\n` +
+        `🧪 Soil: ${soilScore}/100 ${soilStatus}\n` +
+        `🌦️ मौसम: ${temp}°C · बारिश ${rain}%\n` +
+        `━━━━━━━━━━━━━━━━━━\n\n` +
+        `*🎯 आज के 3 काम:*\n\n` +
+        `${advice1}\n\n` +
+        `${advice2}\n\n` +
+        `${advice3}\n\n` +
+        `📊 *संकेत:* Satellite ✓ · Soil ✓ · Climate ✓ · Crop ✓\n` +
+        `────────────────────\n` +
+        `आगे क्या करना चाहेंगे?` +
+        demoLabel;
+    } else if (language === 'bn') {
+      const advice1 = soilScore < 75
+        ? `1️⃣ *মাটিতে Nitrogen কম*\n   পরবর্তী সেচের আগে ২৫কেজি/একর ইউরিয়া দিন।`
+        : `1️⃣ *মাটির অবস্থা ভালো*\n   নিয়মিত যত্ন চালিয়ে যান।`;
+      const advice2 = ndvi < 0.65
+        ? `2️⃣ *NDVI ${ndvi.toFixed(2)} — ফসলের দিকে মনোযোগ দিন*\n   উত্তর অংশে পাতা পরীক্ষা করুন।`
+        : `2️⃣ *ফসলের স্বাস্থ্য ভালো (NDVI ${ndvi.toFixed(2)})*\n   পর্যবেক্ষণ চালিয়ে যান।`;
+      const advice3 = rainAlert
+        ? `3️⃣ *${rain}% বৃষ্টির সম্ভাবনা*\n   ৪৮ ঘণ্টা সেচ স্থগিত রাখুন।`
+        : `3️⃣ *আবহাওয়া ${temp}°C, ${condition}*\n   সেচের উপযুক্ত সময়।`;
+
+      body =
+        `🌾 *আজকের মাঠ পরামর্শ*\n` +
+        `📍 ${location} · ${crop}${farmer.land ? ` · ${farmer.land}` : ''}\n\n` +
+        `━━━━━━━━━━━━━━━━━━\n` +
+        `🛰️ Satellite: NDVI ${ndvi.toFixed(2)} ${ndviStatus}\n` +
+        `🧪 Soil: ${soilScore}/100 ${soilStatus}\n` +
+        `🌦️ আবহাওয়া: ${temp}°C · বৃষ্টি ${rain}%\n` +
+        `━━━━━━━━━━━━━━━━━━\n\n` +
+        `*🎯 আজকের ৩টি কাজ:*\n\n` +
+        `${advice1}\n\n` +
+        `${advice2}\n\n` +
+        `${advice3}\n\n` +
+        `📊 *সংকেত:* Satellite ✓ · Soil ✓ · Climate ✓ · Crop ✓\n` +
+        `────────────────────\n` +
+        `পরবর্তী পদক্ষেপ নির্বাচন করুন:` +
+        demoLabel;
+    } else {
+      const advice1 = soilScore < 75
+        ? `1️⃣ *Nitrogen deficiency detected*\n   Apply 25kg/acre urea before next watering.`
+        : `1️⃣ *Soil health is good*\n   Continue regular maintenance.`;
+      const advice2 = ndvi < 0.65
+        ? `2️⃣ *NDVI ${ndvi.toFixed(2)} — moderate crop health*\n   Inspect canopy in north zone this week.`
+        : `2️⃣ *Crop looks healthy (NDVI ${ndvi.toFixed(2)})*\n   Continue monitoring.`;
+      const advice3 = rainAlert
+        ? `3️⃣ *Rain expected (${rain}%)*\n   Delay irrigation 48h — save water cost.`
+        : `3️⃣ *Weather: ${temp}°C, ${condition}*\n   Good window for irrigation today.`;
+
+      body =
+        `🌾 *TODAY'S FARM ADVICE*\n` +
+        `📍 ${location} · ${crop}${farmer.land ? ` · ${farmer.land}` : ''}\n\n` +
+        `━━━━━━━━━━━━━━━━━━\n` +
+        `🛰️ Satellite: NDVI ${ndvi.toFixed(2)} ${ndviStatus}\n` +
+        `🧪 Soil: ${soilScore}/100 ${soilStatus}\n` +
+        `🌦️ Weather: ${temp}°C · ${condition} · Rain ${rain}%\n` +
+        `━━━━━━━━━━━━━━━━━━\n\n` +
+        `*🎯 3 actions for today:*\n\n` +
+        `${advice1}\n\n` +
+        `${advice2}\n\n` +
+        `${advice3}\n\n` +
+        `📊 *Signals:* Satellite ✓ · Soil ✓ · Climate ✓ · Crop ✓\n` +
+        `────────────────────\n` +
+        `What would you like to do next?` +
+        demoLabel;
+    }
+
+    return {
+      text: body,
+      interactiveType: 'button',
+      buttons: [
+        { id: 'NAV_MAIN_MENU', title: '🏠 Main Menu' },
+        { id: 'SRV_CLIMATE_RISK', title: '🌦️ Weather detail' },
+        { id: 'SRV_SMART_MANDI', title: '📊 Mandi price' }
+      ]
+    };
+  }
+
+  /**
+   * 16b. Crop Health Result
+   */
+  static buildCropHealthResult(
+    data: {
+      ndvi: number;
+      trend: 'INCREASING' | 'STABLE' | 'DECREASING';
+      location: string;
+      crop: string;
+      isDemo?: boolean;
+    },
+    language: SupportedWhatsAppLanguage
+  ): FormattedStepMessage {
+    const { ndvi, trend, location, crop, isDemo } = data;
+    const status = ndvi >= 0.65 ? 'GOOD' : ndvi >= 0.50 ? 'MODERATE' : 'LOW';
+    const statusEmoji = ndvi >= 0.65 ? '✅' : ndvi >= 0.50 ? '⚠️' : '🔴';
+    const trendEmoji = trend === 'INCREASING' ? '📈' : trend === 'STABLE' ? '➡️' : '📉';
+    const demoLabel = isDemo ? `\n_🧪 [Demo Satellite Data — Sentinel-2]_` : '';
+
+    let body = '';
+    if (language === 'hi') {
+      const obs = ndvi < 0.65
+        ? `⚠️ उत्तर क्षेत्र में NDVI थोड़ा कम है — नजदीक से देखें।`
+        : `✅ पूरे खेत में वनस्पति स्वास्थ्य एक समान है।`;
+      body =
+        `🌱 *फसल स्वास्थ्य रिपोर्ट*\n\n` +
+        `📍 ${location} · ${crop}\n\n` +
+        `${statusEmoji} *स्थिति:* ${status}\n` +
+        `🛰️ *NDVI Score:* ${ndvi.toFixed(2)}\n` +
+        `${trendEmoji} *Trend:* ${trend}\n\n` +
+        `${obs}\n\n` +
+        `────────────────────\nआगे क्या करना चाहेंगे?` + demoLabel;
+    } else if (language === 'bn') {
+      const obs = ndvi < 0.65
+        ? `⚠️ উত্তর অঞ্চলে NDVI কিছুটা কম — নিবিড়ভাবে পর্যবেক্ষণ করুন।`
+        : `✅ পুরো মাঠে উদ্ভিদ স্বাস্থ্য একসমান।`;
+      body =
+        `🌱 *ফসলের স্বাস্থ্য রিপোর্ট*\n\n` +
+        `📍 ${location} · ${crop}\n\n` +
+        `${statusEmoji} *অবস্থা:* ${status}\n` +
+        `🛰️ *NDVI Score:* ${ndvi.toFixed(2)}\n` +
+        `${trendEmoji} *Trend:* ${trend}\n\n` +
+        `${obs}\n\n` +
+        `────────────────────\nপরবর্তী পদক্ষেপ নির্বাচন করুন:` + demoLabel;
+    } else {
+      const obs = ndvi < 0.65
+        ? `⚠️ North zone shows slightly lower NDVI — inspect that area closely.`
+        : `✅ Crop health is uniform across the field.`;
+      body =
+        `🌱 *CROP HEALTH*\n\n` +
+        `📍 ${location} · ${crop}\n\n` +
+        `${statusEmoji} *Status:* ${status}\n` +
+        `🛰️ *NDVI:* ${ndvi.toFixed(2)}\n` +
+        `${trendEmoji} *Trend:* ${trend}\n\n` +
+        `${obs}\n\n` +
+        `────────────────────\nWhat would you like to do next?` + demoLabel;
+    }
+
+    return {
+      text: body,
+      interactiveType: 'button',
+      buttons: [
+        { id: 'SRV_FIELD_ADVICE', title: '🌾 My Field Advice' },
+        { id: 'NAV_MAIN_MENU', title: '🏠 Main Menu' }
+      ]
+    };
+  }
+
+  /**
+   * 16c. Crop Disease Result from image scan
+   */
+  static buildCropDiseaseDetected(
+    data: { crop: string; disease: string; confidence: number; actions: string[] },
+    language: SupportedWhatsAppLanguage
+  ): FormattedStepMessage {
+    const conf = Math.round(data.confidence * 100);
+    let body = '';
+    if (language === 'hi') {
+      body =
+        `🔬 *फसल रोग निदान*\n\n` +
+        `🌱 *फसल:* ${data.crop}\n` +
+        `🦠 *संभावित रोग:* ${data.disease}\n` +
+        `📊 *Confidence:* ${conf}%\n\n` +
+        `*क्या करें:*\n` +
+        data.actions.map((a, i) => `${i + 1}. ${a}`).join('\n') +
+        `\n\n_रोग की पुष्टि के लिए स्थानीय कृषि विशेषज्ञ से मिलें।_\n` +
+        `────────────────────\nआगे क्या करना चाहेंगे?`;
+    } else if (language === 'bn') {
+      body =
+        `🔬 *ফসলের রোগ নির্ণয়*\n\n` +
+        `🌱 *ফসল:* ${data.crop}\n` +
+        `🦠 *সম্ভাব্য রোগ:* ${data.disease}\n` +
+        `📊 *Confidence:* ${conf}%\n\n` +
+        `*কী করবেন:*\n` +
+        data.actions.map((a, i) => `${i + 1}. ${a}`).join('\n') +
+        `\n\n_নিশ্চিতের জন্য স্থানীয় কৃষি বিশেষজ্ঞের সাথে যোগাযোগ করুন।_\n` +
+        `────────────────────\nপরবর্তী পদক্ষেপ নির্বাচন করুন:`;
+    } else {
+      body =
+        `🔬 *CROP DISEASE DIAGNOSIS*\n\n` +
+        `🌱 *Crop:* ${data.crop}\n` +
+        `🦠 *Possible issue:* ${data.disease}\n` +
+        `📊 *Confidence:* ${conf}%\n\n` +
+        `*What to do:*\n` +
+        data.actions.map((a, i) => `${i + 1}. ${a}`).join('\n') +
+        `\n\n_For certainty, consult your local agricultural extension officer._\n` +
+        `────────────────────\nWhat would you like to do next?`;
+    }
+    return {
+      text: body,
+      interactiveType: 'button',
+      buttons: [
+        { id: 'SRV_FIELD_ADVICE', title: '🌾 My Field Advice' },
+        { id: 'NAV_MAIN_MENU', title: '🏠 Main Menu' }
       ]
     };
   }

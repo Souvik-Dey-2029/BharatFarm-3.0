@@ -14,11 +14,14 @@ const waStyles = `
     50% { transform: scale(0.97); }
     100% { transform: scale(1); }
   }
+  @keyframes waPulse {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
+  }
   .wa-sim-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(11, 20, 26, 0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(11, 20, 26, 0.9);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,8 +86,41 @@ const waStyles = `
     color: #25D366;
     border-color: #00A884;
   }
+  .wa-interactive-btn.wa-hero-btn {
+    background: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+    color: #34D399;
+    border-color: rgba(52,211,153,0.4);
+    font-size: 0.88rem;
+  }
+  .wa-interactive-btn.wa-hero-btn:hover {
+    background: linear-gradient(135deg, #065F46 0%, #047857 100%);
+    color: #6EE7B7;
+  }
   .wa-interactive-btn:active {
     animation: waBtnPress 0.15s ease;
+  }
+  .wa-scenario-chip {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #D1D7DB;
+    border-radius: 16px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .wa-scenario-chip:hover {
+    background: rgba(37,211,102,0.15);
+    border-color: #25D366;
+    color: #25D366;
+  }
+  .wa-scenario-chip.hero {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.4);
+    color: #34D399;
   }
   .wa-dot {
     width: 6px;
@@ -96,6 +132,28 @@ const waStyles = `
   }
   .wa-dot:nth-child(2) { animation-delay: 0.2s; }
   .wa-dot:nth-child(3) { animation-delay: 0.4s; }
+  .wa-voice-bubble {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #005C4B;
+    border-radius: 14px 14px 2px 14px;
+    color: #E9EDEF;
+    font-size: 0.82rem;
+  }
+  .wa-voice-waveform {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 18px;
+  }
+  .wa-voice-bar {
+    width: 3px;
+    background: #25D366;
+    border-radius: 2px;
+    animation: waPulse 0.8s ease-in-out infinite;
+  }
 `;
 
 export interface WhatsAppMessageItem {
@@ -172,6 +230,97 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({ 
     }
 
     startAutomationWorkflow();
+  };
+
+  /**
+   * Run a full demo scenario end-to-end
+   */
+  const runScenario = async (scenarioName: string) => {
+    // Reset first
+    sessionIdRef.current = `sim-${scenarioName.toLowerCase().replace(/\s/g, '-')}-${Date.now()}`;
+    setMessages([]);
+    setFarmerProfile({});
+    setSessionState('START');
+
+    try {
+      await fetch('/api/sahayak/whatsapp/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: sessionIdRef.current, action: 'RESET' })
+      });
+    } catch { /* ignore */ }
+
+    // Start with HI
+    await startAutomationWorkflow();
+
+    // Scenario-specific steps run after initial load
+    // Judge can follow along or use the quick shortcuts that appear
+  };
+
+  /**
+   * Simulate a voice note being sent
+   */
+  const handleVoiceDemo = async (transcript: string) => {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Show voice bubble
+    const voiceMsg: WhatsAppMessageItem = {
+      id: `usr-voice-${Date.now()}`,
+      sender: 'farmer',
+      text: `🎤 Voice note`,
+      time: timeStr,
+      status: 'read'
+    };
+    setMessages(prev => [...prev, voiceMsg]);
+    setIsTyping(true);
+
+    // Show transcription after 1s delay
+    await new Promise(r => setTimeout(r, 1000));
+    const transcriptMsg: WhatsAppMessageItem = {
+      id: `sys-transcript-${Date.now()}`,
+      sender: 'sahayak',
+      text: `🎤 _Voice transcribed:_\n"${transcript}"\n\n_Processing intent..._`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: 'read'
+    };
+    setMessages(prev => [...prev, transcriptMsg]);
+
+    // Now send as text intent
+    await new Promise(r => setTimeout(r, 800));
+    await handleUserAction(undefined, undefined, transcript);
+  };
+
+  /**
+   * Simulate a crop photo being sent
+   */
+  const handleImageDemo = async () => {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    // Show image bubble placeholder
+    const imgMsg: WhatsAppMessageItem = {
+      id: `usr-img-${Date.now()}`,
+      sender: 'farmer',
+      text: `📷 Crop photo sent`,
+      time: timeStr,
+      status: 'read'
+    };
+    setMessages(prev => [...prev, imgMsg]);
+    setIsTyping(true);
+
+    await new Promise(r => setTimeout(r, 1200));
+    const ackMsg: WhatsAppMessageItem = {
+      id: `bot-ack-${Date.now()}`,
+      sender: 'sahayak',
+      text: `📷 _Image received. Analyzing crop..._`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      status: 'read'
+    };
+    setMessages(prev => [...prev, ackMsg]);
+    setIsTyping(false);
+
+    // Trigger crop disease service
+    await new Promise(r => setTimeout(r, 800));
+    await handleUserAction('SRV_CROP_DISEASE', '🔬 Crop Disease');
   };
 
   /**
@@ -624,15 +773,24 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({ 
                     marginTop: '0.1rem',
                     width: '100%'
                   }}>
-                    {m.buttons.map((btn) => (
-                      <button
-                        key={btn.id}
-                        className="wa-interactive-btn"
-                        onClick={() => handleUserAction(btn.id, btn.title)}
-                      >
-                        {btn.title}
-                      </button>
-                    ))}
+                    {m.buttons.map((btn) => {
+                      const isHero = btn.id === 'SRV_FIELD_ADVICE' || btn.title.includes('Field Advice');
+                      const isDemoFarmer = btn.id?.startsWith('DEMO_FARMER_');
+                      return (
+                        <button
+                          key={btn.id}
+                          className={`wa-interactive-btn${isHero ? ' wa-hero-btn' : ''}`}
+                          onClick={() => handleUserAction(btn.id, btn.title)}
+                          style={isDemoFarmer ? {
+                            background: 'rgba(52,211,153,0.1)',
+                            borderColor: 'rgba(52,211,153,0.3)',
+                            color: '#34D399'
+                          } : undefined}
+                        >
+                          {btn.title}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -662,94 +820,218 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({ 
           <div ref={chatBottomRef} />
         </div>
 
-        {/* Demo Quick Shortcuts Bar (Helpful during SIH evaluation) */}
+        {/* ── DEMO SCENARIOS BAR ── */}
+        <div style={{
+          background: '#0D1F2A',
+          padding: '0.4rem 0.75rem',
+          borderTop: '1px solid #1A2C38',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.4rem',
+          overflowX: 'auto',
+          whiteSpace: 'nowrap'
+        }}>
+          <span style={{ fontSize: '0.62rem', color: '#64748B', fontWeight: 900, letterSpacing: '0.04em', flexShrink: 0 }}>SCENARIOS:</span>
+          <button className="wa-scenario-chip hero" onClick={() => runScenario('field-advice')} title="Hero Demo: HI → Hindi → Demo Farmer → My Field Advice">
+            ⭐ Field Advice
+          </button>
+          <button className="wa-scenario-chip" onClick={() => runScenario('mandi')} title="Mandi price demo">
+            📊 Mandi
+          </button>
+          <button className="wa-scenario-chip" onClick={() => runScenario('weather')} title="Weather demo">
+            🌦️ Weather
+          </button>
+          <button className="wa-scenario-chip" onClick={() => runScenario('disease')} title="Crop disease demo">
+            🔬 Disease
+          </button>
+          <button className="wa-scenario-chip" onClick={() => runScenario('voice')} title="Voice demo">
+            🎤 Voice
+          </button>
+        </div>
+
+        {/* ── DEMO QUICK SHORTCUTS BAR ── */}
         <div style={{
           background: '#111B21',
           padding: '0.35rem 0.65rem',
-          borderTop: '1px solid #202C33',
+          borderTop: '1px solid #1A2C38',
           display: 'flex',
           alignItems: 'center',
           gap: '0.35rem',
           overflowX: 'auto',
           whiteSpace: 'nowrap'
         }}>
-          <span style={{ fontSize: '0.68rem', color: '#8696A0', fontWeight: 800 }}>Demo Inputs:</span>
-          {sessionState === 'ACCOUNT_LINK_PHONE' ? (
-            <button
-              onClick={() => handleUserAction(undefined, undefined, '9876543210')}
-              style={{
-                background: '#00A88422',
-                border: '1px solid #00A884',
-                color: '#25D366',
-                borderRadius: '12px',
-                padding: '0.2rem 0.6rem',
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
-            >
-              📱 9876543210 (Demo Farmer Nashik)
-            </button>
-          ) : sessionState === 'MAIN_MENU' ? (
+          <span style={{ fontSize: '0.64rem', color: '#475569', fontWeight: 800, flexShrink: 0 }}>QUICK:</span>
+
+          {/* === ACCOUNT_LINK_PHONE: show demo farmer buttons === */}
+          {sessionState === 'ACCOUNT_LINK_PHONE' && (
             <>
               <button
-                onClick={() => handleUserAction('SRV_PRICE_RISK', '🌾 Price Risk')}
+                onClick={() => handleUserAction('DEMO_FARMER_NASHIK', '🧑‍🌾 Nashik Demo')}
                 style={{
-                  background: '#202C33',
-                  border: '1px solid #2A3942',
-                  color: '#D1D7DB',
+                  background: 'rgba(52,211,153,0.15)',
+                  border: '1px solid rgba(52,211,153,0.35)',
+                  color: '#34D399',
                   borderRadius: '12px',
-                  padding: '0.2rem 0.55rem',
+                  padding: '0.25rem 0.65rem',
                   fontSize: '0.72rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  flexShrink: 0
                 }}
               >
-                🌾 1. Price Risk
+                🧑‍🌾 Nashik (Tomato)
               </button>
               <button
-                onClick={() => handleUserAction('SRV_CLIMATE_RISK', '🌦️ Climate Risk')}
+                onClick={() => handleUserAction('DEMO_FARMER_HALDIA', '🧑‍🌾 Haldia Demo')}
+                style={{
+                  background: 'rgba(59,130,246,0.12)',
+                  border: '1px solid rgba(59,130,246,0.3)',
+                  color: '#93C5FD',
+                  borderRadius: '12px',
+                  padding: '0.25rem 0.65rem',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                🧑‍🌾 Haldia (Paddy)
+              </button>
+              <button
+                onClick={() => handleUserAction('DEMO_FARMER_PUNJAB', '🧑‍🌾 Punjab Demo')}
+                style={{
+                  background: 'rgba(251,191,36,0.1)',
+                  border: '1px solid rgba(251,191,36,0.25)',
+                  color: '#FCD34D',
+                  borderRadius: '12px',
+                  padding: '0.25rem 0.65rem',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                🧑‍🌾 Punjab (Wheat)
+              </button>
+              <button
+                onClick={() => handleUserAction(undefined, undefined, '9876543210')}
                 style={{
                   background: '#202C33',
                   border: '1px solid #2A3942',
-                  color: '#D1D7DB',
+                  color: '#8696A0',
                   borderRadius: '12px',
-                  padding: '0.2rem 0.55rem',
-                  fontSize: '0.72rem',
+                  padding: '0.25rem 0.6rem',
+                  fontSize: '0.7rem',
                   fontWeight: 600,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  flexShrink: 0
                 }}
               >
-                🌦️ 2. Climate
+                📱 9876543210
               </button>
+            </>
+          )}
+
+          {/* === MAIN_MENU: hero + all service shortcuts === */}
+          {sessionState === 'MAIN_MENU' && (
+            <>
+              <button
+                onClick={() => handleUserAction('SRV_FIELD_ADVICE', '⭐ My Field Advice')}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(6,78,59,0.7) 0%, rgba(6,95,70,0.7) 100%)',
+                  border: '1px solid rgba(52,211,153,0.4)',
+                  color: '#34D399',
+                  borderRadius: '12px',
+                  padding: '0.25rem 0.65rem',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                ⭐ Field Advice
+              </button>
+              <button
+                onClick={() => handleUserAction('SRV_CROP_HEALTH', '🌱 Crop Health')}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >🌱 Crop Health</button>
+              <button
+                onClick={() => handleUserAction('SRV_CLIMATE_RISK', '🌦️ Weather')}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >🌦️ Weather</button>
               <button
                 onClick={() => handleUserAction('SRV_SMART_MANDI', '📊 Smart Mandi')}
                 style={{
-                  background: '#202C33',
-                  border: '1px solid #2A3942',
-                  color: '#D1D7DB',
-                  borderRadius: '12px',
-                  padding: '0.2rem 0.55rem',
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
                 }}
-              >
-                📊 5. Mandi
-              </button>
+              >📊 Mandi</button>
+              <button
+                onClick={() => handleVoiceDemo('kal baarish hogi kya?')}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >🎤 Voice</button>
+              <button
+                onClick={() => handleImageDemo()}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >📷 Photo</button>
             </>
-          ) : (
+          )}
+
+          {/* === SERVICE_RESULT: context shortcuts === */}
+          {sessionState === 'SERVICE_RESULT' && (
+            <>
+              <button
+                onClick={() => handleUserAction('SRV_FIELD_ADVICE', '⭐ My Field Advice')}
+                style={{
+                  background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)',
+                  color: '#34D399', borderRadius: '12px', padding: '0.25rem 0.65rem',
+                  fontSize: '0.72rem', fontWeight: 800, cursor: 'pointer', flexShrink: 0
+                }}
+              >⭐ Field Advice</button>
+              <button
+                onClick={() => handleUserAction('NAV_MAIN_MENU', '🏠 Main Menu')}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >🏠 Menu</button>
+              <button
+                onClick={() => handleVoiceDemo('kal baarish hogi kya?')}
+                style={{
+                  background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                  borderRadius: '12px', padding: '0.25rem 0.55rem', fontSize: '0.72rem',
+                  fontWeight: 600, cursor: 'pointer', flexShrink: 0
+                }}
+              >🎤 Voice</button>
+            </>
+          )}
+
+          {/* === Default / other states === */}
+          {sessionState !== 'ACCOUNT_LINK_PHONE' && sessionState !== 'MAIN_MENU' && sessionState !== 'SERVICE_RESULT' && (
             <button
               onClick={() => handleUserAction(undefined, undefined, 'kal baarish hogi kya?')}
               style={{
-                background: '#202C33',
-                border: '1px solid #2A3942',
-                color: '#D1D7DB',
-                borderRadius: '12px',
-                padding: '0.2rem 0.55rem',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                cursor: 'pointer'
+                background: '#202C33', border: '1px solid #2A3942', color: '#D1D7DB',
+                borderRadius: '12px', padding: '0.2rem 0.55rem', fontSize: '0.72rem',
+                fontWeight: 600, cursor: 'pointer'
               }}
             >
               "kal baarish hogi kya?"
