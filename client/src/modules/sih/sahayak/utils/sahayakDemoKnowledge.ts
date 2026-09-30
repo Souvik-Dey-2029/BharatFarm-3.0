@@ -1,4 +1,4 @@
-﻿/**
+/**
  * sahayakDemoKnowledge.ts
  * SIH Demo Knowledge Layer for BharatFarm Sahayak Voice Helpline.
  * 
@@ -281,6 +281,44 @@ export const SAHAYAK_KNOWLEDGE_MODULES: Record<string, ModuleIntentConfig> = {
       hi: ["Kya aap sarkari subsidy yojana ke baare mein janna chahte hain?", "Kya fertilizer calculator use karna hai?"],
       en: ["Would you like details on government subsidy schemes?", "Need help with the fertilizer dosage calculator?"],
       bn: ["আপনি কি সরকারি ভর্তুকি যোজনা সম্পর্কে জানতে চান?"]
+    }
+  },
+
+  REGENERATIVE_AI: {
+    moduleCode: "REGENERATIVE_AI",
+    nameEn: "Regenerative AI, Soil Health & Satellite Monitoring",
+    nameHi: "रीजेनरेटिव एआई, मिट्टी स्वास्थ्य एवं सैटेलाइट सलाह",
+    nameBn: "রিজেনারেটিভ এআই, মাটির স্বাস্থ্য ও স্যাটেলাইট পর্যবেক্ষণ",
+    description: "Actionable 3-tier daily farm decisions combining Sentinel NDVI, Soil NPK & Organic Carbon chemistry, and BRICS practices.",
+    examples: [
+      { text: "What should I do in my field today?", lang: "en" },
+      { text: "What is my field's soil health score?", lang: "en" },
+      { text: "What does the satellite NDVI show for my farm?", lang: "en" },
+      { text: "How can I improve my soil organic carbon?", lang: "en" },
+      { text: "Show me BRICS farming practices for wheat", lang: "en" },
+      { text: "Aaj khet mein kya karna chahiye?", lang: "hi" },
+      { text: "Mere khet ki mitti ka score kaisa hai?", lang: "hi" },
+      { text: "Satellite se fasal ki haryali aur NDVI kaisa hai?", lang: "hi" },
+      { text: "Khet mein nitrogen aur compost kab daalein?", lang: "hi" },
+      { text: "Mitti ki jaanch report sunayein", lang: "hi" },
+      { text: "আজ আমার জমিতে কী সার বা পরিচর্যা করব?", lang: "bn" },
+      { text: "আমার জমির মাটির স্বাস্থ্য কেমন?", lang: "bn" },
+      { text: "স্যাটেলাইটে ফসলের সবুজ সূচক কেমন দেখাচ্ছে?", lang: "bn" }
+    ],
+    clarification: {
+      hi: "BharatFarm Regenerative AI aapke khet ke satellite NDVI, mitti ke NPK carbon aur aane wale mausam ko milakar aaj ki sabse zaroori kheti salah deta hai.",
+      en: "BharatFarm Regenerative AI synthesizes Sentinel satellite vegetation indices, laboratory soil chemistry, and hyper-local meteorology into daily prioritized actions.",
+      bn: "ভারতফার্ম রিজেনারেটিভ এআই স্যাটেলাইট ছবি, মাটির স্বাস্থ্য ও আবহাওয়া একত্র করে মাঠের সঠিক সিদ্ধান্ত জানায়।"
+    },
+    sampleAnswer: {
+      hi: "🌿 Regenerative Khet Salah: Aaj ka zaroori action subah ke samay targeted organic compost ya split-dose top dressing karna hai. Khet ka Satellite NDVI 0.72 achha hai, lekin Soil score 74/100 mein Nitrogen kam hai aur agle 48 ghanton mein halki baarish sambhav hai.",
+      en: "🌿 Regenerative Field Action: Your today's top priority is applying targeted organic compost top-dressing. Sentinel NDVI reports a healthy 0.72 canopy, but your soil diagnostic shows a nitrogen deficit ahead of 48-hour light showers.",
+      bn: "🌿 রিজেনারেটিভ মাঠ পরামর্শ: আজকের প্রধান কাজ হলো সকালে জৈব কম্পোস্ট প্রয়োগ করা। স্যাটেলাইট NDVI ০.৭২ স্বাভাবিক হলেও মাটিতে নাইট্রোজেনের ঘাটতি রয়েছে এবং আগামী ৪৮ ঘন্টায় বৃষ্টির পূর্বাভাস রয়েছে।"
+    },
+    followUps: {
+      hi: ["Kya aap NPK mitti breakdown sunna chahte hain?", "Kya BRICS bio-mulching practice janni hai?"],
+      en: ["Would you like the full soil NPK & organic carbon breakdown?", "Hear BRICS regenerative farming practices?"],
+      bn: ["আপনি কি মাটির সম্পূর্ণ এনপিকে রিপোর্ট জানতে চান?"]
     }
   }
 };

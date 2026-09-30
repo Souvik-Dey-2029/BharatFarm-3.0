@@ -6,17 +6,19 @@ export type CallModuleOption =
   | 'AGGREGATION'          // Option 3
   | 'CROP_INSURANCE'       // Option 4
   | 'SMART_MANDI'          // Option 5
-  | 'BASIC_FARMER_NEEDS';  // Option 6
+  | 'BASIC_FARMER_NEEDS'   // Option 6
+  | 'REGENERATIVE_AI';     // Option 7: Track 4 - Regenerative AI, Soil Health, Satellite NDVI, BRICS
 
 export type CallStep =
   | 'WELCOME_LANGUAGE'     // Initial greeting asking for language (1, 2, 3)
-  | 'MAIN_MENU'            // Service selection (1 - 6)
+  | 'MAIN_MENU'            // Service selection (1 - 7)
   | 'BEFORE_YOU_SOW_FLOW'  // Crop, land size, district questions & recommendation
   | 'CLIMATE_RISK_FLOW'    // Weather, rain, flood inquiry
   | 'AGGREGATION_FLOW'     // Collective selling/buying pool inquiry
   | 'CROP_INSURANCE_FLOW'  // Claim check & satellite verification guidance
   | 'SMART_MANDI_FLOW'     // Local prices, nearest mandi & buyer demand
   | 'BASIC_NEEDS_FLOW'     // Scanner, marketplace, roadmap, schemes guidance
+  | 'REGENERATIVE_AI_FLOW' // Track 4: Field advice, Soil Health, Satellite NDVI, BRICS
   | 'FOLLOW_UP_CONVERSATION';
 
 export interface CallSessionState {

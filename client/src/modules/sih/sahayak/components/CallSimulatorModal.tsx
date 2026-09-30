@@ -153,7 +153,7 @@ const KEYS = [
   { num: "4", alpha: "GHI",  svc: "Insurance" },
   { num: "5", alpha: "JKL",  svc: "Mandi" },
   { num: "6", alpha: "MNO",  svc: "Basic Needs" },
-  { num: "7", alpha: "PQRS", svc: "" },
+  { num: "7", alpha: "PQRS", svc: "Regen AI" },
   { num: "8", alpha: "TUV",  svc: "Repeat" },
   { num: "9", alpha: "WXYZ", svc: "Menu" },
   { num: "*", alpha: "",     svc: "Back" },
@@ -162,6 +162,9 @@ const KEYS = [
 ];
 
 const SCENARIOS = [
+  { label: "🌿 Today's Action", q: "What should I do in my field today?", lang: "en", tag: "Regen AI" },
+  { label: "🧪 Mitti Health?", q: "Mere khet ki mitti aur NPK health kaisi hai?", lang: "hi", tag: "Soil Health" },
+  { label: "🛰️ Satellite NDVI", q: "Satellite se fasal ki haryali aur NDVI kaisa hai?", lang: "hi", tag: "Satellite" },
   { label: "🌦️ Kal baarish?", q: "Kal baarish hogi kya?", lang: "hi", tag: "Climate" },
   { label: "🌾 Mandi rate", q: "Mere paas wali mandi mein dhan ka kya rate hai?", lang: "hi", tag: "Mandi" },
   { label: "🌱 Kaun si fasal?", q: "Is baar kaunsa crop lagana sahi rahega?", lang: "hi", tag: "Before Sow" },
@@ -169,6 +172,7 @@ const SCENARIOS = [
   { label: "🤝 Group sell", q: "Mujhe group mein fasal bechni hai", lang: "hi", tag: "Aggregation" },
   { label: "📸 Leaf scan", q: "Leaf scanner kaise use karu?", lang: "hi", tag: "Basic Needs" },
   { label: "🌧️ বৃষ্টি হবে?", q: "আগামীকাল কি বৃষ্টি হবে?", lang: "bn", tag: "Climate" },
+  { label: "🌾 আজ জমিতে কী করব?", q: "আজ আমার জমিতে কী সার বা পরিচর্যা করব?", lang: "bn", tag: "Regen AI" },
   { label: "🌾 ধানের দাম", q: "আজ ধানের মান্ডি দর কত?", lang: "bn", tag: "Mandi" },
   { label: "🌽 Best crop", q: "What should I sow this season?", lang: "en", tag: "Before Sow" },
   { label: "⚡ Mandi price", q: "What is the nearest mandi for paddy?", lang: "en", tag: "Mandi" }

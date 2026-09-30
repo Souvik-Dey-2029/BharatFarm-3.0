@@ -156,6 +156,17 @@ export class VoiceIntentService {
       };
     }
 
+    // Module 7: REGENERATIVE AI & TRACK 4 (Field Advice, Soil Health, Satellite NDVI, BRICS)
+    if (
+      /regenerative|khet\s*salah|field\s*advice|soil\s*health|mitti|npk|nitrogen|organic\s*carbon|ndvi|satellite|canopy|brics|what\s*should\s*i\s*do|aaj\s*kya\s*karein|khet\s*mein\s*kya\s*karein|today\s*action|priority\s*action|মাটি|রিজেনারেটিভ|আজ\s*কী\s*করব|আজ\s*কি\s*করব/i.test(lower)
+    ) {
+      return {
+        module: 'REGENERATIVE_AI',
+        detectedLanguage,
+        extractedEntities: { crop }
+      };
+    }
+
     return { detectedLanguage };
   }
 }
