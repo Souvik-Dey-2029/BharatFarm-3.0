@@ -17,48 +17,72 @@ export const NutrientBreakdownCard: React.FC<NutrientBreakdownCardProps> = ({ me
   const { t } = useLanguage();
   const [showTargets, setShowTargets] = useState<boolean>(false);
 
-  const nutrientBars = [
+  const nutrientCircles = [
     {
-      name: 'pH',
-      valueStr: `${metrics.ph.value}`,
-      percent: Math.min(100, Math.max(10, ((metrics.ph.value - 4) / 4) * 100)),
+      key: 'ph',
+      name: t('buildAi.soilPh'),
+      valueOnly: `${metrics.ph.value}`,
+      unit: 'pH',
+      percent: Math.min(100, Math.max(15, (metrics.ph.value / 8.5) * 100)),
       status: metrics.ph.status === 'OPTIMAL' ? 'Optimal' : metrics.ph.status === 'LOW' ? 'Low' : 'High',
-      color: metrics.ph.status === 'OPTIMAL' ? tokens.colors.primaryLeaf : tokens.colors.statusWatch,
+      color: metrics.ph.status === 'OPTIMAL' ? '#15803D' : '#D97706',
       target: metrics.ph.idealRange
     },
     {
-      name: 'Nitrogen',
-      valueStr: `${metrics.nitrogen.value} kg/ha`,
-      percent: Math.min(100, Math.max(10, (metrics.nitrogen.value / 400) * 100)),
+      key: 'nitrogen',
+      name: t('buildAi.nitrogen'),
+      valueOnly: `${metrics.nitrogen.value}`,
+      unit: 'kg/ha',
+      percent: Math.min(100, Math.max(15, (metrics.nitrogen.value / 400) * 100)),
       status: metrics.nitrogen.status === 'OPTIMAL' ? 'Good' : metrics.nitrogen.status === 'LOW' ? 'Low' : 'High',
-      color: metrics.nitrogen.status === 'OPTIMAL' ? tokens.colors.primaryLeaf : tokens.colors.clay,
+      color: metrics.nitrogen.status === 'OPTIMAL' ? '#15803D' : '#B45F43',
       target: metrics.nitrogen.idealRange
     },
     {
-      name: 'Phosphorus',
-      valueStr: `${metrics.phosphorus.value} kg/ha`,
-      percent: Math.min(100, Math.max(10, (metrics.phosphorus.value / 40) * 100)),
+      key: 'phosphorus',
+      name: t('buildAi.phosphorus'),
+      valueOnly: `${metrics.phosphorus.value}`,
+      unit: 'kg/ha',
+      percent: Math.min(100, Math.max(15, (metrics.phosphorus.value / 40) * 100)),
       status: metrics.phosphorus.status === 'OPTIMAL' ? 'Good' : metrics.phosphorus.status === 'LOW' ? 'Low' : 'High',
-      color: metrics.phosphorus.status === 'OPTIMAL' ? tokens.colors.primaryLeaf : tokens.colors.clay,
+      color: metrics.phosphorus.status === 'OPTIMAL' ? '#15803D' : '#B45F43',
       target: metrics.phosphorus.idealRange
     },
     {
-      name: 'Potassium',
-      valueStr: `${metrics.potassium.value} kg/ha`,
-      percent: Math.min(100, Math.max(10, (metrics.potassium.value / 300) * 100)),
+      key: 'potassium',
+      name: t('buildAi.potassium'),
+      valueOnly: `${metrics.potassium.value}`,
+      unit: 'kg/ha',
+      percent: Math.min(100, Math.max(15, (metrics.potassium.value / 280) * 100)),
       status: metrics.potassium.status === 'OPTIMAL' ? 'Good' : 'Moderate',
-      color: tokens.colors.primaryLeaf,
+      color: '#15803D',
       target: metrics.potassium.idealRange
     },
     {
-      name: 'Organic Carbon',
-      valueStr: `${metrics.organicCarbon.value}%`,
-      percent: Math.min(100, Math.max(10, (metrics.organicCarbon.value / 1.0) * 100)),
+      key: 'organicCarbon',
+      name: t('buildAi.organicCarbon'),
+      valueOnly: `${metrics.organicCarbon.value}%`,
+      unit: 'OC',
+      percent: Math.min(100, Math.max(15, (metrics.organicCarbon.value / 1.0) * 100)),
       status: metrics.organicCarbon.status === 'OPTIMAL' ? 'Good' : 'Low',
-      color: metrics.organicCarbon.status === 'OPTIMAL' ? tokens.colors.primaryLeaf : tokens.colors.earth,
+      color: metrics.organicCarbon.status === 'OPTIMAL' ? '#15803D' : '#854D0E',
       target: metrics.organicCarbon.idealRange
     }
   ];
+
+  const getLocalizedStatus = (status: string) => {
+    if (status === 'Optimal') return t('buildAi.optimal');
+    if (status === 'Good') return t('buildAi.good');
+    if (status === 'Moderate') return t('buildAi.moderate');
+    return t('buildAi.low');
+  };
+
+  // SVG circular ring geometry constants
+  const size = 76;
+  const strokeWidth = 6;
+  const center = size / 2; // 38
+  const radius = center - strokeWidth / 2 - 2; // 38 - 3 - 2 = 33
+  const circumference = 2 * Math.PI * radius; // ~207.34
 
   return (
     <div style={{
@@ -69,7 +93,7 @@ export const NutrientBreakdownCard: React.FC<NutrientBreakdownCardProps> = ({ me
       boxShadow: tokens.shadows.subtle
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '18px', color: tokens.colors.clay }}>science</span>
           <h3 style={{ margin: 0, fontSize: '0.94rem', color: tokens.colors.textPrimary, fontWeight: 800 }}>
@@ -93,62 +117,133 @@ export const NutrientBreakdownCard: React.FC<NutrientBreakdownCardProps> = ({ me
         </button>
       </div>
 
-      {/* ONE Unified Visual Diagnostic Panel (No nested mini-cards) */}
+      {/* 2 Circles per row grid layout */}
       <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.65rem'
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '0.75rem',
+        alignItems: 'stretch'
       }}>
-        {nutrientBars.map((item, idx) => {
-          const localizedName = idx === 0 ? t('buildAi.soilPh') : idx === 1 ? t('buildAi.nitrogen') : idx === 2 ? t('buildAi.phosphorus') : idx === 3 ? t('buildAi.potassium') : t('buildAi.organicCarbon');
-          const localizedStatus = item.status === 'Optimal' ? t('buildAi.optimal') : item.status === 'Good' ? t('buildAi.good') : item.status === 'Moderate' ? t('buildAi.moderate') : t('buildAi.low');
-          const isLast = idx === nutrientBars.length - 1;
+        {nutrientCircles.map((item, idx) => {
+          const localizedStatus = getLocalizedStatus(item.status);
+          const isGood = item.status === 'Optimal' || item.status === 'Good';
+          const badgeBg = isGood ? tokens.colors.statusGoodBg : tokens.colors.statusWatchBg;
+          const badgeColor = isGood ? tokens.colors.statusGood : tokens.colors.statusWatch;
+          const isLast = idx === nutrientCircles.length - 1;
+          const strokeDashoffset = circumference * (1 - item.percent / 100);
 
           return (
             <div
-              key={idx}
+              key={item.key}
               style={{
-                paddingBottom: isLast ? '0' : '0.65rem',
-                borderBottom: isLast ? 'none' : '1px solid #F1F5F9'
+                background: tokens.colors.surfaceAlt,
+                borderRadius: tokens.radii.sm,
+                border: `1px solid ${tokens.colors.borderDefault}`,
+                padding: '0.85rem 0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                ...(isLast ? {
+                  gridColumn: '1 / -1',
+                  maxWidth: '220px',
+                  width: '100%',
+                  margin: '0 auto'
+                } : {})
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontSize: tokens.typography.small }}>
-                <span style={{ fontWeight: 800, color: tokens.colors.textPrimary }}>{localizedName}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <span style={{ fontWeight: 700, color: tokens.colors.textSecondary, fontSize: tokens.typography.micro }}>{item.valueStr}</span>
-                  <span style={{
-                    fontSize: '10px',
-                    fontWeight: 800,
-                    padding: '1px 6px',
-                    borderRadius: tokens.radii.xs,
-                    background: item.color === tokens.colors.primaryLeaf ? tokens.colors.statusGoodBg : tokens.colors.statusWatchBg,
-                    color: item.color === tokens.colors.primaryLeaf ? tokens.colors.statusGood : tokens.colors.statusWatch
-                  }}>
-                    {localizedStatus}
-                  </span>
-                </div>
+              {/* Circular Gauge SVG */}
+              <div style={{ position: 'relative', width: `${size}px`, height: `${size}px` }}>
+                <svg
+                  width={size}
+                  height={size}
+                  viewBox={`0 0 ${size} ${size}`}
+                  style={{ display: 'block' }}
+                >
+                  {/* Background Track */}
+                  <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke="#E2E8F0"
+                    strokeWidth={strokeWidth}
+                    fill="transparent"
+                  />
+                  {/* Active Progress Ring */}
+                  <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke={item.color}
+                    strokeWidth={strokeWidth}
+                    strokeDasharray={circumference}
+                    strokeDashoffset={strokeDashoffset}
+                    strokeLinecap="round"
+                    transform={`rotate(-90 ${center} ${center})`}
+                    fill="transparent"
+                    style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+                  />
+                  {/* Inside Circle: Value & Unit */}
+                  <text
+                    x={center}
+                    y={center - 2}
+                    textAnchor="middle"
+                    fontSize="13"
+                    fontWeight="900"
+                    fill={tokens.colors.textPrimary}
+                  >
+                    {item.valueOnly}
+                  </text>
+                  <text
+                    x={center}
+                    y={center + 11}
+                    textAnchor="middle"
+                    fontSize="8.5"
+                    fontWeight="700"
+                    fill={tokens.colors.textMuted}
+                  >
+                    {item.unit}
+                  </text>
+                </svg>
               </div>
 
-              {/* Seamless Indicator Bar */}
+              {/* Nutrient Name */}
               <div style={{
-                width: '100%',
-                height: '6px',
-                borderRadius: '3px',
-                background: '#E2E8F0',
-                overflow: 'hidden'
+                fontWeight: 800,
+                fontSize: '0.8rem',
+                color: tokens.colors.textPrimary,
+                marginTop: '0.4rem',
+                lineHeight: 1.2
               }}>
-                <div style={{
-                  width: `${item.percent}%`,
-                  height: '100%',
-                  background: item.color,
-                  borderRadius: '3px',
-                  transition: 'width 0.3s ease'
-                }} />
+                {item.name}
               </div>
 
+              {/* Status Badge */}
+              <span style={{
+                display: 'inline-block',
+                marginTop: '0.3rem',
+                fontSize: '10px',
+                fontWeight: 800,
+                padding: '2px 8px',
+                borderRadius: tokens.radii.xs,
+                background: badgeBg,
+                color: badgeColor
+              }}>
+                {localizedStatus}
+              </span>
+
+              {/* Optional Target Range */}
               {showTargets && (
-                <div style={{ fontSize: '10px', color: tokens.colors.textMuted, marginTop: '3px', fontWeight: 600 }}>
-                  {t('buildAi.soil.optimalRange')}: {item.target}
+                <div style={{
+                  fontSize: '9.5px',
+                  color: tokens.colors.textMuted,
+                  marginTop: '0.35rem',
+                  fontWeight: 600,
+                  lineHeight: 1.2
+                }}>
+                  {t('buildAi.soil.optimalRange')}:<br />
+                  <strong style={{ color: tokens.colors.textSecondary }}>{item.target}</strong>
                 </div>
               )}
             </div>
