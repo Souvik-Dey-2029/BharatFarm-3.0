@@ -117,8 +117,8 @@ export const SoilHealthPage: React.FC = () => {
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>potted_plant</span>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
+          <div style={{ minWidth: 0, flex: '1 1 auto' }}>
+            <div style={{ fontSize: '0.62rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
               {t('buildAi.fieldSelect')}
             </div>
             <select
@@ -129,12 +129,15 @@ export const SoilHealthPage: React.FC = () => {
                 color: '#0F172A',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '0.2rem 0.45rem',
-                fontSize: '0.82rem',
+                padding: '0.25rem 0.4rem',
+                fontSize: '0.8rem',
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer',
-                maxWidth: '100%'
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                textOverflow: 'ellipsis'
               }}
             >
               {fields.map(f => (

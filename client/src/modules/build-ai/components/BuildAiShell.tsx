@@ -103,20 +103,20 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
                 background: '#F0FDF4',
                 border: '1px solid #BBF7D0',
                 borderRadius: '8px',
-                padding: '0.35rem 0.55rem',
+                padding: '0.35rem 0.5rem',
                 color: '#15803D',
-                fontSize: '0.8rem',
+                fontSize: '0.78rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.2rem',
+                gap: '0.15rem',
                 flexShrink: 0,
-                height: '34px'
+                height: '32px'
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-              <span style={{ display: 'inline-block' }}>{t('buildAi.backToRegen')}</span>
+              <span className="hidden sm:inline" style={{ display: 'inline-block' }}>{t('buildAi.backToRegen')}</span>
             </button>
           ) : (
             <button
@@ -126,30 +126,31 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
                 background: '#F1F5F9',
                 border: '1px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '0.35rem 0.55rem',
+                padding: '0.35rem 0.5rem',
                 color: '#334155',
-                fontSize: '0.8rem',
+                fontSize: '0.78rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.2rem',
+                gap: '0.15rem',
                 flexShrink: 0,
-                height: '34px'
+                height: '32px'
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-              <span style={{ display: 'inline-block' }}>{t('buildAi.backToHome')}</span>
+              <span className="hidden sm:inline" style={{ display: 'inline-block' }}>{t('buildAi.backToHome')}</span>
             </button>
           )}
 
           <span style={{
-            fontSize: '0.92rem',
+            fontSize: '0.88rem',
             fontWeight: 800,
             color: '#0F172A',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
-            textOverflow: 'ellipsis'
+            textOverflow: 'ellipsis',
+            maxWidth: '130px'
           }}>
             {currentTitle}
           </span>

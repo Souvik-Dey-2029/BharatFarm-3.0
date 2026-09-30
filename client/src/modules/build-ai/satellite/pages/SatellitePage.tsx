@@ -102,7 +102,7 @@ export const SatellitePage: React.FC = () => {
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
-        padding: '0.75rem 0.9rem',
+        padding: '0.65rem 0.8rem',
         border: '1px solid #E2E8F0',
         marginBottom: '0.75rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
@@ -110,12 +110,13 @@ export const SatellitePage: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '0.6rem'
+        gap: '0.5rem',
+        overflow: 'hidden'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 200px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: '1 1 auto', minWidth: 0, maxWidth: '100%' }}>
           <div style={{
-            width: '32px',
-            height: '32px',
+            width: '30px',
+            height: '30px',
             borderRadius: '8px',
             background: '#F0FDF4',
             color: '#16A34A',
@@ -126,8 +127,8 @@ export const SatellitePage: React.FC = () => {
           }}>
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>grass</span>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <label htmlFor="field-select" style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
+          <div style={{ minWidth: 0, flex: '1 1 auto' }}>
+            <label htmlFor="field-select" style={{ display: 'block', fontSize: '0.62rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
               {t('buildAi.fieldSelect')}
             </label>
             <select
@@ -139,12 +140,15 @@ export const SatellitePage: React.FC = () => {
                 color: '#0F172A',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '0.2rem 0.45rem',
-                fontSize: '0.82rem',
+                padding: '0.25rem 0.4rem',
+                fontSize: '0.8rem',
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer',
-                maxWidth: '100%'
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                textOverflow: 'ellipsis'
               }}
             >
               {fields.map(f => (
@@ -161,13 +165,14 @@ export const SatellitePage: React.FC = () => {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.35rem',
-          padding: '3px 9px',
+          padding: '2px 8px',
           borderRadius: '9999px',
-          fontSize: '0.7rem',
+          fontSize: '0.68rem',
           fontWeight: 800,
           background: satelliteData?.source === 'live' ? '#DCFCE7' : '#FEF3C7',
           color: satelliteData?.source === 'live' ? '#15803D' : '#92400E',
-          border: `1px solid ${satelliteData?.source === 'live' ? '#BBF7D0' : '#FDE68A'}`
+          border: `1px solid ${satelliteData?.source === 'live' ? '#BBF7D0' : '#FDE68A'}`,
+          flexShrink: 0
         }}>
           <span style={{
             width: '6px',
