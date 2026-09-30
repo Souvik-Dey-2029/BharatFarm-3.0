@@ -68,43 +68,60 @@ export const RegenerativeAiPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/regenerative-ai">
-      {/* Header Bar */}
+      {/* Field & Engine Source Strip */}
       <div style={{
+        background: '#FFFFFF',
+        borderRadius: '14px',
+        padding: '0.85rem 1rem',
+        border: '1px solid #E2E8F0',
+        marginBottom: '1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '1.5rem',
         flexWrap: 'wrap',
-        gap: '0.75rem'
+        gap: '0.75rem',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-            <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '24px' }}>eco</span>
-            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
-              Regenerative AI Engine
-            </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px',
+            background: '#F0FDF4',
+            color: '#16A34A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>psychology</span>
           </div>
-          <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748B', fontWeight: 500 }}>
-            Structured, multi-horizon sustainable agronomic recommendations backed by evidence traces
-          </p>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.15rem' }}>
+              Field Intelligence Pipeline
+            </div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A' }}>
+              {availableFields.find(f => f.id === selectedFieldId)?.field_name || 'Selected Field'} • Decision Support
+            </div>
+          </div>
         </div>
 
         {planData && (
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            padding: '5px 14px',
+            gap: '0.35rem',
+            padding: '4px 10px',
             borderRadius: '9999px',
-            fontSize: '0.8rem',
+            fontSize: '0.74rem',
             fontWeight: 800,
             background: planData.source === 'live_ai' ? '#DCFCE7' : '#FEF3C7',
             color: planData.source === 'live_ai' ? '#15803D' : '#B45309',
             border: `1px solid ${planData.source === 'live_ai' ? '#BBF7D0' : '#FDE68A'}`
           }}>
             <span style={{
-              width: '8px',
-              height: '8px',
+              width: '7px',
+              height: '7px',
               borderRadius: '50%',
               background: planData.source === 'live_ai' ? '#16A34A' : '#D97706'
             }} />

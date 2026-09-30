@@ -27,20 +27,20 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
 
   return (
     <div style={{
-      background: 'var(--surface-card, #12281a)',
+      background: '#FFFFFF',
       borderRadius: '16px',
-      padding: '1.25rem',
-      border: '1px solid rgba(255,255,255,0.08)',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+      padding: '1.5rem',
+      border: '1px solid #E2E8F0',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
       marginBottom: '1.25rem'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary, #fff)', fontWeight: 700 }}>
-            🧪 Enter Soil Test Parameters
+          <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#0F172A', fontWeight: 800 }}>
+            Enter Soil Test Parameters
           </h3>
-          <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)' }}>
-            Input lab test values or use sample pre-set data
+          <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748B' }}>
+            Input measured laboratory values or pre-fill sample values
           </p>
         </div>
 
@@ -48,17 +48,17 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
           type="button"
           onClick={onLoadSample}
           style={{
-            padding: '4px 10px',
-            background: 'rgba(52, 211, 153, 0.15)',
-            color: '#34D399',
-            border: '1px solid rgba(52, 211, 153, 0.3)',
+            padding: '5px 12px',
+            background: '#F0FDF4',
+            color: '#15803D',
+            border: '1px solid #BBF7D0',
             borderRadius: '8px',
             fontSize: '0.78rem',
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: 'pointer'
           }}
         >
-          ⚡ Load Sample Lab Report
+          Load Sample Report
         </button>
       </div>
 
@@ -66,7 +66,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
         {/* Field & Crop Selectors */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.85rem', marginBottom: '1rem' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Select Field:
             </label>
             <select
@@ -82,16 +82,18 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               }}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
-                fontSize: '0.85rem'
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                outline: 'none'
               }}
             >
               {fields.map(f => (
-                <option key={f.id} value={f.id} style={{ background: '#0d1f14', color: '#fff' }}>
+                <option key={f.id} value={f.id}>
                   {f.field_name} ({f.crop_name})
                 </option>
               ))}
@@ -99,7 +101,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Target Crop:
             </label>
             <select
@@ -107,21 +109,23 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('crop', e.target.value)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
-                fontSize: '0.85rem'
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                outline: 'none'
               }}
             >
-              <option value="Rice (Paddy)" style={{ background: '#0d1f14' }}>Rice (Paddy)</option>
-              <option value="Wheat" style={{ background: '#0d1f14' }}>Wheat</option>
-              <option value="Maize" style={{ background: '#0d1f14' }}>Maize</option>
-              <option value="Mustard" style={{ background: '#0d1f14' }}>Mustard</option>
-              <option value="Cotton" style={{ background: '#0d1f14' }}>Cotton</option>
-              <option value="Sugarcane" style={{ background: '#0d1f14' }}>Sugarcane</option>
-              <option value="Vegetables" style={{ background: '#0d1f14' }}>Vegetables</option>
+              <option value="Rice (Paddy)">Rice (Paddy)</option>
+              <option value="Wheat">Wheat</option>
+              <option value="Maize">Maize</option>
+              <option value="Mustard">Mustard</option>
+              <option value="Cotton">Cotton</option>
+              <option value="Sugarcane">Sugarcane</option>
+              <option value="Vegetables">Vegetables</option>
             </select>
           </div>
         </div>
@@ -130,7 +134,7 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '0.85rem', marginBottom: '1.25rem' }}>
           {/* pH */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Soil pH (0 - 14):
             </label>
             <input
@@ -142,20 +146,22 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('ph', parseFloat(e.target.value) || 0)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
                 fontSize: '0.9rem',
-                fontWeight: 600
+                fontWeight: 700,
+                outline: 'none',
+                boxSizing: 'border-box'
               }}
             />
           </div>
 
           {/* Nitrogen N */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Nitrogen N (kg/ha):
             </label>
             <input
@@ -166,20 +172,22 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('nitrogen', parseFloat(e.target.value) || 0)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
                 fontSize: '0.9rem',
-                fontWeight: 600
+                fontWeight: 700,
+                outline: 'none',
+                boxSizing: 'border-box'
               }}
             />
           </div>
 
           {/* Phosphorus P */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Phosphorus P (kg/ha):
             </label>
             <input
@@ -190,20 +198,22 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('phosphorus', parseFloat(e.target.value) || 0)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
                 fontSize: '0.9rem',
-                fontWeight: 600
+                fontWeight: 700,
+                outline: 'none',
+                boxSizing: 'border-box'
               }}
             />
           </div>
 
           {/* Potassium K */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Potassium K (kg/ha):
             </label>
             <input
@@ -214,20 +224,22 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('potassium', parseFloat(e.target.value) || 0)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
                 fontSize: '0.9rem',
-                fontWeight: 600
+                fontWeight: 700,
+                outline: 'none',
+                boxSizing: 'border-box'
               }}
             />
           </div>
 
           {/* Organic Carbon % */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600, marginBottom: '4px' }}>
+            <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '4px' }}>
               Organic Carbon (%):
             </label>
             <input
@@ -239,13 +251,15 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
               onChange={(e) => handleChange('organicCarbon', parseFloat(e.target.value) || 0)}
               style={{
                 width: '100%',
-                background: 'rgba(0,0,0,0.3)',
-                color: '#fff',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
                 padding: '8px',
                 fontSize: '0.9rem',
-                fontWeight: 600
+                fontWeight: 700,
+                outline: 'none',
+                boxSizing: 'border-box'
               }}
             />
           </div>
@@ -258,21 +272,21 @@ export const SoilFormCard: React.FC<SoilFormCardProps> = ({
           style={{
             width: '100%',
             padding: '0.75rem',
-            background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-            color: '#fff',
+            background: '#16A34A',
+            color: '#FFFFFF',
             border: 'none',
             borderRadius: '10px',
-            fontSize: '0.95rem',
+            fontSize: '0.92rem',
             fontWeight: 700,
             cursor: isAnalyzing ? 'not-allowed' : 'pointer',
-            boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)',
+            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.3)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.5rem'
           }}
         >
-          {isAnalyzing ? 'Analyzing Soil Parameters...' : '⚡ Generate AI Soil Analysis & Recommendations'}
+          {isAnalyzing ? 'Analyzing Soil Parameters...' : 'Run Soil Analysis'}
         </button>
       </form>
     </div>

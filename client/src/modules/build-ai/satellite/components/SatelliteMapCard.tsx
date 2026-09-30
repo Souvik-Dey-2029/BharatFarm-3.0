@@ -63,18 +63,19 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({ field, curre
         </div>
 
         {/* Map Layer Selector */}
-        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.3)', padding: '3px', borderRadius: '10px', gap: '2px' }}>
+        <div style={{ display: 'flex', background: '#F1F5F9', padding: '3px', borderRadius: '10px', gap: '2px', border: '1px solid #E2E8F0' }}>
           <button
             onClick={() => setMapLayer('ndvi')}
             style={{
               padding: '4px 10px',
               fontSize: '0.75rem',
-              fontWeight: 600,
+              fontWeight: 700,
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
-              background: mapLayer === 'ndvi' ? '#16A34A' : 'transparent',
-              color: mapLayer === 'ndvi' ? '#fff' : 'rgba(255,255,255,0.6)'
+              background: mapLayer === 'ndvi' ? '#FFFFFF' : 'transparent',
+              color: mapLayer === 'ndvi' ? '#15803D' : '#64748B',
+              boxShadow: mapLayer === 'ndvi' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'
             }}
           >
             NDVI Heatmap
@@ -84,12 +85,13 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({ field, curre
             style={{
               padding: '4px 10px',
               fontSize: '0.75rem',
-              fontWeight: 600,
+              fontWeight: 700,
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
-              background: mapLayer === 'truecolor' ? '#16A34A' : 'transparent',
-              color: mapLayer === 'truecolor' ? '#fff' : 'rgba(255,255,255,0.6)'
+              background: mapLayer === 'truecolor' ? '#FFFFFF' : 'transparent',
+              color: mapLayer === 'truecolor' ? '#15803D' : '#64748B',
+              boxShadow: mapLayer === 'truecolor' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'
             }}
           >
             True Color
@@ -99,12 +101,13 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({ field, curre
             style={{
               padding: '4px 10px',
               fontSize: '0.75rem',
-              fontWeight: 600,
+              fontWeight: 700,
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
-              background: mapLayer === 'moisture' ? '#0284C7' : 'transparent',
-              color: mapLayer === 'moisture' ? '#fff' : 'rgba(255,255,255,0.6)'
+              background: mapLayer === 'moisture' ? '#FFFFFF' : 'transparent',
+              color: mapLayer === 'moisture' ? '#0369A1' : '#64748B',
+              boxShadow: mapLayer === 'moisture' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none'
             }}
           >
             Moisture

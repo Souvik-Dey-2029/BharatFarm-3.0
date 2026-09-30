@@ -7,15 +7,14 @@ interface SoilScoreGaugeProps {
 
 export const SoilScoreGauge: React.FC<SoilScoreGaugeProps> = ({ result }) => {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return '#34D399'; // Green
-    if (score >= 65) return '#A3E635'; // Light Green
-    if (score >= 50) return '#FBBF24'; // Yellow
-    return '#F87171'; // Red
+    if (score >= 80) return '#16A34A'; // Green
+    if (score >= 65) return '#65A30D'; // Light Green
+    if (score >= 50) return '#D97706'; // Yellow/Amber
+    return '#DC2626'; // Red
   };
 
   const getStatusBadge = (status: string) => {
-    const formatted = status.replace('_', ' ');
-    return formatted.toUpperCase();
+    return status.replace(/_/g, ' ').toUpperCase();
   };
 
   return (
@@ -27,64 +26,65 @@ export const SoilScoreGauge: React.FC<SoilScoreGaugeProps> = ({ result }) => {
     }}>
       {/* Overall Score */}
       <div style={{
-        background: 'var(--surface-card, #12281a)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '1.25rem',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.25)',
+        border: '1px solid #E2E8F0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
         display: 'flex',
         alignItems: 'center',
-        gap: '1rem'
+        gap: '1.25rem'
       }}>
         {/* Circle Score Gauge */}
         <div style={{
-          width: '72px',
-          height: '72px',
+          width: '68px',
+          height: '68px',
           borderRadius: '50%',
-          border: `6px solid ${getScoreColor(result.score)}`,
+          border: `5px solid ${getScoreColor(result.score)}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          flexShrink: 0
+          flexShrink: 0,
+          background: '#F8FAFC'
         }}>
-          <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#fff' }}>
+          <span style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0F172A' }}>
             {result.score}
           </span>
         </div>
 
         <div>
-          <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>
+          <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Soil Health Index
           </div>
           <div style={{
-            fontSize: '0.95rem',
-            fontWeight: 800,
+            fontSize: '1rem',
+            fontWeight: 900,
             color: getScoreColor(result.score),
             marginTop: '2px'
           }}>
             {getStatusBadge(result.nutrientStatus)}
           </div>
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)', marginTop: '2px' }}>
-            Composite NPK + pH + OC index
+          <div style={{ fontSize: '0.74rem', color: '#64748B', marginTop: '2px' }}>
+            Composite NPK + pH + Organic Carbon
           </div>
         </div>
       </div>
 
       {/* Crop Suitability Context */}
       <div style={{
-        background: 'var(--surface-card, #12281a)',
+        background: '#FFFFFF',
         borderRadius: '16px',
         padding: '1.25rem',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+        border: '1px solid #E2E8F0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
       }}>
-        <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>
+        <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           Crop Suitability ({result.cropContext.crop})
         </div>
-        <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#38BDF8', marginTop: '2px' }}>
+        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0284C7', marginTop: '2px' }}>
           {result.cropContext.suitabilityScore} / 100
         </div>
-        <div style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.75)', marginTop: '4px', lineHeight: 1.4 }}>
+        <div style={{ fontSize: '0.8rem', color: '#475569', marginTop: '4px', lineHeight: 1.45, fontWeight: 500 }}>
           {result.cropContext.summary}
         </div>
       </div>

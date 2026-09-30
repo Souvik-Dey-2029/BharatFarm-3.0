@@ -20,18 +20,19 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
       {/* Warnings & Risk Flags */}
       {warnings && warnings.length > 0 && (
         <div style={{
-          background: 'rgba(239, 68, 68, 0.1)',
+          background: '#FEF2F2',
           borderRadius: '16px',
           padding: '1.25rem',
-          border: '1px solid rgba(239, 68, 68, 0.3)'
+          border: '1px solid #FECACA'
         }}>
-          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1rem', color: '#F87171', fontWeight: 700 }}>
-            ⚠️ Soil Health Warnings & Deficiencies
+          <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.98rem', color: '#991B1B', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>warning</span>
+            <span>Soil Health Warnings & Deficiencies</span>
           </h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
             {warnings.map((w, idx) => (
-              <div key={idx} style={{ fontSize: '0.84rem', color: 'rgba(255,255,255,0.85)', display: 'flex', gap: '0.4rem' }}>
-                <span style={{ color: '#F87171' }}>•</span>
+              <div key={idx} style={{ fontSize: '0.84rem', color: '#7F1D1D', display: 'flex', gap: '0.4rem' }}>
+                <span>•</span>
                 <span>{w}</span>
               </div>
             ))}
@@ -41,104 +42,99 @@ export const SoilRecommendationsCard: React.FC<SoilRecommendationsCardProps> = (
 
       {/* Recommendations Card */}
       <div style={{
-        background: 'var(--surface-card, #12281a)',
+        background: '#FFFFFF',
         borderRadius: '16px',
-        padding: '1.25rem',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+        padding: '1.5rem',
+        border: '1px solid #E2E8F0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-          <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--text-primary, #fff)', fontWeight: 700 }}>
-            💡 Actionable Soil Restoration & Fertilization Plan
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h3 style={{ margin: 0, fontSize: '1.05rem', color: '#0F172A', fontWeight: 800 }}>
+            Practical Regenerative Recommendations
           </h3>
 
           <span style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
+            fontSize: '0.72rem',
+            fontWeight: 800,
             padding: '3px 10px',
             borderRadius: '12px',
-            background: source === 'live_ai' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-            color: source === 'live_ai' ? '#34D399' : '#FBBF24',
-            border: `1px solid ${source === 'live_ai' ? 'rgba(52, 211, 153, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`
+            background: source === 'live_ai' ? '#DCFCE7' : '#E0F2FE',
+            color: source === 'live_ai' ? '#15803D' : '#0369A1',
+            border: `1px solid ${source === 'live_ai' ? '#BBF7D0' : '#BAE6FD'}`
           }}>
-            {source === 'live_ai' ? 'LIVE AI ADVISORY' : 'DETERMINISTIC ANALYSIS'}
+            {source === 'live_ai' ? 'LIVE AI INTERPRETATION' : 'MEASURED DATA INTERPRETATION'}
           </span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.25rem' }}>
           {recommendations.map((rec, idx) => (
             <div key={idx} style={{
-              background: 'rgba(0,0,0,0.25)',
-              padding: '0.85rem 1rem',
+              background: '#F8FAFC',
+              padding: '1rem',
               borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.05)'
+              border: '1px solid #E2E8F0'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                <span style={{ fontWeight: 700, fontSize: '0.92rem', color: '#34D399' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.94rem', color: '#0F172A' }}>
                   {idx + 1}. {rec.title}
                 </span>
                 <span style={{
                   fontSize: '0.68rem',
-                  fontWeight: 700,
-                  padding: '2px 6px',
+                  fontWeight: 800,
+                  padding: '2px 8px',
                   borderRadius: '6px',
-                  background: rec.actionPriority === 'HIGH' || rec.actionPriority === 'URGENT' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255,255,255,0.1)',
-                  color: rec.actionPriority === 'HIGH' || rec.actionPriority === 'URGENT' ? '#F87171' : 'rgba(255,255,255,0.7)'
+                  background: rec.actionPriority === 'HIGH' || rec.actionPriority === 'URGENT' ? '#FEE2E2' : '#F1F5F9',
+                  color: rec.actionPriority === 'HIGH' || rec.actionPriority === 'URGENT' ? '#B91C1C' : '#475569'
                 }}>
-                  {rec.actionPriority}
+                  Priority: {rec.actionPriority}
                 </span>
               </div>
-              <p style={{ margin: 0, fontSize: '0.84rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.45 }}>
+              <p style={{ margin: 0, fontSize: '0.86rem', color: '#475569', lineHeight: 1.5 }}>
                 {rec.description}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Advisory Disclaimer */}
-        <div style={{
-          background: 'rgba(0,0,0,0.3)',
-          padding: '0.75rem',
-          borderRadius: '10px',
-          fontSize: '0.75rem',
-          color: 'rgba(255,255,255,0.5)',
-          marginBottom: '1.25rem',
-          lineHeight: 1.4
-        }}>
-          📌 <strong>Advisory Disclaimer:</strong> Soil health scores and fertilizer dosages are AI decision support recommendations based on reported lab values. For exact application rates, cross-reference with official Krishi Vigyan Kendra (KVK) guidelines.
-        </div>
-
-        {/* Deep-Links */}
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        {/* Connected Tool CTA */}
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', borderTop: '1px solid #F1F5F9', paddingTop: '1rem' }}>
           <button
-            onClick={() => navigate('/sih/smart-mandi')}
+            onClick={() => navigate('/build-ai/regenerative-ai')}
             style={{
-              padding: '0.5rem 1rem',
-              background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-              color: '#fff',
+              padding: '0.55rem 1.1rem',
+              background: '#16A34A',
+              color: '#FFFFFF',
               border: 'none',
               borderRadius: '10px',
-              fontWeight: 600,
-              fontSize: '0.8rem',
-              cursor: 'pointer'
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem'
             }}
           >
-            🛒 Source Inputs on Marketplace
+            <span>Proceed to Regenerative AI Plan</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
           </button>
           <button
             onClick={() => navigate('/build-ai/satellite')}
             style={{
-              padding: '0.5rem 1rem',
-              background: 'rgba(255,255,255,0.08)',
-              color: '#fff',
-              border: '1px solid rgba(255,255,255,0.15)',
+              padding: '0.55rem 1.1rem',
+              background: '#F8FAFC',
+              color: '#0F172A',
+              border: '1.5px solid #CBD5E1',
               borderRadius: '10px',
-              fontWeight: 600,
-              fontSize: '0.8rem',
-              cursor: 'pointer'
+              fontWeight: 700,
+              fontSize: '0.82rem',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem'
             }}
           >
-            📡 View Satellite Vegetation Health
+            <span>View Satellite Telemetry</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>satellite_alt</span>
           </button>
         </div>
       </div>

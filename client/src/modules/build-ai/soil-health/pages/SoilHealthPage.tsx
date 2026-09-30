@@ -83,43 +83,61 @@ export const SoilHealthPage: React.FC = () => {
 
   return (
     <BuildAiShell activeRoute="/build-ai/soil-health">
-      {/* Page Header */}
+      {/* Field Selector & Live/Demo Status Strip */}
       <div style={{
+        background: '#FFFFFF',
+        borderRadius: '14px',
+        padding: '0.85rem 1rem',
+        border: '1px solid #E2E8F0',
+        marginBottom: '1.25rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '1.5rem',
         flexWrap: 'wrap',
-        gap: '0.75rem'
+        gap: '0.75rem',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
       }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-            <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '24px' }}>potted_plant</span>
-            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em' }}>
-              Soil Health Analysis
-            </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px',
+            background: '#F0FDF4',
+            color: '#16A34A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>potted_plant</span>
           </div>
-          <p style={{ margin: 0, fontSize: '0.875rem', color: '#64748B', fontWeight: 500 }}>
-            Analyze soil chemistry parameters & receive practical restoration priorities
-          </p>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.15rem' }}>
+              Field & Soil Diagnostics
+            </div>
+            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A' }}>
+              {inputForm.fieldName} • {inputForm.crop}
+            </div>
+          </div>
         </div>
 
+        {/* Source Badge */}
         {analysisResult && (
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            padding: '5px 14px',
+            gap: '0.35rem',
+            padding: '4px 10px',
             borderRadius: '9999px',
-            fontSize: '0.8rem',
+            fontSize: '0.74rem',
             fontWeight: 800,
             background: analysisResult.source === 'live_ai' ? '#DCFCE7' : '#E0F2FE',
             color: analysisResult.source === 'live_ai' ? '#15803D' : '#0369A1',
             border: `1px solid ${analysisResult.source === 'live_ai' ? '#BBF7D0' : '#BAE6FD'}`
           }}>
             <span style={{
-              width: '8px',
-              height: '8px',
+              width: '7px',
+              height: '7px',
               borderRadius: '50%',
               background: analysisResult.source === 'live_ai' ? '#16A34A' : '#0284C7'
             }} />
@@ -131,8 +149,8 @@ export const SoilHealthPage: React.FC = () => {
       {/* Grid: Form Input + Results */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-        gap: '1.5rem',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '1.25rem',
         alignItems: 'start'
       }}>
         {/* Form Card */}
@@ -154,7 +172,7 @@ export const SoilHealthPage: React.FC = () => {
               borderRadius: '14px',
               padding: '1.25rem',
               color: '#991B1B',
-              marginBottom: '1.5rem'
+              marginBottom: '1.25rem'
             }}>
               <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>Analysis Error</div>
               <div style={{ fontSize: '0.85rem' }}>{error}</div>
@@ -162,7 +180,7 @@ export const SoilHealthPage: React.FC = () => {
           )}
 
           {analysisResult ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               <SoilScoreGauge
                 result={analysisResult}
               />

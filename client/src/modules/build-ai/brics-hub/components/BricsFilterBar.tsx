@@ -61,12 +61,14 @@ export const BricsFilterBar: React.FC<Props> = ({
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
             style={{
               width: '100%',
-              background: 'rgba(0, 0, 0, 0.3)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#F8FAFC',
+              border: '1.5px solid #CBD5E1',
               borderRadius: '8px',
-              padding: '0.6rem 0.85rem',
-              color: '#ffffff',
-              fontSize: '0.9rem'
+              padding: '0.55rem 0.85rem',
+              color: '#0F172A',
+              fontSize: '0.88rem',
+              outline: 'none',
+              boxSizing: 'border-box'
             }}
           />
         </div>
@@ -74,10 +76,10 @@ export const BricsFilterBar: React.FC<Props> = ({
         {/* View mode toggle */}
         <div style={{
           display: 'flex',
-          background: 'rgba(0,0,0,0.4)',
+          background: '#F1F5F9',
           borderRadius: '8px',
           padding: '3px',
-          border: '1px solid rgba(255,255,255,0.1)'
+          border: '1px solid #E2E8F0'
         }}>
           <button
             onClick={() => onToggleViewMode('grid')}
@@ -85,12 +87,13 @@ export const BricsFilterBar: React.FC<Props> = ({
               padding: '0.4rem 0.85rem',
               borderRadius: '6px',
               border: 'none',
-              background: viewMode === 'grid' ? '#10b981' : 'transparent',
-              color: viewMode === 'grid' ? '#0b1d12' : '#9ca3af',
-              fontWeight: 600,
-              fontSize: '0.825rem',
+              background: viewMode === 'grid' ? '#FFFFFF' : 'transparent',
+              color: viewMode === 'grid' ? '#15803D' : '#64748B',
+              fontWeight: 700,
+              fontSize: '0.82rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              boxShadow: viewMode === 'grid' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              transition: 'all 0.15s ease'
             }}
           >
             📋 Practice Cards
@@ -101,12 +104,13 @@ export const BricsFilterBar: React.FC<Props> = ({
               padding: '0.4rem 0.85rem',
               borderRadius: '6px',
               border: 'none',
-              background: viewMode === 'comparison' ? '#10b981' : 'transparent',
-              color: viewMode === 'comparison' ? '#0b1d12' : '#9ca3af',
-              fontWeight: 600,
-              fontSize: '0.825rem',
+              background: viewMode === 'comparison' ? '#FFFFFF' : 'transparent',
+              color: viewMode === 'comparison' ? '#15803D' : '#64748B',
+              fontWeight: 700,
+              fontSize: '0.82rem',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              boxShadow: viewMode === 'comparison' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+              transition: 'all 0.15s ease'
             }}
           >
             ⚖️ Cross-Country Compare
@@ -116,7 +120,7 @@ export const BricsFilterBar: React.FC<Props> = ({
 
       {/* Country Tabs */}
       <div>
-        <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#9ca3af', fontWeight: 600, marginBottom: '0.5rem' }}>
+        <div style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: '#64748B', fontWeight: 800, marginBottom: '0.5rem', letterSpacing: '0.04em' }}>
           Select BRICS Nation:
         </div>
         <div style={{
@@ -132,13 +136,13 @@ export const BricsFilterBar: React.FC<Props> = ({
                 key={c.code}
                 onClick={() => onChange({ ...filters, country: c.code })}
                 style={{
-                  padding: '0.4rem 0.75rem',
+                  padding: '0.4rem 0.8rem',
                   borderRadius: '20px',
-                  border: active ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.1)',
-                  background: active ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.03)',
-                  color: active ? '#34d399' : '#d1d5db',
-                  fontSize: '0.85rem',
-                  fontWeight: active ? 600 : 400,
+                  border: active ? '1.5px solid #16A34A' : '1px solid #CBD5E1',
+                  background: active ? '#DCFCE7' : '#F8FAFC',
+                  color: active ? '#15803D' : '#475569',
+                  fontSize: '0.82rem',
+                  fontWeight: active ? 800 : 600,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
                   display: 'flex',
@@ -157,7 +161,7 @@ export const BricsFilterBar: React.FC<Props> = ({
       {/* Topic Filters */}
       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 200px' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', color: '#9ca3af', marginBottom: '0.3rem' }}>
+          <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '0.3rem' }}>
             Topic Domain:
           </label>
           <select
@@ -165,16 +169,19 @@ export const BricsFilterBar: React.FC<Props> = ({
             onChange={(e) => onChange({ ...filters, topic: e.target.value as any })}
             style={{
               width: '100%',
-              background: 'rgba(0,0,0,0.3)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              background: '#F8FAFC',
+              border: '1.5px solid #CBD5E1',
               borderRadius: '8px',
               padding: '0.5rem 0.75rem',
-              color: '#ffffff',
-              fontSize: '0.85rem'
+              color: '#0F172A',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              outline: 'none',
+              boxSizing: 'border-box'
             }}
           >
             {TOPICS.map(t => (
-              <option key={t.code} value={t.code} style={{ background: '#111827' }}>
+              <option key={t.code} value={t.code}>
                 {t.label}
               </option>
             ))}
@@ -182,7 +189,7 @@ export const BricsFilterBar: React.FC<Props> = ({
         </div>
 
         <div style={{ flex: '1 1 200px' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', color: '#9ca3af', marginBottom: '0.3rem' }}>
+          <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginBottom: '0.3rem' }}>
             Crop Filter:
           </label>
           <select
@@ -190,22 +197,25 @@ export const BricsFilterBar: React.FC<Props> = ({
             onChange={(e) => onChange({ ...filters, crop: e.target.value })}
             style={{
               width: '100%',
-              background: 'rgba(0,0,0,0.3)',
-              border: '1px solid rgba(255,255,255,0.15)',
+              background: '#F8FAFC',
+              border: '1.5px solid #CBD5E1',
               borderRadius: '8px',
               padding: '0.5rem 0.75rem',
-              color: '#ffffff',
-              fontSize: '0.85rem'
+              color: '#0F172A',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              outline: 'none',
+              boxSizing: 'border-box'
             }}
           >
-            <option value="ALL" style={{ background: '#111827' }}>All Crops</option>
-            <option value="Rice" style={{ background: '#111827' }}>Rice (Paddy)</option>
-            <option value="Wheat" style={{ background: '#111827' }}>Wheat</option>
-            <option value="Soybean" style={{ background: '#111827' }}>Soybean</option>
-            <option value="Corn" style={{ background: '#111827' }}>Corn (Maize)</option>
-            <option value="Cotton" style={{ background: '#111827' }}>Cotton</option>
-            <option value="Citrus" style={{ background: '#111827' }}>Citrus</option>
-            <option value="Sugarcane" style={{ background: '#111827' }}>Sugarcane</option>
+            <option value="ALL">All Crops</option>
+            <option value="Rice">Rice (Paddy)</option>
+            <option value="Wheat">Wheat</option>
+            <option value="Soybean">Soybean</option>
+            <option value="Corn">Corn (Maize)</option>
+            <option value="Cotton">Cotton</option>
+            <option value="Citrus">Citrus</option>
+            <option value="Sugarcane">Sugarcane</option>
           </select>
         </div>
       </div>

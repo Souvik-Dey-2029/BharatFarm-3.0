@@ -37,8 +37,8 @@ import {
 import { FarmerProfilePage } from './pages/FarmerProfilePage.js';
 import { DemoPage } from './pages/DemoPage.js';
 
-// Build-with-AI Track 4 Modules
-import { BuildAiLauncherPage, SatellitePage, SoilHealthPage, RegenerativeAiPage, BricsHubPage, ApiDocsPage, ImpactDashboardPage, ModelCardsPage } from '../modules/build-ai/index.js';
+// Regenerative Intelligence Track 4 Modules
+import { BuildAiLauncherPage, SatellitePage, SoilHealthPage, RegenerativeAiPage, BricsHubPage } from '../modules/build-ai/index.js';
 
 /**
  * ProtectedRoute component — Redirects unauthenticated users to /login
@@ -225,7 +225,7 @@ export const AppRouter: React.FC = () => {
         }
       />
 
-      {/* 4b. Build with AI — Track 4 Routes */}
+      {/* 4b. BharatFarm Regenerative Intelligence — Track 4 Routes */}
       <Route
         path="/build-ai"
         element={
@@ -251,6 +251,10 @@ export const AppRouter: React.FC = () => {
         }
       />
       <Route
+        path="/build-ai/soil"
+        element={<Navigate to="/build-ai/soil-health" replace />}
+      />
+      <Route
         path="/build-ai/regenerative-ai"
         element={
           <ProtectedRoute>
@@ -267,28 +271,8 @@ export const AppRouter: React.FC = () => {
         }
       />
       <Route
-        path="/build-ai/api"
-        element={
-          <ProtectedRoute>
-            <ApiDocsPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/build-ai/impact"
-        element={
-          <ProtectedRoute>
-            <ImpactDashboardPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/build-ai/model-cards"
-        element={
-          <ProtectedRoute>
-            <ModelCardsPage />
-          </ProtectedRoute>
-        }
+        path="/build-ai/brics"
+        element={<Navigate to="/build-ai/brics-hub" replace />}
       />
 
       {/* Backward Compatibility Aliases for SIH Routes */}

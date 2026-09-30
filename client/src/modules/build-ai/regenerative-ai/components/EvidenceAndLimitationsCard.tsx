@@ -15,30 +15,31 @@ export const EvidenceAndLimitationsCard: React.FC<EvidenceAndLimitationsCardProp
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '1.5rem' }}>
       {/* Evidence Provenance Table */}
       <div style={{
-        background: 'var(--surface-card, #12281a)',
+        background: '#FFFFFF',
         borderRadius: '16px',
-        padding: '1.25rem',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+        padding: '1.5rem',
+        border: '1px solid #E2E8F0',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
       }}>
-        <h4 style={{ margin: '0 0 0.85rem 0', fontSize: '1rem', color: '#fff', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          🔍 Grounding Evidence & Ingested Intelligence
+        <h4 style={{ margin: '0 0 0.85rem 0', fontSize: '1rem', color: '#0F172A', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '20px' }}>fact_check</span>
+          <span>Field Context & Ingested Data Sources</span>
         </h4>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
           {evidence.map((ev, idx) => (
             <div key={idx} style={{
-              background: 'rgba(0,0,0,0.25)',
-              padding: '0.75rem 0.9rem',
+              background: '#F8FAFC',
+              padding: '0.85rem 1rem',
               borderRadius: '10px',
-              border: '1px solid rgba(255,255,255,0.05)',
-              fontSize: '0.8rem'
+              border: '1px solid #E2E8F0',
+              fontSize: '0.85rem'
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                <strong style={{ color: '#34D399' }}>{ev.parameter}</strong>
-                <span style={{ color: '#FBBF24', fontWeight: 600 }}>{ev.value}</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', flexWrap: 'wrap', gap: '0.3rem' }}>
+                <strong style={{ color: '#15803D' }}>{ev.parameter}</strong>
+                <span style={{ color: '#0F172A', fontWeight: 700 }}>{ev.value}</span>
               </div>
-              <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.76rem', lineHeight: 1.4 }}>
+              <div style={{ color: '#475569', fontSize: '0.8rem', lineHeight: 1.45 }}>
                 {ev.impactOnPlan}
               </div>
             </div>
@@ -48,20 +49,21 @@ export const EvidenceAndLimitationsCard: React.FC<EvidenceAndLimitationsCardProp
 
       {/* Assumptions & Limitations Transparency Card */}
       <div style={{
-        background: 'rgba(0,0,0,0.3)',
+        background: '#F8FAFC',
         borderRadius: '14px',
         padding: '1.25rem',
-        border: '1px solid rgba(255,255,255,0.06)'
+        border: '1px solid #E2E8F0'
       }}>
-        <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)', marginBottom: '0.75rem' }}>
-          📌 Model Assumptions & Advisory Limitations
+        <div style={{ fontSize: '0.92rem', fontWeight: 800, color: '#0F172A', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#64748B' }}>info</span>
+          <span>Decision Context & Practical Guidance</span>
         </div>
 
         <div style={{ marginBottom: '0.85rem' }}>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#38BDF8', marginBottom: '0.3rem' }}>
-            Underlying System Assumptions:
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#0369A1', marginBottom: '0.3rem' }}>
+            System Assumptions:
           </div>
-          <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.45 }}>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.8rem', color: '#475569', lineHeight: 1.5 }}>
             {assumptions.map((a, idx) => (
               <li key={idx}>{a}</li>
             ))}
@@ -69,10 +71,10 @@ export const EvidenceAndLimitationsCard: React.FC<EvidenceAndLimitationsCardProp
         </div>
 
         <div>
-          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#F87171', marginBottom: '0.3rem' }}>
-            Advisory Limitations & Disclaimers:
+          <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#B91C1C', marginBottom: '0.3rem' }}>
+            Farmer Advisory Guidelines:
           </div>
-          <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.45 }}>
+          <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.8rem', color: '#475569', lineHeight: 1.5 }}>
             {limitations.map((l, idx) => (
               <li key={idx}>{l}</li>
             ))}
