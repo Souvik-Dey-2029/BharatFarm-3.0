@@ -34,7 +34,7 @@ export const NdviTimeSeriesChart: React.FC<NdviTimeSeriesChartProps> = ({ observ
     if (!prevObs) return { icon: '•', color: '#16A34A', label: 'Start' };
     if (obs.ndvi > prevObs.ndvi + 0.02) return { icon: '↑', color: '#16A34A', label: t('buildAi.satellite.trendImproving') };
     if (obs.ndvi < prevObs.ndvi - 0.02) return { icon: '↓', color: '#DC2626', label: t('buildAi.satellite.trendDeclining') };
-    return { icon: '→', color: '#16A34A', label: 'Stable' };
+    return { icon: '→', color: '#16A34A', label: t('buildAi.satellite.trendStable') };
   };
 
   return (

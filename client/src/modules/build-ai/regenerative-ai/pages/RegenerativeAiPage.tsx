@@ -266,6 +266,10 @@ export const RegenerativeAiPage: React.FC = () => {
       <WhyAdviceModal
         isOpen={isWhyModalOpen}
         onClose={() => setIsWhyModalOpen(false)}
+        cropName={selectedField?.crop_name || 'Rice (Paddy)'}
+        weatherInfo={t('buildAi.regenerative.climateCondition')}
+        soilInfo="pH 6.5 · Organic Carbon 0.62%"
+        satelliteInfo="NDVI 0.62 · Moderate"
       />
     </BuildAiShell>
   );

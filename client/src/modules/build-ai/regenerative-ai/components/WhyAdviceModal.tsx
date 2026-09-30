@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../../../context/LanguageContext.js';
 
 interface WhyAdviceModalProps {
   isOpen: boolean;
   onClose: () => void;
+  cropName?: string;
   weatherInfo?: string;
   soilInfo?: string;
   satelliteInfo?: string;
@@ -12,11 +14,13 @@ interface WhyAdviceModalProps {
 export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
   isOpen,
   onClose,
-  weatherInfo = 'Partly cloudy · 20% rain',
+  cropName = 'Rice (Paddy)',
+  weatherInfo = '28°C · 20% rain · Partly cloudy',
   soilInfo = 'pH 6.5 · Organic Carbon 0.62%',
   satelliteInfo = 'NDVI 0.62 · Moderate'
 }) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -40,23 +44,25 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
         borderRadius: '16px',
         border: '1.5px solid #EFEAE2',
         boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-        maxWidth: '360px',
+        maxWidth: '380px',
         width: '100%',
         padding: '1.25rem',
-        animation: 'fadeIn 0.18s ease-out'
+        animation: 'fadeIn 0.18s ease-out',
+        maxHeight: '90vh',
+        overflowY: 'auto'
       }}>
         {/* Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '1rem',
-          borderBottom: '1px solid #EFEAE2',
+          marginBottom: '0.85rem',
+          borderBottom: '1.5px solid #EFEAE2',
           paddingBottom: '0.65rem'
         }}>
           <h3 style={{
             margin: 0,
-            fontSize: '1.05rem',
+            fontSize: '1.02rem',
             fontWeight: 800,
             color: '#0F172A',
             display: 'flex',
@@ -83,20 +89,20 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
         </div>
 
         {/* Signals List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1rem' }}>
-          {/* Weather Signal */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginBottom: '0.85rem' }}>
+          {/* Satellite Signal */}
           <div style={{
             background: '#FDFBF7',
             border: '1px solid #EFEAE2',
             borderRadius: '10px',
-            padding: '0.65rem 0.8rem'
+            padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🌤</span>
-              <span>{t('buildAi.regenerative.whyModalSignalWeather')}</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#15803D', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <span>🛰</span>
+              <span>{t('buildAi.regenerative.whyModalSignalSatellite')}</span>
             </div>
-            <div style={{ fontSize: '0.82rem', color: '#0F172A', fontWeight: 600 }}>
-              {weatherInfo}
+            <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
+              {satelliteInfo}
             </div>
           </div>
 
@@ -105,41 +111,98 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             background: '#FDFBF7',
             border: '1px solid #EFEAE2',
             borderRadius: '10px',
-            padding: '0.65rem 0.8rem'
+            padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#B45309', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#B45309', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
               <span>🧪</span>
               <span>{t('buildAi.regenerative.whyModalSignalSoil')}</span>
             </div>
-            <div style={{ fontSize: '0.82rem', color: '#0F172A', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
               {soilInfo}
             </div>
           </div>
 
-          {/* Satellite Signal */}
+          {/* Weather Signal */}
           <div style={{
             background: '#FDFBF7',
             border: '1px solid #EFEAE2',
             borderRadius: '10px',
-            padding: '0.65rem 0.8rem'
+            padding: '0.55rem 0.75rem'
           }}>
-            <div style={{ fontSize: '0.74rem', fontWeight: 800, color: '#15803D', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span>🛰</span>
-              <span>{t('buildAi.regenerative.whyModalSignalSatellite')}</span>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#D97706', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <span>🌤</span>
+              <span>{t('buildAi.regenerative.whyModalSignalWeather')}</span>
             </div>
-            <div style={{ fontSize: '0.82rem', color: '#0F172A', fontWeight: 600 }}>
-              {satelliteInfo}
+            <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
+              {weatherInfo}
+            </div>
+          </div>
+
+          {/* Crop Signal */}
+          <div style={{
+            background: '#FDFBF7',
+            border: '1px solid #EFEAE2',
+            borderRadius: '10px',
+            padding: '0.55rem 0.75rem'
+          }}>
+            <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0284C7', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <span>🌾</span>
+              <span>{t('buildAi.regenerative.whyModalSignalCrop')}</span>
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#0F172A', fontWeight: 600 }}>
+              {cropName}
             </div>
           </div>
         </div>
 
+        {/* BRICS Knowledge Used Box */}
+        <div style={{
+          background: '#F0FDF4',
+          border: '1px solid #BBF7D0',
+          borderRadius: '10px',
+          padding: '0.65rem 0.75rem',
+          marginBottom: '0.85rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '3px' }}>
+            <span style={{ fontSize: '0.9rem' }}>🌍</span>
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#15803D' }}>
+              {t('buildAi.regenerative.whyModalKnowledgeUsed')}
+            </span>
+          </div>
+          <p style={{ margin: '0 0 0.4rem 0', fontSize: '0.74rem', color: '#334155', lineHeight: 1.35 }}>
+            {t('buildAi.regenerative.whyModalBricsNotice')}
+          </p>
+          <button
+            onClick={() => {
+              onClose();
+              navigate('/build-ai/brics-hub');
+            }}
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #86EFAC',
+              color: '#15803D',
+              borderRadius: '6px',
+              padding: '2px 7px',
+              fontSize: '0.7rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '3px'
+            }}
+          >
+            <span>{t('buildAi.regenerative.explorePracticesBtn')}</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>arrow_forward</span>
+          </button>
+        </div>
+
         {/* Explanatory Notice */}
         <p style={{
-          fontSize: '0.74rem',
+          fontSize: '0.72rem',
           color: '#64748B',
           textAlign: 'center',
           lineHeight: 1.4,
-          margin: '0 0 1.1rem 0',
+          margin: '0 0 0.85rem 0',
           fontWeight: 500
         }}>
           {t('buildAi.regenerative.whyModalSignalsNotice')}
@@ -154,7 +217,7 @@ export const WhyAdviceModal: React.FC<WhyAdviceModalProps> = ({
             color: '#FFFFFF',
             border: 'none',
             borderRadius: '8px',
-            padding: '0.6rem 1rem',
+            padding: '0.55rem 1rem',
             fontSize: '0.82rem',
             fontWeight: 800,
             cursor: 'pointer',
