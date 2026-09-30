@@ -1716,7 +1716,17 @@ export const hi: typeof en = {
       evidenceTitle: "खेत संदर्भ और प्राप्त डेटा स्रोत",
       guidanceTitle: "निर्णय संदर्भ और व्यावहारिक मार्गदर्शन",
       systemAssumptions: "प्रणाली की मान्यताएं:",
-      farmerGuidelines: "किसान परामर्श दिशानिर्देश:"
+      farmerGuidelines: "किसान परामर्श दिशानिर्देश:",
+      whyModalTitle: "यह सलाह क्यों?",
+      whyModalSignalWeather: "मौसम",
+      whyModalSignalSoil: "मिट्टी",
+      whyModalSignalSatellite: "उपग्रह",
+      whyModalSignalsNotice: "इन संकेतों के आधार पर आपकी यह सिफारिश तैयार की गई है।",
+      whyModalCloseBtn: "बंद करें",
+      actionGroupImmediate: "आज की प्राथमिक कार्रवाइयां",
+      actionGroupSoil: "मिट्टी सुधार उपाय",
+      actionGroupWater: "जल प्रबंधन उपाय",
+      actionGroupPest: "कीट एवं मौसमी जोखिम प्रबंधन"
     },
     brics: {
       title: "अन्य किसानों से क्या सीखें?",

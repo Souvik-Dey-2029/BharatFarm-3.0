@@ -5,6 +5,7 @@ import { RegenerativeResponseSchema, RegenerativeContextInput } from '../types.j
 import { ContextGatheringBar } from '../components/ContextGatheringBar.js';
 import { ActionGroupCard } from '../components/ActionGroupCard.js';
 import { EvidenceAndLimitationsCard } from '../components/EvidenceAndLimitationsCard.js';
+import { WhyAdviceModal } from '../components/WhyAdviceModal.js';
 import { BuildAiShell } from '../../components/BuildAiShell.js';
 import { useSharedField } from '../../context/SharedFieldContext.js';
 import { useLanguage } from '../../../../context/LanguageContext.js';
@@ -20,6 +21,8 @@ export const RegenerativeAiPage: React.FC = () => {
   const [planData, setPlanData] = useState<RegenerativeResponseSchema | null>(null);
   const [isGenerating, setIsGenerating] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [isWhyModalOpen, setIsWhyModalOpen] = useState<boolean>(false);
 
   const loadPlan = async (overrides?: Partial<RegenerativeContextInput>) => {
     setIsGenerating(true);
@@ -182,6 +185,7 @@ export const RegenerativeAiPage: React.FC = () => {
         }}
         onRefresh={() => loadPlan()}
         isGenerating={isGenerating}
+        onOpenWhyModal={() => setIsWhyModalOpen(true)}
       />
 
       {/* Loading Skeleton */}
@@ -191,13 +195,13 @@ export const RegenerativeAiPage: React.FC = () => {
           borderRadius: '14px',
           padding: '2rem 1rem',
           textAlign: 'center',
-          border: '1px solid #E2E8F0',
+          border: '1.5px solid #EFEAE2',
           boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
           marginBottom: '0.85rem'
         }}>
           <div style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>🌱</div>
           <p style={{ margin: 0, fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>
-            Preparing your advice...
+            {t('buildAi.gettingAdvice')}
           </p>
         </div>
       )}
@@ -222,28 +226,28 @@ export const RegenerativeAiPage: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
           {/* Highest Priority Recommendations */}
           <ActionGroupCard
-            title="Today's Priority Actions"
+            title={t('buildAi.regenerative.actionGroupImmediate')}
             icon="flash_on"
             actions={planData.immediateActions}
             defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title="Soil Improvement Actions"
+            title={t('buildAi.regenerative.actionGroupSoil')}
             icon="potted_plant"
             actions={planData.soilActions}
             defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title="Water Management Actions"
+            title={t('buildAi.regenerative.actionGroupWater')}
             icon="water_drop"
             actions={planData.waterActions}
             defaultExpanded={false}
           />
 
           <ActionGroupCard
-            title="Pest & Seasonal Risk Actions"
+            title={t('buildAi.regenerative.actionGroupPest')}
             icon="shield"
             actions={planData.riskMitigation}
             defaultExpanded={false}
@@ -257,6 +261,12 @@ export const RegenerativeAiPage: React.FC = () => {
           />
         </div>
       )}
+
+      {/* "Why this advice?" Modal Dialog */}
+      <WhyAdviceModal
+        isOpen={isWhyModalOpen}
+        onClose={() => setIsWhyModalOpen(false)}
+      />
     </BuildAiShell>
   );
 };

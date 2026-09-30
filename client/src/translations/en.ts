@@ -1730,7 +1730,17 @@ export const en = {
       evidenceTitle: "Field Context & Ingested Data Sources",
       guidanceTitle: "Decision Context & Practical Guidance",
       systemAssumptions: "System Assumptions:",
-      farmerGuidelines: "Farmer Advisory Guidelines:"
+      farmerGuidelines: "Farmer Advisory Guidelines:",
+      whyModalTitle: "Why this advice?",
+      whyModalSignalWeather: "Weather",
+      whyModalSignalSoil: "Soil",
+      whyModalSignalSatellite: "Satellite",
+      whyModalSignalsNotice: "These signals were used to generate your recommendation.",
+      whyModalCloseBtn: "Close",
+      actionGroupImmediate: "Today's Priority Actions",
+      actionGroupSoil: "Soil Improvement Actions",
+      actionGroupWater: "Water Management Actions",
+      actionGroupPest: "Pest & Seasonal Risk Actions"
     },
     brics: {
       title: "What can I learn from other farmers?",

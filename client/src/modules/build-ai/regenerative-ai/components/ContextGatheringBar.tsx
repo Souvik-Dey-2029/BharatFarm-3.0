@@ -11,6 +11,7 @@ interface ContextGatheringBarProps {
   onToggleSatellite: (val: boolean) => void;
   onRefresh: () => void;
   isGenerating: boolean;
+  onOpenWhyModal?: () => void;
 }
 
 export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
@@ -22,7 +23,8 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
   includeSatellite,
   onToggleSatellite,
   onRefresh,
-  isGenerating
+  isGenerating,
+  onOpenWhyModal
 }) => {
   const { t } = useLanguage();
 
@@ -93,18 +95,32 @@ export const ContextGatheringBar: React.FC<ContextGatheringBarProps> = ({
       </div>
 
       {/* Trust Line */}
-      <div style={{
-        fontSize: '0.72rem',
-        color: '#64748B',
-        textAlign: 'center',
-        fontWeight: 500,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.3rem'
-      }}>
-        <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#16A34A' }}>verified</span>
-        <span>{t('buildAi.regenerative.combinedSignals')}</span>
+      <div
+        onClick={onOpenWhyModal}
+        style={{
+          fontSize: '0.72rem',
+          color: onOpenWhyModal ? '#15803D' : '#64748B',
+          textAlign: 'center',
+          fontWeight: 600,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.35rem',
+          cursor: onOpenWhyModal ? 'pointer' : 'default',
+          padding: '0.2rem',
+          borderRadius: '6px',
+          transition: 'background 0.15s ease'
+        }}
+      >
+        <span className="material-symbols-outlined" style={{ fontSize: '15px', color: '#16A34A' }}>verified</span>
+        <span style={{ textDecoration: onOpenWhyModal ? 'underline' : 'none' }}>
+          {t('buildAi.regenerative.combinedSignals')}
+        </span>
+        {onOpenWhyModal && (
+          <span style={{ fontSize: '0.65rem', background: '#DCFCE7', color: '#15803D', padding: '1px 5px', borderRadius: '4px', fontWeight: 800 }}>
+            {t('buildAi.whyQuestion')}
+          </span>
+        )}
       </div>
     </div>
   );

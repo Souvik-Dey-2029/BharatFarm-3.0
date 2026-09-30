@@ -1716,7 +1716,17 @@ export const bn: typeof en = {
       evidenceTitle: "জমির প্রেক্ষাপট ও সংযুক্ত উপাত্তের উৎস",
       guidanceTitle: "সিদ্ধান্তের পরিপ্রেক্ষিত ও ব্যবহারিক নির্দেশিকা",
       systemAssumptions: "সিস্টেমের প্রাথমিক অনুমানসমূহ:",
-      farmerGuidelines: "কৃষকদের জন্য পরামর্শ নির্দেশিকা:"
+      farmerGuidelines: "কৃষকদের জন্য পরামর্শ নির্দেশিকা:",
+      whyModalTitle: "এই পরামর্শ কেন দেওয়া হলো?",
+      whyModalSignalWeather: "আবহাওয়া",
+      whyModalSignalSoil: "মাটি",
+      whyModalSignalSatellite: "স্যাটেলাইট",
+      whyModalSignalsNotice: "এই তথ্য সংকেতগুলোর ভিত্তিতে আপনার পরামর্শ তৈরি করা হয়েছে।",
+      whyModalCloseBtn: "বন্ধ করুন",
+      actionGroupImmediate: "আজকের অগ্রাধিকারমূলক পদক্ষেপসমূহ",
+      actionGroupSoil: "মাটি উন্নয়ন পদক্ষেপসমূহ",
+      actionGroupWater: "জল ব্যবস্থাপনা পদক্ষেপসমূহ",
+      actionGroupPest: "বালাই ও মরশুমি ঝুঁকি ব্যবস্থাপনা"
     },
     brics: {
       title: "অন্য কৃষকদের থেকে কী শিখব?",
