@@ -379,9 +379,5 @@ const BuildAiShellContent: React.FC<ShellInnerProps> = ({ children, activeRoute,
 };
 
 export const BuildAiShell: React.FC<ShellInnerProps> = (props) => {
-  return (
-    <SharedFieldProvider>
-      <BuildAiShellContent {...props} />
-    </SharedFieldProvider>
-  );
+  return <BuildAiShellContent {...props} />;
 };
