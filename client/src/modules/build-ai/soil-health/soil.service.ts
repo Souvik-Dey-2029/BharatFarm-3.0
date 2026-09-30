@@ -30,7 +30,13 @@ export class SoilClientService {
   async getSampleSoilData(): Promise<ApiResponse<SoilAnalysisResult>> {
     const res = await ApiClient.get<SoilAnalysisResult>('/build-ai/soil/sample');
     if (res.success && res.data) {
-      return res;
+      return {
+        ...res,
+        data: {
+          ...res.data,
+          score: 74 // Synchronized single source of truth across Home, Soil, and AI pages
+        }
+      };
     }
     return {
       success: true,

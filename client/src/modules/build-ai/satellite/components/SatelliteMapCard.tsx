@@ -381,7 +381,7 @@ export const SatelliteMapCard: React.FC<SatelliteMapCardProps> = ({
           }} />
         </div>
         <div style={{ textAlign: 'center', fontSize: '0.68rem', color: '#64748B', marginTop: '4px', fontWeight: 600 }}>
-          {t('buildAi.ndviScore')}: <strong>{currentNdvi}</strong> ({healthStatus === 'GOOD' ? t('buildAi.good') : healthStatus === 'STRESSED' ? t('buildAi.needsCare') : t('buildAi.moderate')})
+          FIELD AVERAGE {t('buildAi.ndviScore')}: <strong>{currentNdvi}</strong> ({healthStatus === 'GOOD' ? t('buildAi.good') : healthStatus === 'STRESSED' ? t('buildAi.needsCare') : t('buildAi.moderate')})
         </div>
       </div>
     </div>

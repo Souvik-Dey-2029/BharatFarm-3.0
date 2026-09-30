@@ -204,17 +204,32 @@ export const BuildAiLauncherPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Responsive Layout Grid: Desktop 65/35 Split, Mobile Single-Column Flow */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-        gap: '1rem',
-        alignItems: 'start'
-      }}>
-        {/* Left Column / Mobile Primary Section */}
+      <style>{`
+        .home-grid-container {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          align-items: start;
+        }
+        @media (max-width: 860px) {
+          .home-grid-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+          }
+          .home-slot-snapshot { order: 1; }
+          .home-slot-priority { order: 2; }
+          .home-slot-diagnostics { order: 3; }
+          .home-slot-brics { order: 4; }
+        }
+      `}</style>
+
+      {/* Responsive Layout Grid: Desktop 2-Column Split, Mobile Strict Priority Flow */}
+      <div className="home-grid-container">
+        {/* Left Column / Mobile Flow */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
           {/* 2. FIELD SNAPSHOT: Unified "Field Today" Composition */}
-          <div style={{
+          <div className="home-slot-snapshot" style={{
             background: tokens.colors.surfaceLight,
             borderRadius: tokens.radii.lg,
             border: `1.5px solid ${tokens.colors.borderDefault}`,
@@ -314,7 +329,7 @@ export const BuildAiLauncherPage: React.FC = () => {
           </div>
 
           {/* 4. SECONDARY INTELLIGENCE: Two Compact Diagnostic Modules */}
-          <div style={{
+          <div className="home-slot-diagnostics" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
             gap: '0.65rem'
@@ -478,7 +493,7 @@ export const BuildAiLauncherPage: React.FC = () => {
         {/* Right Column / Mobile Secondary Stack */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
           {/* 3. PRIMARY ACTION: High-Contrast "Today's Decision" Panel */}
-          <div style={{
+          <div className="home-slot-priority" style={{
             background: tokens.colors.primaryDeep,
             borderRadius: tokens.radii.lg,
             padding: '1.15rem 1.25rem',
@@ -557,6 +572,7 @@ export const BuildAiLauncherPage: React.FC = () => {
 
           {/* 5. KNOWLEDGE: Subordinated Agricultural Practice Teaser */}
           <div
+            className="home-slot-brics"
             onClick={() => navigate('/build-ai/brics-hub')}
             style={{
               background: tokens.colors.surfaceAlt,

@@ -258,104 +258,135 @@ export const SatellitePage: React.FC = () => {
         </div>
       )}
 
-      {/* Main Workspace (Responsive: Desktop 65/35 Split, Mobile Stacked Flow) */}
+      {/* Main Workspace (Responsive: Desktop 60/40 Split, Mobile Strict MAP -> HEALTH -> TREND -> MEANING Flow) */}
       {!isLoading && !error && satelliteData && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1rem',
-          alignItems: 'start'
-        }}>
-          {/* Left / Desktop Primary (65%): Map & NDVI Trend */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {/* LARGE VISUAL FIELD MAP */}
-            <SatelliteMapCard
-              field={satelliteData.field}
-              currentNdvi={satelliteData.ndviSummary.currentNdvi}
-              healthStatus={satelliteData.ndviSummary.healthStatus}
-              zones={satelliteData.zones}
-            />
+        <>
+          <style>{`
+            .sat-grid-container {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 1rem;
+              align-items: start;
+            }
+            @media (min-width: 900px) {
+              .sat-grid-container {
+                grid-template-columns: 1.15fr 0.85fr;
+              }
+            }
+            @media (max-width: 860px) {
+              .sat-grid-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0.85rem;
+              }
+              .sat-slot-map { order: 1; }
+              .sat-slot-health { order: 2; }
+              .sat-slot-trend { order: 3; }
+              .sat-slot-meaning { order: 4; }
+            }
+          `}</style>
 
-            {/* NDVI TREND OVER TIME */}
-            <NdviTimeSeriesChart observations={satelliteData.observations} />
-          </div>
-
-          {/* Right / Desktop Secondary (35%): Crop Health KPI, Meaning & Next Step */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {/* FIELD HEALTH STATUS BANNER */}
-            <div style={{
-              background: isHealthy ? tokens.colors.statusGoodBg : isWatch ? tokens.colors.statusWatchBg : tokens.colors.statusAlertBg,
-              border: `1.5px solid ${isHealthy ? tokens.colors.statusGoodBorder : isWatch ? tokens.colors.statusWatchBorder : tokens.colors.statusAlertBorder}`,
-              borderRadius: tokens.radii.md,
-              padding: '0.85rem 1rem',
-              boxShadow: tokens.shadows.subtle
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                <span style={{ fontSize: tokens.typography.micro, color: isHealthy ? tokens.colors.statusGood : tokens.colors.statusWatch, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  {selectedField?.field_name || 'EAST WHEAT PARCEL'}
-                </span>
-                <span style={{
-                  fontSize: tokens.typography.micro,
-                  fontWeight: 900,
-                  padding: '2px 8px',
-                  borderRadius: tokens.radii.full,
-                  background: isHealthy ? '#DCFCE7' : isWatch ? '#FEF3C7' : '#FEE2E2',
-                  color: isHealthy ? tokens.colors.statusGood : isWatch ? tokens.colors.statusWatch : tokens.colors.statusAlert
-                }}>
-                  {isHealthy ? t('buildAi.good') : isWatch ? t('buildAi.needsCare') : t('buildAi.critical')}
-                </span>
+          <div className="sat-grid-container">
+            {/* Desktop Left Column / Mobile Map Slot */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {/* 1. LARGE VISUAL FIELD MAP */}
+              <div className="sat-slot-map">
+                <SatelliteMapCard
+                  field={satelliteData.field}
+                  currentNdvi={satelliteData.ndviSummary.currentNdvi}
+                  healthStatus={satelliteData.ndviSummary.healthStatus}
+                  zones={satelliteData.zones}
+                />
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.65rem' }}>
-                <span style={{ fontSize: '1.85rem', fontWeight: 900, color: tokens.colors.textPrimary, lineHeight: 1 }}>
-                  NDVI 0.72
-                </span>
-                <span style={{ fontSize: '0.84rem', fontWeight: 700, color: isHealthy ? tokens.colors.statusGood : tokens.colors.statusWatch }}>
-                  {isHealthy ? t('buildAi.satellite.cropsLookingHealthy') : t('buildAi.satellite.growthStressSouthern')}
-                </span>
-              </div>
-
-              {/* Visual Health Bars */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.6rem' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
-                    <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barVegetation')}</span>
-                    <span style={{ color: tokens.colors.textPrimary }}>{vegetationLabel}</span>
-                  </div>
-                  <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${vegetationPct}%`, height: '100%', background: tokens.colors.primaryLeaf, borderRadius: '3px' }} />
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
-                    <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barMoisture')}</span>
-                    <span style={{ color: tokens.colors.textPrimary }}>{moistureLabel}</span>
-                  </div>
-                  <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${moisturePct}%`, height: '100%', background: tokens.colors.sky, borderRadius: '3px' }} />
-                  </div>
-                </div>
-
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
-                    <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barCanopy')}</span>
-                    <span style={{ color: tokens.colors.textPrimary }}>{canopyLabel}</span>
-                  </div>
-                  <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${canopyPct}%`, height: '100%', background: '#65A30D', borderRadius: '3px' }} />
-                  </div>
-                </div>
+              {/* 3. NDVI TREND OVER TIME (Under map on desktop, 3rd on mobile) */}
+              <div className="sat-slot-trend">
+                <NdviTimeSeriesChart observations={satelliteData.observations} />
               </div>
             </div>
 
-            {/* WHAT THIS MEANS & NEXT ACTIONS */}
-            <HealthInterpretationCard
-              interpretation={satelliteData.interpretation}
-              modelMetadata={satelliteData.modelMetadata}
-            />
+            {/* Desktop Right Column / Mobile Health & Meaning Slots */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {/* 2. FIELD HEALTH STATUS BANNER (Top of right column on desktop, 2nd on mobile) */}
+              <div className="sat-slot-health" style={{
+                background: isHealthy ? tokens.colors.statusGoodBg : isWatch ? tokens.colors.statusWatchBg : tokens.colors.statusAlertBg,
+                border: `1.5px solid ${isHealthy ? tokens.colors.statusGoodBorder : isWatch ? tokens.colors.statusWatchBorder : tokens.colors.statusAlertBorder}`,
+                borderRadius: tokens.radii.md,
+                padding: '0.85rem 1rem',
+                boxShadow: tokens.shadows.subtle
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px', color: tokens.colors.primaryLeaf }}>satellite_alt</span>
+                    <span style={{ fontSize: tokens.typography.micro, color: tokens.colors.textSecondary, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      FIELD AVERAGE
+                    </span>
+                  </div>
+                  <span style={{
+                    fontSize: tokens.typography.micro,
+                    fontWeight: 900,
+                    padding: '2px 8px',
+                    borderRadius: tokens.radii.full,
+                    background: isHealthy ? '#DCFCE7' : isWatch ? '#FEF3C7' : '#FEE2E2',
+                    color: isHealthy ? tokens.colors.statusGood : isWatch ? tokens.colors.statusWatch : tokens.colors.statusAlert
+                  }}>
+                    {isHealthy ? t('buildAi.good') : isWatch ? t('buildAi.needsCare') : t('buildAi.critical')}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.65rem' }}>
+                  <span style={{ fontSize: '1.85rem', fontWeight: 900, color: tokens.colors.textPrimary, lineHeight: 1 }}>
+                    NDVI {satelliteData.ndviSummary.currentNdvi.toFixed(2)}
+                  </span>
+                  <span style={{ fontSize: '0.84rem', fontWeight: 700, color: isHealthy ? tokens.colors.statusGood : tokens.colors.statusWatch }}>
+                    {isHealthy ? t('buildAi.satellite.cropsLookingHealthy') : t('buildAi.satellite.growthStressSouthern')}
+                  </span>
+                </div>
+
+                {/* Visual Health Bars */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '0.6rem' }}>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
+                      <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barVegetation')}</span>
+                      <span style={{ color: tokens.colors.textPrimary }}>{vegetationLabel}</span>
+                    </div>
+                    <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${vegetationPct}%`, height: '100%', background: tokens.colors.primaryLeaf, borderRadius: '3px' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
+                      <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barMoisture')}</span>
+                      <span style={{ color: tokens.colors.textPrimary }}>{moistureLabel}</span>
+                    </div>
+                    <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${moisturePct}%`, height: '100%', background: tokens.colors.sky, borderRadius: '3px' }} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: tokens.typography.micro, fontWeight: 700, marginBottom: '2px' }}>
+                      <span style={{ color: tokens.colors.textSecondary }}>{t('buildAi.satellite.barCanopy')}</span>
+                      <span style={{ color: tokens.colors.textPrimary }}>{canopyLabel}</span>
+                    </div>
+                    <div style={{ width: '100%', height: '6px', background: 'rgba(0,0,0,0.08)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${canopyPct}%`, height: '100%', background: '#65A30D', borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. WHAT THIS MEANS & NEXT ACTIONS */}
+              <div className="sat-slot-meaning">
+                <HealthInterpretationCard
+                  interpretation={satelliteData.interpretation}
+                  modelMetadata={satelliteData.modelMetadata}
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </BuildAiShell>
   );

@@ -99,8 +99,8 @@ export class SatelliteClientService {
     const lat = meta?.centroid_lat || 22.0667;
     const lng = meta?.centroid_lng || 88.0667;
 
-    const currentNdvi = isPaddy ? 0.62 : isVegetable ? 0.52 : 0.74;
-    const prevNdvi = isPaddy ? 0.68 : isVegetable ? 0.49 : 0.70;
+    const currentNdvi = isPaddy ? 0.62 : isVegetable ? 0.52 : 0.72;
+    const prevNdvi = isPaddy ? 0.65 : isVegetable ? 0.48 : 0.69;
 
     const zones: FieldZoneDetail[] = isPaddy ? [
       {
@@ -146,8 +146,8 @@ export class SatelliteClientService {
     ] : [
       {
         id: 'zone_nw',
-        name: 'North Zone',
-        ndvi: 0.76,
+        name: 'North-West Zone',
+        ndvi: 0.74,
         vegetation: 'Healthy',
         status: 'Good',
         color: '#16A34A',
@@ -156,22 +156,32 @@ export class SatelliteClientService {
       },
       {
         id: 'zone_ne',
-        name: 'Central Zone',
+        name: 'North-East Zone',
         ndvi: 0.72,
         vegetation: 'Healthy',
         status: 'Good',
         color: '#16A34A',
-        description: 'Consistent canopy development.',
+        description: 'Consistent canopy development matching parcel average.',
         moisturePercent: 72
       },
       {
         id: 'zone_sw',
-        name: 'South Zone',
-        ndvi: 0.65,
+        name: 'South-West Zone',
+        ndvi: 0.71,
         vegetation: 'Healthy',
         status: 'Good',
         color: '#16A34A',
         description: 'Uniform tillering with good soil moisture.',
+        moisturePercent: 70
+      },
+      {
+        id: 'zone_se',
+        name: 'South-East Zone',
+        ndvi: 0.69,
+        vegetation: 'Healthy',
+        status: 'Good',
+        color: '#16A34A',
+        description: 'Normal tillering and uniform greenness.',
         moisturePercent: 68
       }
     ];
@@ -193,15 +203,15 @@ export class SatelliteClientService {
         location_address: 'Haldia Ag-Zone, West Bengal (Offline Demo)'
       },
       observations: [
-        { date: '2026-03-15', ndvi: 0.35, vegetationHealth: 'MODERATE', cloudCover: 2.1 },
-        { date: '2026-04-15', ndvi: 0.54, vegetationHealth: 'HEALTHY', cloudCover: 1.8 },
-        { date: '2026-05-15', ndvi: 0.68, vegetationHealth: 'HEALTHY', cloudCover: 3.2 },
-        { date: '2026-06-15', ndvi: 0.62, vegetationHealth: 'MODERATE', cloudCover: 1.5 }
+        { date: '2026-03-15', ndvi: isPaddy ? 0.38 : isVegetable ? 0.35 : 0.52, vegetationHealth: 'MODERATE', cloudCover: 2.1 },
+        { date: '2026-04-15', ndvi: isPaddy ? 0.50 : isVegetable ? 0.42 : 0.61, vegetationHealth: 'HEALTHY', cloudCover: 1.8 },
+        { date: '2026-05-15', ndvi: isPaddy ? 0.65 : isVegetable ? 0.48 : 0.69, vegetationHealth: 'HEALTHY', cloudCover: 3.2 },
+        { date: '2026-06-15', ndvi: currentNdvi, vegetationHealth: currentNdvi >= 0.70 ? 'HEALTHY' : 'MODERATE', cloudCover: 1.5 }
       ],
       ndviSummary: {
         currentNdvi,
         previousNdvi: prevNdvi,
-        changePercentage: -8.8,
+        changePercentage: isPaddy ? -4.6 : isVegetable ? 8.3 : 4.3,
         trend: isPaddy ? 'DECLINING' : 'IMPROVING',
         healthStatus: currentNdvi >= 0.70 ? 'HEALTHY' : currentNdvi >= 0.50 ? 'MODERATE' : 'STRESSED',
         lastObservationDate: '2026-06-15'
