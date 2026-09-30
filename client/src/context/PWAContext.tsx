@@ -97,6 +97,13 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     useEffect(() => {
         if (!('serviceWorker' in navigator)) return;
 
+        // In Vite development mode without dev SW enabled, /sw.js serves index.html (text/html) causing MIME error.
+        // Register SW only in production builds or when not on localhost dev server.
+        const isDev = Boolean((import.meta as any).env?.DEV);
+        if (isDev) {
+            return;
+        }
+
         const registerSW = async () => {
             try {
                 const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });

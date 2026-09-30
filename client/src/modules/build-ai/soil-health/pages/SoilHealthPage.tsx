@@ -149,8 +149,8 @@ export const SoilHealthPage: React.FC = () => {
       {/* Grid: Form Input + Results */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-        gap: '1.25rem',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '1rem',
         alignItems: 'start'
       }}>
         {/* Form Card */}

@@ -37,13 +37,13 @@ export const BricsFilterBar: React.FC<Props> = ({
     <div style={{
       background: '#FFFFFF',
       border: '1px solid #E2E8F0',
-      borderRadius: '16px',
-      padding: '1.25rem',
-      marginBottom: '1.5rem',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+      borderRadius: '14px',
+      padding: '0.9rem 1rem',
+      marginBottom: '1rem',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
       display: 'flex',
       flexDirection: 'column',
-      gap: '1rem'
+      gap: '0.85rem'
     }}>
       {/* Top row: Search input & View Mode toggle */}
       <div style={{

@@ -22,6 +22,7 @@ export const BuildAiShell: React.FC<Props> = ({ children, activeRoute, pageTitle
       subtitle: 'Monitor crop vegetation',
       path: '/build-ai/satellite',
       icon: 'satellite_alt',
+      image: '/images/tools/satellite.jpg',
       badge: 'NDVI & Maps'
     },
     {
@@ -30,6 +31,7 @@ export const BuildAiShell: React.FC<Props> = ({ children, activeRoute, pageTitle
       subtitle: 'Check soil condition',
       path: '/build-ai/soil-health',
       icon: 'potted_plant',
+      image: '/images/tools/soil.jpg',
       badge: 'NPK & Carbon'
     },
     {
@@ -37,7 +39,8 @@ export const BuildAiShell: React.FC<Props> = ({ children, activeRoute, pageTitle
       title: 'Regenerative AI',
       subtitle: 'Get farming recommendations',
       path: '/build-ai/regenerative-ai',
-      icon: 'eco',
+      icon: 'psychology',
+      image: '/images/tools/regenerative.jpg',
       badge: 'Action Plan'
     },
     {
@@ -46,6 +49,7 @@ export const BuildAiShell: React.FC<Props> = ({ children, activeRoute, pageTitle
       subtitle: 'Explore farming practices',
       path: '/build-ai/brics-hub',
       icon: 'public',
+      image: '/images/tools/brics.jpg',
       badge: 'Best Practices'
     }
   ];
@@ -301,23 +305,24 @@ export const BuildAiShell: React.FC<Props> = ({ children, activeRoute, pageTitle
                       transition: 'all 0.15s ease'
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: 0 }}>
                       <div style={{
-                        width: '42px',
-                        height: '42px',
+                        width: '46px',
+                        height: '46px',
                         borderRadius: '10px',
-                        background: isCurrent ? '#DCFCE7' : '#FFFFFF',
-                        border: '1px solid',
-                        borderColor: isCurrent ? '#BBF7D0' : '#E2E8F0',
-                        color: isCurrent ? '#15803D' : '#16A34A',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
+                        overflow: 'hidden',
+                        position: 'relative',
+                        flexShrink: 0,
+                        border: isCurrent ? '1.5px solid #16A34A' : '1px solid #E2E8F0',
+                        background: '#E2E8F0'
                       }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>{tool.icon}</span>
+                        <img
+                          src={tool.image}
+                          alt={tool.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
                       </div>
-                      <div>
+                      <div style={{ minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                           <span style={{ fontSize: '0.94rem', fontWeight: 800, color: '#0F172A' }}>
                             {tool.title}

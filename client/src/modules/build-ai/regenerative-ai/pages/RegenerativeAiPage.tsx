@@ -187,19 +187,19 @@ export const RegenerativeAiPage: React.FC = () => {
 
       {/* Plan Content */}
       {!isGenerating && !error && planData && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Plan Header Headline & Score */}
           <div style={{
             background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
             borderRadius: '16px',
-            padding: '1.5rem',
+            padding: '1.1rem 1.25rem',
             border: '1.5px solid #BBF7D0',
             boxShadow: '0 4px 16px rgba(22, 163, 74, 0.08)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '1rem'
+            gap: '0.85rem'
           }}>
             <div>
               <div style={{ fontSize: '0.78rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '0.2rem' }}>

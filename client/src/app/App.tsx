@@ -7,7 +7,7 @@ import { OfflineBanner } from '../components/pwa/OfflineBanner.js';
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AppProviders>
         {/* PWA: Offline detection banner — shown globally */}
         <OfflineBanner />
