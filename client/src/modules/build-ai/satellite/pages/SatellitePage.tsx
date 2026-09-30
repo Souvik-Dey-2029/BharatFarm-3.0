@@ -1,45 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { satelliteClientService } from '../satellite.service.js';
-import { SatelliteFieldData, SatelliteFieldSummary } from '../satellite.types.js';
+import { SatelliteFieldData } from '../satellite.types.js';
 import { SatelliteMapCard } from '../components/SatelliteMapCard.js';
 import { NdviTimeSeriesChart } from '../components/NdviTimeSeriesChart.js';
 import { HealthInterpretationCard } from '../components/HealthInterpretationCard.js';
 import { BuildAiShell } from '../../components/BuildAiShell.js';
+import { useSharedField } from '../../context/SharedFieldContext.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 export const SatellitePage: React.FC = () => {
   const navigate = useNavigate();
-
-  const [availableFields, setAvailableFields] = useState<SatelliteFieldSummary[]>([]);
-  const [selectedFieldId, setSelectedFieldId] = useState<string>('field_demo_paddy_01');
+  const { t } = useLanguage();
+  const { fields, selectedFieldId, selectedField, setSelectedFieldId, isLoadingFields } = useSharedField();
 
   const [satelliteData, setSatelliteData] = useState<SatelliteFieldData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load available fields on mount
-  useEffect(() => {
-    let isMounted = true;
-    satelliteClientService.getAvailableFields().then(fields => {
-      if (isMounted && fields.length > 0) {
-        const formatted: SatelliteFieldSummary[] = fields.map(f => ({
-          id: f.id,
-          field_name: f.field_name,
-          crop_name: f.crop_name,
-          area_acres: f.area_acres,
-          centroid_lat: f.centroid_lat || 22.0667,
-          centroid_lng: f.centroid_lng || 88.0667,
-          boundary_coordinates: f.boundary_coordinates || []
-        }));
-        setAvailableFields(formatted);
-        setSelectedFieldId(fields[0].id);
-      }
-    });
-
-    return () => { isMounted = false; };
-  }, []);
-
-  // Fetch telemetry when selected field changes
   const loadSatelliteData = async (fieldId: string) => {
     setIsLoading(true);
     setError(null);
@@ -50,7 +28,7 @@ export const SatellitePage: React.FC = () => {
     if (res.success && res.data) {
       setSatelliteData(res.data);
     } else {
-      setError(typeof res.error === 'string' ? res.error : res.error?.message || 'Failed to load satellite telemetry data.');
+      setError(typeof res.error === 'string' ? res.error : res.error?.message || t('buildAi.generalError'));
     }
   };
 
@@ -60,29 +38,27 @@ export const SatellitePage: React.FC = () => {
     }
   }, [selectedFieldId]);
 
-  const selectedField = availableFields.find(f => f.id === selectedFieldId);
-
   return (
-    <BuildAiShell activeRoute="/build-ai/satellite" pageTitle="Satellite Health">
-      {/* Field Selector & Telemetry Status Bar */}
+    <BuildAiShell activeRoute="/build-ai/satellite" pageTitle={t('buildAi.cropHealth')}>
+      {/* Field Selector & Source Pill */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
-        padding: '1rem',
+        padding: '0.75rem 0.9rem',
         border: '1px solid #E2E8F0',
-        marginBottom: '1rem',
+        marginBottom: '0.75rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '0.75rem'
+        gap: '0.6rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: '1 1 240px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 200px' }}>
           <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '9px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
             background: '#F0FDF4',
             color: '#16A34A',
             display: 'flex',
@@ -90,11 +66,11 @@ export const SatellitePage: React.FC = () => {
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>grass</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>grass</span>
           </div>
           <div style={{ minWidth: 0 }}>
-            <label htmlFor="field-select" style={{ display: 'block', fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.15rem' }}>
-              Selected Field
+            <label htmlFor="field-select" style={{ display: 'block', fontSize: '0.65rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
+              {t('buildAi.fieldSelect')}
             </label>
             <select
               id="field-select"
@@ -105,44 +81,44 @@ export const SatellitePage: React.FC = () => {
                 color: '#0F172A',
                 border: '1.5px solid #CBD5E1',
                 borderRadius: '8px',
-                padding: '0.35rem 0.65rem',
-                fontSize: '0.86rem',
-                fontWeight: 700,
+                padding: '0.2rem 0.45rem',
+                fontSize: '0.82rem',
+                fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer',
                 maxWidth: '100%'
               }}
             >
-              {availableFields.map(f => (
+              {fields.map(f => (
                 <option key={f.id} value={f.id}>
-                  {f.field_name} ({f.crop_name} • {f.area_acres} ac)
+                  🌾 {f.field_name} ({f.crop_name} • {f.area_acres} ac)
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* Source Badge (Live vs Demo) */}
+        {/* Live vs Demo Telemetry Badge */}
         {satelliteData && (
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.35rem',
-            padding: '4px 10px',
+            gap: '0.3rem',
+            padding: '3px 8px',
             borderRadius: '9999px',
-            fontSize: '0.74rem',
+            fontSize: '0.68rem',
             fontWeight: 800,
             background: satelliteData.source === 'live' ? '#DCFCE7' : '#FEF3C7',
             color: satelliteData.source === 'live' ? '#15803D' : '#B45309',
             border: `1px solid ${satelliteData.source === 'live' ? '#BBF7D0' : '#FDE68A'}`
           }}>
             <span style={{
-              width: '7px',
-              height: '7px',
+              width: '6px',
+              height: '6px',
               borderRadius: '50%',
               background: satelliteData.source === 'live' ? '#16A34A' : '#D97706'
             }} />
-            <span>{satelliteData.source === 'live' ? 'LIVE SATELLITE DATA' : 'DEMO SATELLITE DATA'}</span>
+            <span>{satelliteData.source === 'live' ? t('buildAi.liveDataBadge') : t('buildAi.demoDataBadge')}</span>
           </div>
         )}
       </div>
@@ -152,107 +128,147 @@ export const SatellitePage: React.FC = () => {
         <div style={{
           background: '#FFFFFF',
           borderRadius: '14px',
-          padding: '2.5rem 1.5rem',
+          padding: '2rem 1rem',
           textAlign: 'center',
           border: '1px solid #E2E8F0',
           boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
         }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🛰️</div>
-          <p style={{ margin: 0, fontWeight: 700, color: '#334155', fontSize: '0.9rem' }}>
-            Retrieving Sentinel-2 satellite observation...
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>🛰️</div>
+          <p style={{ margin: 0, fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>
+            Checking crop health...
           </p>
         </div>
       )}
 
-      {/* Error Card */}
+      {/* Error State */}
       {error && !isLoading && (
         <div style={{
           background: '#FEF2F2',
           border: '1px solid #FECACA',
           borderRadius: '12px',
-          padding: '1rem',
+          padding: '0.85rem',
           color: '#991B1B',
-          marginBottom: '1rem',
+          marginBottom: '0.85rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
-          gap: '0.75rem'
+          gap: '0.5rem'
         }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Satellite Telemetry Error</div>
-            <div style={{ fontSize: '0.8rem' }}>{error}</div>
+            <div style={{ fontWeight: 800, fontSize: '0.82rem' }}>{t('buildAi.generalError')}</div>
+            <div style={{ fontSize: '0.75rem' }}>{error}</div>
           </div>
           <button
             onClick={() => loadSatelliteData(selectedFieldId)}
             style={{
-              padding: '0.4rem 0.8rem',
+              padding: '0.35rem 0.65rem',
               background: '#DC2626',
               color: '#fff',
               border: 'none',
               borderRadius: '6px',
-              fontSize: '0.78rem',
-              fontWeight: 700,
+              fontSize: '0.74rem',
+              fontWeight: 800,
               cursor: 'pointer'
             }}
           >
-            Retry Stream
+            {t('buildAi.retryBtn')}
           </button>
         </div>
       )}
 
       {/* Main Content Layout */}
       {!isLoading && !error && satelliteData && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Main Health Insight Card (Answer: How healthy is my crop?) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {/* Answer Farmer Question: "Is my crop healthy?" */}
+          {/* 2 SIDE-BY-SIDE CARDS (NO LONG VERTICAL SCROLL) */}
           <div style={{
-            background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
-            border: '1.5px solid #BBF7D0',
-            borderRadius: '14px',
-            padding: '1rem 1.25rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '0.75rem'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '0.65rem'
           }}>
-            <div>
-              <div style={{ fontSize: '0.72rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Vegetation Status
+            {/* Card 1: 🌿 Crop Health */}
+            <div style={{
+              background: '#FFFFFF',
+              border: '1.5px solid #BBF7D0',
+              borderRadius: '14px',
+              padding: '0.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+            }}>
+              <div>
+                <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                  🌿 {t('buildAi.cropHealth')}
+                </div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 900, color: '#0F172A', marginTop: '2px', lineHeight: 1.2 }}>
+                  {satelliteData.ndviSummary.healthStatus === 'EXCELLENT' || satelliteData.ndviSummary.healthStatus === 'HEALTHY'
+                    ? t('buildAi.healthy')
+                    : satelliteData.ndviSummary.healthStatus === 'MODERATE'
+                    ? t('buildAi.moderate')
+                    : t('buildAi.stressed')}
+                </div>
               </div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0F172A', marginTop: '2px' }}>
-                {satelliteData.ndviSummary.healthStatus}
-              </div>
-              <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: '2px' }}>
-                Trend: <strong>{satelliteData.ndviSummary.trend}</strong> • Last observed: {satelliteData.ndviSummary.lastObservationDate}
+              <div style={{
+                fontSize: '0.72rem',
+                color: '#15803D',
+                fontWeight: 700,
+                marginTop: '0.4rem',
+                background: '#F0FDF4',
+                padding: '2px 6px',
+                borderRadius: '6px',
+                alignSelf: 'flex-start'
+              }}>
+                ✓ {t('buildAi.lookingGood')}
               </div>
             </div>
 
+            {/* Card 2: 📊 NDVI Score */}
             <div style={{
               background: '#FFFFFF',
-              border: '1px solid #BBF7D0',
-              borderRadius: '10px',
-              padding: '0.5rem 1rem',
-              textAlign: 'center'
+              border: '1.5px solid #BAE6FD',
+              borderRadius: '14px',
+              padding: '0.75rem',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
             }}>
-              <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700 }}>Current NDVI</div>
-              <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#16A34A' }}>
-                {satelliteData.ndviSummary.currentNdvi}
+              <div>
+                <div style={{ fontSize: '0.68rem', color: '#0369A1', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em' }}>
+                  📊 {t('buildAi.ndviScore')}
+                </div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#16A34A', marginTop: '2px', lineHeight: 1.2 }}>
+                  {satelliteData.ndviSummary.currentNdvi}
+                </div>
+              </div>
+              <div style={{
+                fontSize: '0.72rem',
+                color: '#0369A1',
+                fontWeight: 700,
+                marginTop: '0.4rem',
+                background: '#F0F9FF',
+                padding: '2px 6px',
+                borderRadius: '6px',
+                alignSelf: 'flex-start'
+              }}>
+                {t('buildAi.normalRange')}
               </div>
             </div>
           </div>
 
-          {/* Time Series Trend Chart */}
+          {/* Bi-Weekly NDVI Trend Chart */}
           <NdviTimeSeriesChart observations={satelliteData.observations} />
 
-          {/* Field Map */}
+          {/* Field Boundary & Satellite Map */}
           <SatelliteMapCard
             field={satelliteData.field}
             currentNdvi={satelliteData.ndviSummary.currentNdvi}
             healthStatus={satelliteData.ndviSummary.healthStatus}
           />
 
-          {/* Health Interpretation & Recommendations */}
+          {/* Actionable Health Interpretation */}
           <HealthInterpretationCard
             interpretation={satelliteData.interpretation}
             modelMetadata={satelliteData.modelMetadata}

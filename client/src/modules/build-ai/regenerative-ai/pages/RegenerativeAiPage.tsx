@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { regenerativeClientService } from '../regenerative.service.js';
-import { satelliteClientService } from '../../satellite/satellite.service.js';
 import { RegenerativeResponseSchema, RegenerativeContextInput } from '../types.js';
 import { ContextGatheringBar } from '../components/ContextGatheringBar.js';
 import { ActionGroupCard } from '../components/ActionGroupCard.js';
 import { EvidenceAndLimitationsCard } from '../components/EvidenceAndLimitationsCard.js';
 import { BuildAiShell } from '../../components/BuildAiShell.js';
+import { useSharedField } from '../../context/SharedFieldContext.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 export const RegenerativeAiPage: React.FC = () => {
   const navigate = useNavigate();
-
-  const [availableFields, setAvailableFields] = useState<Array<{ id: string; field_name: string; crop_name: string }>>([]);
-  const [selectedFieldId, setSelectedFieldId] = useState<string>('field_demo_paddy_01');
+  const { language, t } = useLanguage();
+  const { fields, selectedFieldId, selectedField, setSelectedFieldId } = useSharedField();
 
   const [includeSoil, setIncludeSoil] = useState<boolean>(true);
   const [includeSatellite, setIncludeSatellite] = useState<boolean>(true);
@@ -21,31 +21,9 @@ export const RegenerativeAiPage: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load available fields and sample plan on mount
-  useEffect(() => {
-    let isMounted = true;
-    satelliteClientService.getAvailableFields().then(fields => {
-      if (isMounted && fields.length > 0) {
-        setAvailableFields(fields.map(f => ({ id: f.id, field_name: f.field_name, crop_name: f.crop_name })));
-        setSelectedFieldId(fields[0].id);
-      }
-    });
-
-    regenerativeClientService.getSamplePlan().then(res => {
-      if (isMounted && res.success && res.data) {
-        setPlanData(res.data);
-        setIsGenerating(false);
-      }
-    });
-
-    return () => { isMounted = false; };
-  }, []);
-
   const loadPlan = async (overrides?: Partial<RegenerativeContextInput>) => {
     setIsGenerating(true);
     setError(null);
-
-    const selectedField = availableFields.find(f => f.id === selectedFieldId);
 
     const input: RegenerativeContextInput = {
       fieldId: selectedFieldId,
@@ -56,37 +34,42 @@ export const RegenerativeAiPage: React.FC = () => {
       ...overrides
     };
 
-    const res = await regenerativeClientService.generatePlan(input);
+    const res = await regenerativeClientService.generatePlan(input, language);
     setIsGenerating(false);
 
     if (res.success && res.data) {
       setPlanData(res.data);
     } else {
-      setError(typeof res.error === 'string' ? res.error : res.error?.message || 'Failed to generate regenerative plan.');
+      setError(typeof res.error === 'string' ? res.error : res.error?.message || t('buildAi.aiError'));
     }
   };
 
+  // Reload plan on mount or when language or selected field changes
+  useEffect(() => {
+    loadPlan();
+  }, [selectedFieldId, language]);
+
   return (
-    <BuildAiShell activeRoute="/build-ai/regenerative-ai">
-      {/* Field & Engine Source Strip */}
+    <BuildAiShell activeRoute="/build-ai/regenerative-ai" pageTitle={t('buildAi.regenAi')}>
+      {/* Field Selector & Source Pill */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
-        padding: '0.85rem 1rem',
+        padding: '0.75rem 0.9rem',
         border: '1px solid #E2E8F0',
-        marginBottom: '1.25rem',
+        marginBottom: '0.75rem',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '0.75rem',
+        gap: '0.6rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flex: '1 1 200px' }}>
           <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
             background: '#F0FDF4',
             color: '#16A34A',
             display: 'flex',
@@ -94,15 +77,34 @@ export const RegenerativeAiPage: React.FC = () => {
             justifyContent: 'center',
             flexShrink: 0
           }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>psychology</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>psychology</span>
           </div>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.15rem' }}>
-              Field Intelligence Pipeline
+            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '1px' }}>
+              {t('buildAi.fieldSelect')}
             </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A' }}>
-              {availableFields.find(f => f.id === selectedFieldId)?.field_name || 'Selected Field'} • Decision Support
-            </div>
+            <select
+              value={selectedFieldId}
+              onChange={(e) => setSelectedFieldId(e.target.value)}
+              style={{
+                background: '#F8FAFC',
+                color: '#0F172A',
+                border: '1.5px solid #CBD5E1',
+                borderRadius: '8px',
+                padding: '0.2rem 0.45rem',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                outline: 'none',
+                cursor: 'pointer',
+                maxWidth: '100%'
+              }}
+            >
+              {fields.map(f => (
+                <option key={f.id} value={f.id}>
+                  🌾 {f.field_name} ({f.crop_name})
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
@@ -110,34 +112,31 @@ export const RegenerativeAiPage: React.FC = () => {
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.35rem',
-            padding: '4px 10px',
+            gap: '0.3rem',
+            padding: '3px 8px',
             borderRadius: '9999px',
-            fontSize: '0.74rem',
+            fontSize: '0.68rem',
             fontWeight: 800,
             background: planData.source === 'live_ai' ? '#DCFCE7' : '#FEF3C7',
             color: planData.source === 'live_ai' ? '#15803D' : '#B45309',
             border: `1px solid ${planData.source === 'live_ai' ? '#BBF7D0' : '#FDE68A'}`
           }}>
             <span style={{
-              width: '7px',
-              height: '7px',
+              width: '6px',
+              height: '6px',
               borderRadius: '50%',
               background: planData.source === 'live_ai' ? '#16A34A' : '#D97706'
             }} />
-            <span>{planData.source === 'live_ai' ? 'LIVE AI ENGINE' : 'DETERMINISTIC ENGINE'}</span>
+            <span>{planData.source === 'live_ai' ? 'LIVE AI' : 'REGENERATIVE ENGINE'}</span>
           </div>
         )}
       </div>
 
-      {/* Multi-Source Context Gathering Bar */}
+      {/* Available Data Row: 🛰️ Satellite ✓ | 🧪 Soil ✓ | 🌾 Crop ✓ */}
       <ContextGatheringBar
-        availableFields={availableFields}
+        availableFields={fields}
         selectedFieldId={selectedFieldId}
-        onSelectField={(id: string) => {
-          setSelectedFieldId(id);
-          loadPlan({ fieldId: id });
-        }}
+        onSelectField={(id: string) => setSelectedFieldId(id)}
         includeSoil={includeSoil}
         onToggleSoil={(val: boolean) => {
           setIncludeSoil(val);
@@ -152,20 +151,47 @@ export const RegenerativeAiPage: React.FC = () => {
         isGenerating={isGenerating}
       />
 
+      {/* Primary Action Button: [ Get Advice ] */}
+      <div style={{ marginBottom: '0.85rem' }}>
+        <button
+          onClick={() => loadPlan()}
+          disabled={isGenerating}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            background: '#16A34A',
+            color: '#FFFFFF',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '0.92rem',
+            fontWeight: 900,
+            cursor: isGenerating ? 'not-allowed' : 'pointer',
+            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.4rem'
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>psychology</span>
+          <span>{isGenerating ? t('buildAi.gettingAdvice') : t('buildAi.getAdviceBtn')}</span>
+        </button>
+      </div>
+
       {/* Loading Skeleton */}
       {isGenerating && (
         <div style={{
           background: '#FFFFFF',
-          borderRadius: '16px',
-          padding: '3rem 1.5rem',
+          borderRadius: '14px',
+          padding: '2rem 1rem',
           textAlign: 'center',
           border: '1px solid #E2E8F0',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-          marginBottom: '1.5rem'
+          boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+          marginBottom: '0.85rem'
         }}>
-          <div className="spin" style={{ fontSize: '2rem', marginBottom: '1rem' }}>🤖</div>
-          <p style={{ margin: 0, fontWeight: 700, color: '#334155' }}>
-            Synthesizing Regenerative Action Plan...
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.5rem' }}>🌱</div>
+          <p style={{ margin: 0, fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>
+            {t('buildAi.gettingAdvice')}
           </p>
         </div>
       )}
@@ -175,37 +201,36 @@ export const RegenerativeAiPage: React.FC = () => {
         <div style={{
           background: '#FEF2F2',
           border: '1px solid #FCA5A5',
-          borderRadius: '14px',
-          padding: '1.25rem',
+          borderRadius: '12px',
+          padding: '0.85rem',
           color: '#991B1B',
-          marginBottom: '1.5rem'
+          marginBottom: '0.85rem',
+          fontSize: '0.82rem'
         }}>
-          <div style={{ fontWeight: 800, fontSize: '0.95rem' }}>Regenerative Plan Engine Error</div>
-          <div style={{ fontSize: '0.85rem' }}>{error}</div>
+          {error}
         </div>
       )}
 
       {/* Plan Content */}
       {!isGenerating && !error && planData && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {/* Plan Header Headline & Score */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+          {/* Main Answer: 🌱 TODAY'S ADVICE Headline & Sustainability Score */}
           <div style={{
             background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
-            borderRadius: '16px',
-            padding: '1.1rem 1.25rem',
+            borderRadius: '14px',
+            padding: '0.85rem 1rem',
             border: '1.5px solid #BBF7D0',
-            boxShadow: '0 4px 16px rgba(22, 163, 74, 0.08)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '0.85rem'
+            gap: '0.65rem'
           }}>
             <div>
-              <div style={{ fontSize: '0.78rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '0.2rem' }}>
-                Schema Version {planData.schemaVersion}
+              <div style={{ fontSize: '0.68rem', color: '#15803D', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.03em', marginBottom: '2px' }}>
+                🌱 {t('buildAi.todayAdvice')}
               </div>
-              <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 900, color: '#0F172A' }}>
+              <h2 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.25 }}>
                 {planData.headline}
               </h2>
             </div>
@@ -213,59 +238,54 @@ export const RegenerativeAiPage: React.FC = () => {
             <div style={{
               background: '#FFFFFF',
               border: '1px solid #BBF7D0',
-              borderRadius: '12px',
-              padding: '0.75rem 1.25rem',
+              borderRadius: '10px',
+              padding: '0.4rem 0.8rem',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 700 }}>Sustainability Rating</div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#16A34A' }}>
+              <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 700 }}>Rating</div>
+              <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#16A34A' }}>
                 {planData.sustainabilityScore}/100
               </div>
             </div>
           </div>
 
-          {/* Action Group Cards */}
+          {/* Action Group Cards (Collapsible and Compact) */}
           <ActionGroupCard
-            title="Immediate Actions (1–3 Days)"
+            title={t('buildAi.todayAdvice')}
             icon="flash_on"
-            badgeColor="#DCFCE7"
-            textColor="#15803D"
             actions={planData.immediateActions}
+            defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title="Soil Health & Bio-Mass Actions"
+            title={t('buildAi.soilHealth')}
             icon="potted_plant"
-            badgeColor="#E0F2FE"
-            textColor="#0369A1"
             actions={planData.soilActions}
+            defaultExpanded={true}
           />
 
           <ActionGroupCard
-            title="Water Conservation & Irrigation"
+            title="Water Management"
             icon="water_drop"
-            badgeColor="#E0F2FE"
-            textColor="#0284C7"
             actions={planData.waterActions}
+            defaultExpanded={false}
           />
 
           <ActionGroupCard
-            title="Pest & Micro-Climate Risk Mitigation"
+            title="Pest & Risk Mitigation"
             icon="shield"
-            badgeColor="#FEF3C7"
-            textColor="#B45309"
             actions={planData.riskMitigation}
+            defaultExpanded={false}
           />
 
           <ActionGroupCard
-            title="Seasonal & Cover Crop Strategy"
+            title="Seasonal Cover Crops"
             icon="calendar_month"
-            badgeColor="#F3E8FF"
-            textColor="#7E22CE"
             actions={planData.seasonalActions}
+            defaultExpanded={false}
           />
 
-          {/* Evidence, Assumptions, & Limitations */}
+          {/* Evidence Provenance (Collapsible) */}
           <EvidenceAndLimitationsCard
             evidence={planData.evidence}
             assumptions={planData.assumptions}

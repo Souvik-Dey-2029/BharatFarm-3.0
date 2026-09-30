@@ -10,8 +10,10 @@ import { BricsKnowledgeCard } from '../components/BricsKnowledgeCard.js';
 import { BricsComparisonTable } from '../components/BricsComparisonTable.js';
 import { BricsAiSynthesisCard } from '../components/BricsAiSynthesisCard.js';
 import { BuildAiShell } from '../../components/BuildAiShell.js';
+import { useLanguage } from '../../../../context/LanguageContext.js';
 
 export const BricsHubPage: React.FC = () => {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState<BricsQueryFilters>({
     country: 'ALL',
     crop: 'ALL',
@@ -39,7 +41,7 @@ export const BricsHubPage: React.FC = () => {
         setRecords(recRes.records);
       }
     } catch (err: any) {
-      setError(err.message || 'Failed to load BRICS Knowledge Hub data');
+      setError(err.message || t('buildAi.generalError'));
     } finally {
       setLoading(false);
     }
@@ -50,62 +52,8 @@ export const BricsHubPage: React.FC = () => {
   }, [filters, viewMode]);
 
   return (
-    <BuildAiShell activeRoute="/build-ai/brics-hub">
-      {/* BRICS Knowledge Hub Context Strip */}
-      <div style={{
-        background: '#FFFFFF',
-        borderRadius: '14px',
-        padding: '0.85rem 1rem',
-        border: '1px solid #E2E8F0',
-        marginBottom: '1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '0.75rem',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
-            background: '#F0FDF4',
-            color: '#16A34A',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0
-          }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>public</span>
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.15rem' }}>
-              International Knowledge Repository
-            </div>
-            <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A' }}>
-              BRICS Regenerative Farming Practices & Field Studies
-            </div>
-          </div>
-        </div>
-
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.35rem',
-          padding: '4px 10px',
-          borderRadius: '9999px',
-          fontSize: '0.74rem',
-          fontWeight: 800,
-          background: '#DCFCE7',
-          color: '#15803D',
-          border: '1px solid #BBF7D0'
-        }}>
-          <span>🌐 MULTI-NATION REPOSITORY</span>
-        </div>
-      </div>
-
-      {/* Filter controls */}
+    <BuildAiShell activeRoute="/build-ai/brics-hub" pageTitle={t('buildAi.bricsKnowledge')}>
+      {/* Filter controls: [ Country ▼ ] [ Crop ▼ ] */}
       <BricsFilterBar
         filters={filters}
         onChange={setFilters}
@@ -113,21 +61,21 @@ export const BricsHubPage: React.FC = () => {
         onToggleViewMode={setViewMode}
       />
 
-      {/* AI Synthesis Component */}
+      {/* AI Synthesis Summary Card */}
       <BricsAiSynthesisCard records={records} />
 
       {/* Loading state */}
       {loading && (
         <div style={{
           background: '#FFFFFF',
-          borderRadius: '16px',
-          padding: '3rem 1.5rem',
+          borderRadius: '14px',
+          padding: '2rem 1rem',
           textAlign: 'center',
           border: '1px solid #E2E8F0',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+          boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
         }}>
-          <div className="spin" style={{ display: 'inline-block', fontSize: '2rem', marginBottom: '0.5rem' }}>⌛</div>
-          <div style={{ fontWeight: 700, color: '#334155' }}>Loading BRICS Knowledge Repository...</div>
+          <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>⌛</div>
+          <div style={{ fontWeight: 800, color: '#334155', fontSize: '0.85rem' }}>Loading practices...</div>
         </div>
       )}
 
@@ -137,40 +85,41 @@ export const BricsHubPage: React.FC = () => {
           background: '#FEF2F2',
           border: '1px solid #FCA5A5',
           color: '#991B1B',
-          padding: '1.25rem',
+          padding: '0.85rem',
           borderRadius: '12px',
           textAlign: 'center',
-          marginBottom: '2rem'
+          marginBottom: '1rem',
+          fontSize: '0.82rem'
         }}>
-          <p style={{ margin: '0 0 0.5rem 0', fontWeight: 800 }}>Failed to load knowledge records</p>
-          <p style={{ margin: 0, fontSize: '0.85rem' }}>{error}</p>
+          <div>{error}</div>
           <button
             onClick={fetchData}
             style={{
-              marginTop: '1rem',
+              marginTop: '0.5rem',
               background: '#EF4444',
               color: '#ffffff',
               border: 'none',
-              padding: '0.4rem 1rem',
+              padding: '0.35rem 0.75rem',
               borderRadius: '6px',
               cursor: 'pointer',
-              fontWeight: 700
+              fontWeight: 800,
+              fontSize: '0.74rem'
             }}
           >
-            Retry
+            {t('buildAi.retryBtn')}
           </button>
         </div>
       )}
 
-      {/* Content Display */}
+      {/* Content Display: 2-Column Responsive Card Grid */}
       {!loading && !error && (
         <>
           {viewMode === 'grid' ? (
             records.length > 0 ? (
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '1.25rem'
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '0.65rem'
               }}>
                 {records.map(record => (
                   <BricsKnowledgeCard key={record.id} record={record} />
@@ -180,14 +129,14 @@ export const BricsHubPage: React.FC = () => {
               <div style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '3rem',
+                borderRadius: '14px',
+                padding: '2rem 1rem',
                 textAlign: 'center',
                 color: '#64748B'
               }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔍</div>
-                <h4 style={{ margin: '0 0 0.5rem 0', color: '#0F172A', fontWeight: 800 }}>No matching BRICS practices found</h4>
-                <p style={{ margin: 0, fontSize: '0.85rem' }}>Try relaxing your country, crop, or search term filters.</p>
+                <div style={{ fontSize: '2rem', marginBottom: '0.4rem' }}>🔍</div>
+                <div style={{ color: '#0F172A', fontWeight: 800, fontSize: '0.9rem' }}>No matching practices found</div>
+                <p style={{ margin: '4px 0 0 0', fontSize: '0.75rem' }}>Try adjusting your filters above.</p>
               </div>
             )
           ) : (

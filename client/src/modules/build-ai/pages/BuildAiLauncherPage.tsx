@@ -1,77 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BuildAiShell } from '../components/BuildAiShell.js';
-import { satelliteClientService } from '../satellite/satellite.service.js';
-
-interface FieldContextSummary {
-  id: string;
-  field_name: string;
-  crop_name: string;
-  area_acres: number;
-  centroid_lat?: number;
-  centroid_lng?: number;
-}
+import { useSharedField } from '../context/SharedFieldContext.js';
+import { useLanguage } from '../../../context/LanguageContext.js';
 
 export const BuildAiLauncherPage: React.FC = () => {
   const navigate = useNavigate();
-  const [fields, setFields] = useState<FieldContextSummary[]>([]);
-  const [selectedFieldId, setSelectedFieldId] = useState<string>('');
-  const [isLoadingFields, setIsLoadingFields] = useState<boolean>(true);
+  const { t } = useLanguage();
+  const { fields, selectedFieldId, selectedField, setSelectedFieldId, isLoadingFields } = useSharedField();
 
-  useEffect(() => {
-    let isMounted = true;
-    satelliteClientService.getAvailableFields().then(res => {
-      if (isMounted) {
-        setFields(res);
-        if (res.length > 0) {
-          setSelectedFieldId(res[0].id);
-        }
-        setIsLoadingFields(false);
-      }
-    }).catch(() => {
-      if (isMounted) setIsLoadingFields(false);
-    });
-    return () => { isMounted = false; };
-  }, []);
-
-  const selectedField = fields.find(f => f.id === selectedFieldId) || fields[0];
-
-  const tools = [
+  const toolCards = [
     {
       id: 'satellite',
-      title: 'Satellite Health',
-      subtitle: 'Crop Vegetation & NDVI',
-      purpose: 'Check field canopy health & NDVI vegetative growth.',
+      title: t('buildAi.cropHealth'),
+      desc: t('buildAi.cropHealthSub'),
       route: '/build-ai/satellite',
       icon: 'satellite_alt',
       image: '/images/tools/satellite.jpg',
-      badge: '10m Orbit Data'
+      badge: 'NDVI'
     },
     {
       id: 'soil',
-      title: 'Soil Health',
-      subtitle: 'Nutrients & Carbon',
-      purpose: 'Analyze NPK, pH & organic carbon with improvement steps.',
+      title: t('buildAi.soilHealth'),
+      desc: t('buildAi.soilHealthSub'),
       route: '/build-ai/soil-health',
       icon: 'potted_plant',
       image: '/images/tools/soil.jpg',
-      badge: 'Lab Diagnostics'
+      badge: 'NPK & pH'
     },
     {
       id: 'regenerative',
-      title: 'Regenerative AI',
-      subtitle: 'Action Recommendations',
-      purpose: 'Get field actions combining soil, satellite and crop data.',
+      title: t('buildAi.regenAi'),
+      desc: t('buildAi.regenAiSub'),
       route: '/build-ai/regenerative-ai',
       icon: 'psychology',
       image: '/images/tools/regenerative.jpg',
-      badge: 'AI Engine'
+      badge: 'AI Plan'
     },
     {
       id: 'brics',
-      title: 'BRICS Knowledge',
-      subtitle: 'Global Farming Practices',
-      purpose: 'Explore sustainable methods from BRICS agricultural studies.',
+      title: t('buildAi.bricsKnowledge'),
+      desc: t('buildAi.bricsKnowledgeSub'),
       route: '/build-ai/brics-hub',
       icon: 'public',
       image: '/images/tools/brics.jpg',
@@ -80,60 +49,67 @@ export const BuildAiLauncherPage: React.FC = () => {
   ];
 
   return (
-    <BuildAiShell activeRoute="/build-ai" pageTitle="Regenerative Intelligence">
+    <BuildAiShell activeRoute="/build-ai">
       {/* Product Hero Banner */}
       <div style={{
         background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
         border: '1.5px solid #BBF7D0',
         borderRadius: '16px',
-        padding: '0.9rem 1.1rem',
-        marginBottom: '1rem',
-        boxShadow: '0 2px 8px rgba(22, 163, 74, 0.05)'
+        padding: '0.85rem 1rem',
+        marginBottom: '0.85rem',
+        boxShadow: '0 2px 6px rgba(22, 163, 74, 0.05)'
       }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.35rem',
+          gap: '0.3rem',
           background: '#DCFCE7',
           color: '#15803D',
-          padding: '0.2rem 0.55rem',
+          padding: '0.15rem 0.5rem',
           borderRadius: '9999px',
-          fontSize: '0.72rem',
+          fontSize: '0.7rem',
           fontWeight: 800,
-          marginBottom: '0.35rem'
+          marginBottom: '0.3rem'
         }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>eco</span>
-          <span>AgriN & Regenerative Intelligence</span>
+          <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>eco</span>
+          <span>{t('buildAi.appSubtitle')}</span>
         </div>
 
-        <h1 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', fontWeight: 900, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1.25 }}>
-          BharatFarm Regenerative Intelligence
+        <h1 style={{
+          margin: '0 0 0.2rem 0',
+          fontSize: '1.15rem',
+          fontWeight: 900,
+          color: '#0F172A',
+          letterSpacing: '-0.02em',
+          lineHeight: 1.25
+        }}>
+          {t('buildAi.appTitle')}
         </h1>
 
-        <p style={{ margin: 0, fontSize: '0.82rem', color: '#334155', lineHeight: 1.4, fontWeight: 500 }}>
-          Turn field, satellite and soil data into practical regenerative farming decisions.
+        <p style={{ margin: 0, fontSize: '0.8rem', color: '#334155', lineHeight: 1.35, fontWeight: 500 }}>
+          {t('buildAi.homeTagline')}
         </p>
       </div>
 
-      {/* Field / Farm Context Section */}
+      {/* Field Selector Card */}
       <div style={{
         background: '#FFFFFF',
         borderRadius: '14px',
         border: '1px solid #E2E8F0',
-        padding: '0.8rem 1rem',
-        marginBottom: '1rem',
+        padding: '0.75rem 0.9rem',
+        marginBottom: '0.85rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        gap: '0.65rem'
+        gap: '0.6rem'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: '1 1 240px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flex: '1 1 200px' }}>
           <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
+            width: '34px',
+            height: '34px',
+            borderRadius: '9px',
             background: '#F0FDF4',
             color: '#16A34A',
             display: 'flex',
@@ -144,13 +120,13 @@ export const BuildAiLauncherPage: React.FC = () => {
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>pin_drop</span>
           </div>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: '0.66rem', fontWeight: 800, color: '#15803D', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Active Field Context
+            <div style={{ fontSize: '0.65rem', fontWeight: 800, color: '#15803D', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              {t('buildAi.fieldSelect')}
             </div>
             {isLoadingFields ? (
-              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Loading field profile...</div>
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Loading fields...</div>
             ) : fields.length > 0 ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.15rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', marginTop: '2px' }}>
                 <select
                   value={selectedFieldId}
                   onChange={(e) => setSelectedFieldId(e.target.value)}
@@ -159,9 +135,9 @@ export const BuildAiLauncherPage: React.FC = () => {
                     color: '#0F172A',
                     border: '1.5px solid #CBD5E1',
                     borderRadius: '8px',
-                    padding: '0.25rem 0.55rem',
+                    padding: '0.2rem 0.45rem',
                     fontSize: '0.82rem',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     outline: 'none',
                     cursor: 'pointer',
                     maxWidth: '100%'
@@ -169,20 +145,13 @@ export const BuildAiLauncherPage: React.FC = () => {
                 >
                   {fields.map(f => (
                     <option key={f.id} value={f.id}>
-                      {f.field_name} ({f.crop_name} • {f.area_acres} ac)
+                      🌾 {f.field_name} ({f.crop_name} • {f.area_acres} ac)
                     </option>
                   ))}
                 </select>
-                {selectedField && (
-                  <span style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 600 }}>
-                    {selectedField.centroid_lat?.toFixed(4)}°N, {selectedField.centroid_lng?.toFixed(4)}°E
-                  </span>
-                )}
               </div>
             ) : (
-              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>
-                No saved fields yet.
-              </div>
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>{t('buildAi.noFieldFound')}</div>
             )}
           </div>
         </div>
@@ -190,43 +159,141 @@ export const BuildAiLauncherPage: React.FC = () => {
         <button
           onClick={() => navigate('/sih/field-mapping')}
           style={{
-            padding: '0.4rem 0.75rem',
+            padding: '0.35rem 0.65rem',
             background: '#F8FAFC',
             color: '#15803D',
             border: '1.5px solid #BBF7D0',
             borderRadius: '8px',
-            fontSize: '0.76rem',
+            fontSize: '0.74rem',
             fontWeight: 800,
             cursor: 'pointer',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.3rem',
+            gap: '0.25rem',
             whiteSpace: 'nowrap'
           }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>map</span>
-          <span>Field Mapping</span>
+          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>map</span>
+          <span>{t('home.fieldMappingShort')}</span>
         </button>
       </div>
 
-      {/* Connected Tools Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '18px' }}>hub</span>
-          <span>Integrated Tools</span>
+      {/* 2-Column Compact Status Snapshot: Crop Health & Soil Health */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '0.65rem',
+        marginBottom: '0.9rem'
+      }}>
+        {/* Crop Status Card */}
+        <div
+          onClick={() => navigate('/build-ai/satellite')}
+          style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #BBF7D0',
+            borderRadius: '14px',
+            padding: '0.75rem',
+            cursor: 'pointer',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#15803D' }}>
+              🌿 {t('buildAi.cropHealth')}
+            </span>
+            <span style={{
+              fontSize: '0.66rem',
+              fontWeight: 800,
+              background: '#DCFCE7',
+              color: '#15803D',
+              padding: '1px 6px',
+              borderRadius: '6px'
+            }}>
+              {t('buildAi.healthy')}
+            </span>
+          </div>
+          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A' }}>
+            {t('buildAi.lookingGood')}
+          </div>
+          <div style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>
+            {t('buildAi.ndviScore')}: 0.72 ({t('buildAi.normalRange')})
+          </div>
+        </div>
+
+        {/* Soil Status Card */}
+        <div
+          onClick={() => navigate('/build-ai/soil-health')}
+          style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #BAE6FD',
+            borderRadius: '14px',
+            padding: '0.75rem',
+            cursor: 'pointer',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#0369A1' }}>
+              🧪 {t('buildAi.soilHealth')}
+            </span>
+            <span style={{
+              fontSize: '0.66rem',
+              fontWeight: 800,
+              background: '#E0F2FE',
+              color: '#0369A1',
+              padding: '1px 6px',
+              borderRadius: '6px'
+            }}>
+              {t('buildAi.good')}
+            </span>
+          </div>
+          <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#0F172A' }}>
+            74 / 100
+          </div>
+          <div style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '2px', fontWeight: 600 }}>
+            pH 6.5 • OC 0.62%
+          </div>
+        </div>
+      </div>
+
+      {/* Section Title: "What do you want to check?" */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: '0.65rem'
+      }}>
+        <h2 style={{
+          fontSize: '0.94rem',
+          fontWeight: 900,
+          color: '#0F172A',
+          margin: 0,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.35rem'
+        }}>
+          <span className="material-symbols-outlined" style={{ color: '#16A34A', fontSize: '18px' }}>apps</span>
+          <span>{t('home.whatToDoTitle')}</span>
         </h2>
-        <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#15803D', background: '#DCFCE7', padding: '0.15rem 0.55rem', borderRadius: '10px' }}>
-          4 Connected Capabilities
+        <span style={{
+          fontSize: '0.68rem',
+          fontWeight: 800,
+          color: '#15803D',
+          background: '#DCFCE7',
+          padding: '0.1rem 0.45rem',
+          borderRadius: '8px'
+        }}>
+          4 {t('home.solutionsTitle')}
         </span>
       </div>
 
-      {/* Compact 4-Card Responsive Grid with Visual Image Thumbnails */}
+      {/* 2-Column Responsive Compact Grid for the 4 Capabilities */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '0.75rem'
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '0.65rem'
       }}>
-        {tools.map((card) => (
+        {toolCards.map((card) => (
           <div
             key={card.id}
             onClick={() => navigate(card.route)}
@@ -240,11 +307,11 @@ export const BuildAiLauncherPage: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              transition: 'all 0.15s ease'
+              transition: 'transform 0.12s ease'
             }}
           >
-            {/* Image Header with Badge */}
-            <div style={{ position: 'relative', width: '100%', height: '110px', overflow: 'hidden', background: '#E2E8F0' }}>
+            {/* Thumbnail Image Header */}
+            <div style={{ position: 'relative', width: '100%', height: '84px', overflow: 'hidden', background: '#E2E8F0' }}>
               <img
                 src={card.image}
                 alt={card.title}
@@ -257,68 +324,48 @@ export const BuildAiLauncherPage: React.FC = () => {
               />
               <div style={{
                 position: 'absolute',
-                top: '8px',
-                right: '8px',
+                top: '6px',
+                right: '6px',
                 background: 'rgba(15, 23, 42, 0.75)',
-                backdropFilter: 'blur(4px)',
+                backdropFilter: 'blur(3px)',
                 color: '#FFFFFF',
-                fontSize: '0.68rem',
+                fontSize: '0.62rem',
                 fontWeight: 800,
-                padding: '2px 8px',
-                borderRadius: '9999px',
-                letterSpacing: '0.02em'
+                padding: '1px 6px',
+                borderRadius: '9999px'
               }}>
                 {card.badge}
               </div>
             </div>
 
-            {/* Content Body */}
-            <div style={{ padding: '0.85rem 1rem 0.75rem 1rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+            {/* Compact Body */}
+            <div style={{ padding: '0.65rem 0.75rem', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                  <div style={{
-                    width: '28px',
-                    height: '28px',
-                    borderRadius: '8px',
-                    background: '#F0FDF4',
-                    border: '1px solid #BBF7D0',
-                    color: '#16A34A',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{card.icon}</span>
-                  </div>
-                  <div>
-                    <h3 style={{ margin: 0, fontSize: '0.96rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2 }}>
-                      {card.title}
-                    </h3>
-                    <div style={{ fontSize: '0.7rem', color: '#15803D', fontWeight: 700 }}>
-                      {card.subtitle}
-                    </div>
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.2rem' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#16A34A' }}>{card.icon}</span>
+                  <h3 style={{ margin: 0, fontSize: '0.88rem', fontWeight: 900, color: '#0F172A', lineHeight: 1.2 }}>
+                    {card.title}
+                  </h3>
                 </div>
-
-                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: '#475569', lineHeight: 1.4, fontWeight: 500 }}>
-                  {card.purpose}
+                <p style={{ margin: 0, fontSize: '0.72rem', color: '#64748B', lineHeight: 1.3, fontWeight: 500 }}>
+                  {card.desc}
                 </p>
               </div>
 
-              {/* Action Button */}
+              {/* Action Link */}
               <div style={{
-                marginTop: '0.65rem',
+                marginTop: '0.5rem',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 color: '#15803D',
-                fontSize: '0.8rem',
+                fontSize: '0.74rem',
                 fontWeight: 800,
                 borderTop: '1px solid #F1F5F9',
-                paddingTop: '0.5rem'
+                paddingTop: '0.4rem'
               }}>
-                <span>Explore Tool</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
+                <span>{t('buildAi.exploreTool')}</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '15px' }}>arrow_forward</span>
               </div>
             </div>
           </div>
